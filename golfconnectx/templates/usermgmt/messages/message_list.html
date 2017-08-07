@@ -1,0 +1,74 @@
+{% extends 'common/base.html' %}
+{% load messages_tags %}
+{% block header %}
+    <title>Messages | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="Messages">
+   <div class="msgcontainer">
+      <div class="msgHeading">
+         MESSAGES
+      </div>
+      <div class="btns">
+         <a href="{% url 'ajax_new_conversation' %}">
+         	<div class="col-sm-6 alglft"><button class="btnMsg">+ New Message</button></div>
+         </a>
+         <div class="col-sm-6 algrgt">
+         	<button class="btnDel">Delete</button>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-12 ">
+            <ul class="list-group">
+            {% for message in conversations %}
+               	<li class="list-group-item col-sm-12 brdr bg zeroPad">
+                  	<div class="col-xs-1 msgchckbx">
+                  		<input type="checkbox" class="customchck" />
+                  	</div>
+
+                  	<div class="msgView col-sm-4">
+                  	{% for participant in message.participants.all %}
+                  	{% if not participant.id == user.id and forloop.counter < 2 %}
+                     	<img src="{{participant.get_profile_image_url}}" class="profileimg"/>
+                  	{% endif %}
+                    {% endfor %}
+                     	<span class="fromName">
+                     		<a href="{% url 'ajax_conversation_details' message.id %}">{% conversation_name message.id user %}</a>
+                     	</span>
+                  	</div>
+
+                  	<div class="msg">
+                     	<div class="col-sm-4 msgbody">
+                        	<span>{{message.get_first_message|truncatechars:50}}</span>
+                     	</div>
+                    	<div class="col-xs-3 fr">
+                        	<span class="msgtime">{{message.created_on|date:'M d, Y - P'}}</span>
+                     	</div>
+                  	</div>
+               	</li>
+            {% endfor %}
+               <!--li class="list-group-item col-sm-12 brdr bg zeroPad pb12px">
+                  <div class="col-xs-1 msgchckbx"><input type="checkbox" class="customchck" /></div>
+                  <div class="msgView col-sm-4">
+                     <div class="groupicon">
+                        <img src="/static/themes/img/Nick_Zano_45x45.png" class="groupimg"></img>
+                        <img src="/static/themes/img/Rosie Perez.png" class="groupimg2"></img>
+                     </div>
+                     <span class="grpName">Group Awesome!</span>
+                  </div>
+                  <div class="msg">
+                     <div class="col-sm-4 msgbody">
+                        <span>Lorem ipsum dolor sit amen...</span>
+                     </div>
+                     <div class="col-xs-2 fr">
+                        <span class="msgtime">June 22-5:30 pm</span>
+                     </div>
+                  </div>
+               </li-->
+            </ul>
+         </div>
+      </div>
+   </div>
+</div>
+
+{% endblock %}

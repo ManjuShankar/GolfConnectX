@@ -1,0 +1,95 @@
+<div class="sidebar">
+   <div class="menu-title">General</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="/admin/">
+         <span class="i-meter"></span>
+         <span class="text">Dashboard</span>
+         </a>
+      </li>
+      <li>
+         <a href="{% url 'settings' %}">
+         <span class="i-settings"></span>
+         <span class="text">Settings</span>
+         </a>
+      </li>
+       <li>
+         <a href="{% url 'users' %}">
+         <span class="i-users"></span>
+         <span class="text">Users</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Groups</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="{% url 'groups' %}">
+         <span class="i-bubbles"></span>
+         <span class="text">Groups</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Events</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="{% url 'event_categories_list' %}">
+         <span class="i-stars"></span>
+         <span class="text">Categories</span>
+         </a>
+      </li>
+      <li>
+         <a href="{% url 'events' %}">
+         <span class="i-bubbles"></span>
+         <span class="text">Events</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Courses</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="{% url 'course_categories_list' %}">
+         <span class="i-stars"></span>
+         <span class="text">Categories</span>
+         </a>
+      </li>
+      <li>
+         <a href="{% url 'courses' %}">
+         <span class="i-bubbles"></span>
+         <span class="text">Courses</span>
+         </a>
+      </li>
+      <li>
+         <a href="{% url 'course_admins' %}">
+         <span class="i-users"></span>
+         <span class="text">Course Admins</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Posts</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="{% url 'posts' %}">
+         <span class="i-bubbles"></span>
+         <span class="text">Posts</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Contact-Us</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="{% url 'contact_list' %}">
+         <span class="i-stars"></span>
+         <span class="text">Contact-Us</span>
+         </a>
+      </li>
+   </ul>
+   <div class="menu-title">Deployment</div>
+   <ul class="sidebar-menu">
+      <li>
+         <a href="/admin/exception/">
+         <span class="i-wrench"></span>
+         <span class="text">Monitor</span>
+         </a>
+      </li>
+   </ul>
+</div>

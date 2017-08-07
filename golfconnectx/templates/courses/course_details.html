@@ -1,0 +1,29 @@
+ {% if course.is_premium %}
+   {% include 'courses/course_premium.html' %}
+{% else %}
+   {% include 'courses/course_nonpremium.html' %}
+{% endif %}
+
+<script type="text/javascript">
+	function follow_course(id){
+		var datastring = 'courseid='+id;
+  		$.ajax({
+  			data: datastring,
+    		datatype: 'JSON',
+    		url: "{% url 'ajax_follow_course' course.id %}",
+    		method: "GET",
+          success: function (data) {
+            	if(data == 1){
+               	$('#follow_course_button').text('Unfollow Course');
+                $('#following_div').show();
+                $('#following_2_div').hide();
+            	}
+            	else{
+            		$('#follow_course_button').text('Follow Course');
+                $('#following_div').hide();
+                $('#following_2_div').show();
+            	}
+        	}
+    	});
+	}
+</script>

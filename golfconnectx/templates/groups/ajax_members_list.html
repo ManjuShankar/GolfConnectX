@@ -1,0 +1,35 @@
+{% load humanize %}
+<div>
+   <div class="col-sm-3">
+      <span class="tabTitle">{{group.get_members_count}} Member(s)</span>
+   </div>
+    <div class="col-sm-3">
+      <button class="membersbtn">+ Add Members</button>
+   </div>
+   <div class="searchbox col-sm-3">
+      <input class="searchbr" placeholder=" Find a Member" type="text">
+      <span class="glyphicon glyphicon-search"></span>
+   </div>
+   <div class="col-sm-3">
+      <button class="btnLeaveGroup">Invite People</button>
+   </div>
+</div>
+<div class="dividertag"></div>
+
+<div class="col-sm-12">
+   {% for member in members %}
+   <div class="col-sm-2">
+      <img src="{{member.get_profile_image_url}}" class="moealdo">
+   </div>
+   <div class="col-sm-4">
+      <h2>{{member.get_full_name|title}}</h2>
+      <p>{{member.email}}</p>
+      <p>Joined: {{member.created_on|naturaltime}}
+   </div>
+   {% if forloop.counter|divisibleby:2 %}
+      </div>
+      <div class="col-sm-12">
+   {% endif %}
+   {% endfor %}
+
+</div>

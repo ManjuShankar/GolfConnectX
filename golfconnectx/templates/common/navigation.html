@@ -1,0 +1,155 @@
+<div class="leftBody">
+   <nav>
+      <div class="row">
+         <div class="col-sm-4 col-md-4">
+            <div class="col-sm-12">
+               <div class="searchBox">
+                  <input placeholder="Search for courses, groups, people, events, posts, #tags" type="text">
+                  <button>
+                     <span class="searchIcon">
+                        <img src="/static/themes/img/icons/searchBar.png">
+                     </span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <div class="col-sm-8 col-md-8">
+            <div class="col-sm-12 col-md-12">
+               <div class="navHeader">
+                  <button onclick="add_new_post()">
+                     <img src="/static/themes/img/icons/POST.png">
+                  </button>
+                  <button data-toggle="modal" data-target="#sendInvite" data-backdrop="false">
+                     <span class="inviteButton m0px">
+                        <img src="/static/themes/img/icons/inviteIcon.png">
+                     </span>
+                  </button>
+                  <a href="{% url 'ajax_notifications' %}">
+                     <span class="notiButton glyphicon glyphicon-bell"></span>
+                  </a>
+                  <a href="{% url 'ajax_conversations' %}">
+                     <button>
+                        <span class="chatButton">
+                           <img src="/static/themes/img/icons/Chat_icon.png" class="mt10px mr20px">
+                        </span>
+                     </button>
+                  </a>
+                  <button>
+                     <span class="accButton">
+                        <img src="/static/themes/img/icons/Account_Icon.png">
+                     </span>
+                  </button>
+                  <div class="dropdown mt10px">
+                     <button class="dropdown-toggle" type="button" id="dd1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="arrowButton">
+                           <img src="/static/themes/img/icons/Arrow_Icon.png" class="">
+                        </span>
+                     </button>
+                     <div class="dropdown-menu dropdownContent" aria-labelledby="dd1">
+                        <a href="{% url 'ajax_profile_details' %}">
+                           <button class="dropdown-item" type="button">My Profile</button>
+                        </a>
+                        <a href="{% url 'account_settings' %}">
+                           <button class="dropdown-item" type="button">Account Settings</button>
+                        </a>
+                        <a href="{% url 'logout' %}">
+                           <button class="dropdown-item" type="button">
+                              <img src="/static/themes/img/icons/signout_icon.png" class="signout-icon"/>Sign Out
+                           </button>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </nav>
+
+   <!-- Latest compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+   <!-- Latest compiled and minified JavaScript -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+   <div class="modal fade addPost" id="addPost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content" id="post_modal">
+         {% include 'posts/ajax_add_post.html' %}
+       </div>
+     </div>
+   </div>
+   <div class="modal fade addPost" id="sendInvite" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content" id="send_invite_modal">
+            <div class="modal-header">Invite People To GolfConnectx
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+               <form class="form-horizontal" method="POST" id='sendInviteForm' role="form">{% csrf_token %} 
+                  <div class="form-group">
+                      <div class="col-md-12">
+                         <input id="send_emails" class="form-control" placeholder="Emails" name="email" type="text">
+                      </div>
+                   </div>
+                   <div class="form-group">
+                     <div class="col-md-12">
+                         <textarea id="send_message" class="form-control" placeholder="Message" cols="40" name="message" rows="6"></textarea>
+                     </div>
+                   </div>
+               </form>
+            </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-primary" id="btnSend" onclick="send_invite()">Send</button>
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div> 
+       </div>
+     </div>
+   </div>
+
+</div>
+<script type="text/javascript">
+   function add_new_post(){
+      $.ajax({
+         datatype: 'JSON',
+         url: "{% url 'ajax_create_post' %}",
+         method: "GET",
+         success: function (data) {
+            if(data.status == 1){
+               $('#post_modal').html(data.html);
+               $('.select-menu').selectpicker();
+               $('#addPost').modal('show');
+            }
+         }
+      });
+   }
+   function save_post(){
+      var datastring = $('#newPostForm').serialize();
+      $.ajax({
+         data:datastring,
+         datatype: 'JSON',
+         url: "{% url 'ajax_create_post' %}",
+         method: "POST",
+         success: function (data) {
+            if(data.status == 1){
+               $('#addPost').modal('hide');
+            }
+         }
+      });
+   }
+   function send_invite(){
+      var datastring = $('#sendInviteForm').serialize();
+      $.ajax({
+         data:datastring,
+         datatype: 'JSON',
+         url: "{% url 'ajax_send_invite' %}",
+         method: "POST",
+         success: function (data) {
+            if(data.status == 1){
+               $('#sendInvite').modal('hide');
+               $('#sendInviteForm').find("input,textarea,select").val('').end()
+            }
+         }
+      });
+   }
+
+</script>

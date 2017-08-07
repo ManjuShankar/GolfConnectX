@@ -1,0 +1,262 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="main-container" id="main-container">
+   <div class="main-header">
+      <h2>General Settings</h2>
+      <a href="/admin/user_role_admin/" class="btn btn-primary"><span class="i-plus"></span> Manage user roles</a>
+      <ul class="nav nav-pills" role="tablist">
+         <li role="presentation" class="active">
+            <a href="{% url 'settings' %}">General</a>
+         </li>
+         <li role="presentation">
+            <a href="{% url 'user_role_list' %}">User Roles</a>
+         </li>
+         <li role="presentation">
+            <a href="{% url 'email_settings' %}">Email Settings</a>
+         </li>
+      </ul>
+   </div>
+   <div class="main-content clearfix">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="description-box" data-id="settings_admin.index" role="alert">
+               <span class="text">Edit important Campus Bubble settings, <a href="/admin/user_role/">create bio fields</a> for users roles and <a href="/admin/update_info/">push updates</a> to all users.</span>
+               <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+         </div>
+      </div>
+      <form action="{% url 'settings' %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token%}
+         <div class="form-group">
+            <label for="invite_expiration" class="col-md-2 control-label">Invitation Expiry (days)
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.invite_expiration}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="invite_enabled" class="col-md-2 control-label">Invitations Enabled
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.invite_enabled}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="registration_enabled" class="col-md-2 control-label">Registrations Enabled
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+              {{form.registration_enabled}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="password_expiration" class="col-md-2 control-label">Password Expiry (days)
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.password_expiration}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="email_mask" class="col-md-2 control-label">Email Mask
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.email_mask}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="email_visible" class="col-md-2 control-label">Email Mask Text
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.email_mask_text}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="delete_orphoned_text" class="col-md-2 control-label">Delete Orphaned Posts
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.delete_orphoned_text}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="is_deployed" class="col-md-2 control-label">Is Deployed
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.is_deployed}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="is_public_deployment" class="col-md-2 control-label">Enable Public Overview
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.is_public_deployment}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="brand_name" class="col-md-2 control-label">Brand Name
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.brand_name}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="school_name" class="col-md-2 control-label">School name
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.school_name}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="app_title" class="col-md-2 control-label">Site title
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.app_title}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="description" class="col-md-2 control-label">Short description
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+              {{form.app_description}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="img_url" class="col-md-2 control-label">Social Media Preview Image
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.img_url}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="bubble_notification" class="col-md-2 control-label">Bubble Email Notification (days)
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.bubble_notification}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="timezone" class="col-md-2 control-label">Timezone
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+              {{form.timezone}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="updates_feed_url" class="col-md-2 control-label">Updates Feed
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.updates_feed_url}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="landing_header" class="col-md-2 control-label">Landing Page Header
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.landing_header}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="landing_subtitle" class="col-md-2 control-label">Landing Page Subtitle
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.landing_subtitle}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="onboard_usga" class="col-md-2 control-label">Enable Onboarding USGA Checkbox
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.onboard_usga}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="onboard_disclaimer" class="col-md-2 control-label">Onboarding Disclaimer Text
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.onboard_disclaimer}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="login_page_message" class="col-md-2 control-label">Login Page Message
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.login_page_message}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="login_page_link" class="col-md-2 control-label">Login Page Link
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.login_page_link}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="disable_secret_bubbles" class="col-md-2 control-label">Disable Secret Bubbles
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.disable_secret_bubbles}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="login_input_text" class="col-md-2 control-label">Login Input Text
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.login_input_text}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="login_instruction" class="col-md-2 control-label">Login Instructions
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.login_instruction}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="check_in_rewards_is_enabled" class="col-md-2 control-label">Enable Check-In Points Rewards
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.enable_rewards}}
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="check_in_max_reward" class="col-md-2 control-label">Maximum Amount of pts For Check-in
+            &nbsp;
+            </label>
+            <div class="col-md-10">
+               {{form.checkin_reward_points}}
+            </div>
+         </div>
+         <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10 submit-row">
+               <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
+{% endblock %}

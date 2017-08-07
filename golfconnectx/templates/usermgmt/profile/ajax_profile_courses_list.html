@@ -1,0 +1,16 @@
+{% load humanize %}
+{% for course in courses %}
+   <div class="leftimg" onclick="get_course({{course.id}})">
+      <div class="nameoverimg">
+         <img src="/static/themes/img/golf-shadow-creek-04.png" class="img">
+         <div class="following">
+            <span class="OrangeDot"><img src="/static/themes/img/icons/eclipse.png"></span>Following
+         </div>
+         <center>
+            <span class="center">{{course.name}}</span>
+         </center>
+      </div>
+      <p class="lft">{{course.city}}{% if course.state %}, {{course.state}}{% endif %}</p>
+      <p class="ryt">{{course.created_on|naturaltime}}</p>
+   </div>
+ {% endfor %}

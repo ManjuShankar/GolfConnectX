@@ -1,0 +1,105 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2>Members of Group - {{group.name|title}}</h2>
+    </div>
+    <div class="main-content clearfix">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="description-box" data-id="event_admin.index_view" role="alert">
+                <span class="text">View people part of this group.</span>
+                <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+          </div>
+       </div>
+       <div class="model-actions clearfix">
+          <div class="btn-group btn-menu pull-left">
+             <div class="dropdown-toggle btn-title" style="font-size: 16px" >{{object_list.count}} Items</div>
+          </div>
+          <div class="search-form btn-menu">
+             <form method="GET" action="/admin/event_admin/" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                   <input type="text" name="search" value="" class="span2 btn-title form-control" placeholder="Search">
+                </div>
+             </form>
+          </div>
+       </div>
+       <br/>
+       <form id="filter_form" method="GET" action="/admin/event_admin/">
+          <table class="filters">
+          </table>
+          <div class="clearfix filter-footer">
+             <button type="submit" class="btn btn-primary pull-right" style="display: none">Apply</button>
+          </div>
+       </form>
+       <div class="clearfix"></div>
+       <div class="table-container">
+          <div class="table-container-inner">
+             <table class="table table-striped table-bordered table-hover model-list">
+                <thead>
+                   <tr>
+                      <th class="list-checkbox-column">
+                         <input type="checkbox" name="rowtoggle" class="action-rowtoggle" title="Select all records"/>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/user_admin/?sort=0" title="Sort by First name">First Name</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/user_admin/?sort=1" title="Sort by Last name">Last Name</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/user_admin/?sort=2" title="Sort by Email">Email</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/user_admin/?sort=3" title="Sort by User Level">User Level</a>
+                      </th>
+                      <th class="column-header list-actions-column fixed-column">Actions</th>
+                   </tr>
+                </thead>
+
+                {% for user in object_list %}
+                <tr id='row_{{user.id}}'>
+                   <td>
+                      <input type="checkbox" name="rowid" class="action-checkbox" value="1" title="Select record"/>
+                   </td>
+                   <td>{{user.first_name}}</td>
+                   <td>{% if user.last_name %}{{user.last_name}}{% endif %}</td>
+                   <td>{{user.email}}</td>
+                   <td>{% if user.is_superuser %}Super Admin{% else %}Normal{% endif %}</td>
+                   <td class="fixed-column">
+                   		<a class="btn btn-secondary" onclick="remove_member('{{user.id}}')">Remove</a>
+                   </td>
+                </tr>
+                {% endfor %}
+             </table>
+          </div>
+       </div>
+       <form id="action_form" action="/admin/event_admin/action/" method="POST" style="display: none">
+          <input type="hidden" id="action" name="action" />
+       </form>
+    </div>
+ </div>
+
+<script type="text/javascript">
+function remove_member(userid){
+  	var datastring = 'user_id='+userid;
+    $.ajax({
+        data: datastring,
+        datatype: 'JSON',
+        url: "{% url 'groups_members_remove' group.id %}",
+        method: "GET",
+          success: function (data) {
+          	if(data.success){
+          		$('#row_'+userid).remove();
+          		$('.btn-title').text(data.count +' Items')
+          	}
+          	else{
+          		alert('Error occurred while removing!');
+          	}
+        }
+    });
+}
+</script>
+{% endblock %}

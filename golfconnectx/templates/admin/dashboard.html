@@ -1,0 +1,115 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+<div class="main-container" id="main-container">
+   <div class="main-header">
+      <h2>Dashboard</h2>
+   </div>
+   <div class="main-content clearfix">
+      <!-- Notifications -->
+      <div>
+         <h3>Notifications</h3>
+         <div class="clearfix">
+            <a href="/admin/bubble_application_admin/" class="notification-box">
+            <span class="notification-number">
+            <span class="number">0</span>
+            </span>
+            <span class="notification-type">
+            <span class="i-bubble"></span>
+            <span class="text">New Bubble <br /> Applications</span>
+            </span>
+            </a>
+            <a href="/admin/bubble_flag_admin/" class="notification-box">
+            <span class="notification-number">
+            <span class="number">0</span>
+            </span>
+            <span class="notification-type">
+            <span class="i-flag"></span>
+            <span class="text">New Flagged  <br />Posts</span>
+            </span>
+            </a>
+            <a href="/admin/moderation_form_admin/" class="notification-box">
+            <span class="notification-number">
+            <span class="number">0</span>
+            </span>
+            <span class="notification-type">
+            <span class="i-key"></span>
+            <span class="text">New Keyword  <br />Notifications</span>
+            </span>
+            </a>
+         </div>
+      </div>
+      <!-- Analytics -->
+      <h3>Active Users Stats</h3>
+      <div class="quicklinks-triple">
+         <div class="quicklink">
+            <div class="quicklink-value">None</div>
+            <div class="quicklink-label">Total active users</div>
+            <p class="quicklink-description">Users who have visited<br/>Bubble at least once<br/>since August 1st.</p>
+         </div>
+         <div class="quicklink">
+            <div class="quicklink-value">None</div>
+            <div class="quicklink-label">Monthly active users</div>
+            <p class="quicklink-description">Users who have visited<br/>Bubble at least once<br/>in the last 30 days.</p>
+         </div>
+         <div class="quicklink">
+            <div class="quicklink-value">None</div>
+            <div class="quicklink-label">Weekly active users</div>
+            <p class="quicklink-description">Users who have visited<br/>Bubble at least once<br/>in the last 7 days.</p>
+         </div>
+         <div class="quicklink">
+            <div class="quicklink-value">None</div>
+            <div class="quicklink-label">Daily active users</div>
+            <p class="quicklink-description">Users who have visited<br/>Bubble at least once<br/>in the last 24 hours.</p>
+         </div>
+      </div>
+      <!-- Quick links -->
+      <div>
+         <h3>Quicklinks</h3>
+         <div class="row quicklinks-container">
+            <div class="col-md-3">
+               <a class="quicklink red" href="http://support.campusbubble.com/" target="_blank">
+               <span class="i-help"></span>
+               <span>Stuck?<br />24/7 Support</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink green" href="/admin/messaging_user_group/">
+               <span class="i-speaker"></span>
+               <span>Send messages to select<br />segments of users</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink yellow" href="/admin/bubble_application_admin/">
+               <span class="i-bubbles"></span>
+               <span>Manage registration<br />of bubbles</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink blue" href="/admin/bubble_category_admin/">
+               <span class="i-stars"></span>
+               <span>Manage<br />Categories</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink purple" href="/admin/bubble_flag_admin/">
+               <span class="i-flag"></span>
+               <span>View and manage<br />flagged posts</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink red" href="/admin/feeds_admin/">
+               <span class="i-import"></span>
+               <span>Import RSS feeds<br />and more</span>
+               </a>
+            </div>
+            <div class="col-md-3">
+               <a class="quicklink orange" href="/admin/settings_admin/">
+               <span class="i-settings"></span>
+               <span>Change bubble<br />settings</span>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

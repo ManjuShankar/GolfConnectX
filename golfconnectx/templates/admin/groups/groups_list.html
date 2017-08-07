@@ -1,0 +1,156 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2>Groups</h2>
+       <a href="{% url 'group_add' %}" class="btn btn-primary"><span class="i-plus"></span> Create new Group</a>
+       <!--ul class="nav nav-pills" role="tablist">
+          <li role="presentation" class="active">
+             <a href="/admin/bubble_admin/">Active</a>
+          </li>
+          <li role="presentation">
+             <a href="/admin/bubble_inactive_admin/">Inactive</a>
+          </li>
+       </ul-->
+    </div>
+    <div class="main-content clearfix">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="description-box" data-id="bubble_admin.index_view" role="alert">
+                <span class="text">Find, edit, delete, and see members for all groups. <a href="{% url 'bubble_add' %}">Create</a> a new group instantly.</span>
+                <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+          </div>
+       </div>
+       <div class="model-actions clearfix">
+          <div class="btn-group btn-menu pull-left">
+             <div class="dropdown-toggle btn-title" style="font-size: 16px">{{object_list.count}} Items</div>
+          </div>
+          <div class="btn-menu">
+             <a href="{% url 'group_add' %}" class="btn btn-primary pull-right">Create</a>
+          </div>
+          <a href="/admin/bubble_admin/export/?url=%2Fadmin%2Fbubble_admin%2F" class="btn btn-primary pull-right">Export</a>
+          <div class="btn-group btn-menu pull-right">
+             <a class="btn dropdown-toggle btn-title" data-toggle="dropdown" href="javascript:void(0)">
+             Add Filter<b class="i-arrow-b"></b>
+             </a>
+             <ul class="dropdown-menu field-filters">
+                <li>
+                   <a href="javascript:void(0)" class="filter" onclick="return false;">Name</a>
+                </li>
+                <li>
+                   <a href="javascript:void(0)" class="filter" onclick="return false;">Bubble Categories / Name</a>
+                </li>
+                <li>
+                   <a href="javascript:void(0)" class="filter" onclick="return false;">Member Count</a>
+                </li>
+                <li>
+                   <a href="javascript:void(0)" class="filter" onclick="return false;">Post Count</a>
+                </li>
+             </ul>
+          </div>
+          <div class="search-form btn-menu">
+             <form method="GET" action="/admin/bubble_admin/" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                   <input type="text" name="search" value="" class="span2 btn-title form-control" placeholder="Search">
+                </div>
+             </form>
+          </div>
+       </div>
+       <br/>
+       <form id="filter_form" method="GET" action="/admin/bubble_admin/">
+          <table class="filters">
+          </table>
+          <div class="clearfix filter-footer">
+             <button type="submit" class="btn btn-primary pull-right" style="display: none">Apply</button>
+          </div>
+       </form>
+       <div class="clearfix"></div>
+       <div class="table-container">
+          <div class="table-container-inner">
+             <table class="table table-striped table-bordered table-hover model-list">
+                <thead>
+                   <tr>
+                      <th class="list-checkbox-column">
+                         <input type="checkbox" name="rowtoggle" class="action-rowtoggle" title="Select all records"/>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/bubble_admin/?sort=0" title="Sort by Name">Name</a>
+                      </th>
+                      <th class="column-header">
+                         <a>Home Course</a>
+                      </th>
+                      <th class="column-header">
+                         <a>Private Group</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/bubble_admin/?sort=4" title="Sort by Last Activity">Last Activity</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/bubble_admin/?sort=2" title="Sort by Member Count">Member Count</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/bubble_admin/?sort=5" title="Sort by Post Count">Post Count</a>
+                      </th>
+                      <th class="column-header list-actions-column fixed-column">Actions</th>
+                   </tr>
+                </thead>
+                {% for group in object_list %}
+                <tr>
+                   <td>
+                      <input type="checkbox" name="rowid" class="action-checkbox" value="2" title="Select record"/>
+                   </td>
+                   <td>{{group.name}}</td>
+                   <td>{{group.course}}</td>
+                   <td>{{group.is_private}}</td>
+                   <td>{{group.modified_on}}</td>
+                   <td>{{group.get_members_count}}</td>
+                   <td>{{group.get_posts_count}}</td>
+                   <td class="fixed-column">
+                      <a href="{% url 'group_edit' group.id %}" class="btn btn-secondary">Edit</a>
+                      <!-- Large button group -->
+                      <div class="btn-group">
+                         <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                         <span class="i-cog"></span>
+                         <span class="caret"></span>
+                         </button>
+                         <ul class="dropdown-menu dropdown-menu-right dropdown-menu-small" role="menu">
+                            <li>
+                               <form method="GET" action="{% url 'group_delete' group.id %}">
+                                  <button onclick="return confirm('You sure you want to delete this item?');" title="Delete record">
+                                  Delete
+                                  </button>
+                               </form>
+                            </li>
+                            <li>
+                               <a href="{% url 'groups_posts' group.id %}">Posts</a>
+                            </li>
+                            <li>
+                               <a href="{% url 'groups_members' group.id %}">Members</a>
+                            </li>
+                            <li>
+                               <a href="/bubbles/2" target="_blank">Go to Group</a>
+                            </li>
+                            <li>
+                               <form method="GET" action="/admin/bubble_admin/deactivate/?url=%2Fadmin%2Fbubble_admin%2F&amp;id=2">
+                                  <button onclick="return confirm('Are you sure you want to deactivate this bubble?');" title="Disable Bubble">
+                                  Deactivate
+                                  </button>
+                               </form>
+                            </li>
+                         </ul>
+                      </div>
+                   </td>
+                </tr>
+                {% endfor %}
+             </table>
+          </div>
+       </div>
+       <form id="action_form" action="/admin/bubble_admin/action/" method="POST" style="display: none">
+          <input type="hidden" id="action" name="action" />
+       </form>
+    </div>
+ </div>
+{% endblock %}
+
+

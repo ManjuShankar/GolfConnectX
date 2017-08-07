@@ -1,0 +1,236 @@
+{% load humanize %}
+<style type="text/css">
+   .map-div {
+    height: 40% !important;
+    width: 98% !important;
+   }
+</style>
+<div class="premium">
+   <div class="col-sm-8 removePadding">
+      <div class="imgGolf"><img src="/static/themes/img/premuim/golfImg.png"></div>
+      <div class="col-sm-6">
+         <div class="following">
+            <div {% if not cud.is_following %}style="display:none"{% endif %} id="following_div">
+               <span class="OrnageDot"><img src="/static/themes/img/icons/eclipse.png"></span>
+               <span class="following_text">Following</span>
+            </div>
+            <div {% if cud.is_following %}style="display:none"{% endif %} id="following_2_div"><br></div>
+         </div>
+      </div>
+      <div class="col-sm-6">
+         {% if cud.is_played %}<div class="played">Played</div>{% endif %}
+      </div>
+      <div class="col-sm-12">
+         <div class="coursesTitle">{{course.name}}</div>
+      </div>
+   </div>
+   <div class="coursesScrollRight">
+      <div class="col-sm-6 removePadding">
+         <div class="unfollowCourses">
+               <button class="true" id='follow_course_button' onclick="follow_course({{course.id}})">
+                  {% if cud.is_following %}Unfollow{% else %}Follow{% endif %} Course
+               </button>
+         </div>
+         <div class="coursesAddress">
+            {{course.address1}}{% if course.address2 %},{{course.address2}}{% endif %}<br>{{course.city}}
+         </div>
+         <div class="coursescontact">
+            {% if course.phone %}{{course.phone}}{% endif %}
+            {% if course.email %}<br>{{course.email}}{% endif %}
+         </div>
+      </div>
+      <div class="col-sm-6 removePadding">
+         <div id="map" class='map-div'></div>                                          
+      </div>
+      <div class="col-sm-12 removePadding">
+         <div class="ReactTabs react-tabs" data-tabs="true">
+
+            <ul class="ReactTabs__TabList" role="tablist">
+               <li class="ReactTabs__Tab active" role="tab" id="react_tab_posts" onclick="show_tab('posts')">Post</li>
+               <li class="ReactTabs__Tab" role="tab" id="react_tab_description" onclick="show_tab('description')">Description</li>
+               <li class="ReactTabs__Tab" role="tab" id="react_tab_groups" onclick="show_tab('groups')">Groups</li>
+               <li class="ReactTabs__Tab" role="tab" id="react_tab_events" onclick="show_tab('events')">Events</li>
+            </ul>
+
+            <div role="tabpanel" id="tab_posts" class='react_div'>
+               <!--div class="headerEvents">
+                  <div class="col-sm-9">1 Upcoming Event</div>
+                  <div class="col-sm-3"><button class="viewEveBtn">View Events</button></div>
+               </div-->
+               <div class="eventsContainer">
+               {% if course.get_posts %}
+               {% for post in course.get_posts %}
+                  <div class="postContent">
+                     <div class="col-sm-6">
+                        <div class="inlinePostTittle">
+                           <div class="postthumb"><img src="/static/themes/img/icons/golfconnectx.png"></div>
+                           <div class="postTittle">{{post.title}}</div>
+                        </div>
+                     </div>
+                     <div class="col-sm-6">
+                        <div class="postTime">{{post.created|naturaltime }}</div>
+                     </div>
+                     <div class="col-sm-12">
+                        <div class="postSumary">{{post.body}}</div>
+                     </div>
+                     <div class="col-sm-12">
+                        <span class="like">
+                           <span class="likeIcon"><img src="/static/themes/img/icons/like.png"></span>
+                           <span class="likeTxt">Like</span>
+                        </span>|
+                        <span class="comment">
+                           <span class="commentIcon"><img src="/static/themes/img/icons/comment.png"></span>
+                           <span class="commentTxt">Comment</span>
+                        </span>|
+                        <span class="share">
+                           <span class="shareIcon"><img src="/static/themes/img/icons/share.png"></span>
+                           <span class="shareTxt">Share</span>
+                        </span>
+                     </div>
+                  </div>
+               {% endfor %}
+               {% endif %}
+               </div>
+            </div>
+
+            <div role="tabpanel" id="tab_description" class='react_div hide'>
+               <div class="description">
+                  {{course.description}}
+               </div>
+            </div>
+
+            <div role="tabpanel" id="tab_groups" class='react_div hide'>
+               <div id="groups_div" class="groupsTabPanel">
+               {% for group in course.get_groups %}
+                  <div>
+                     <div class="dateEvents">{% if group.is_private %}Private Group{% else %}Public Group{% endif %}</div>
+                     <div class="detailsEvents">
+                        <div class="col-sm-10">
+                           <div class="nameEvents">
+                              {{group.name}}
+                           </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <div class="viewLink">
+                              View <span class="glyphicon glyphicon-menu-right"></span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               {% endfor %}
+               </div>
+            </div>
+
+            <div role="tabpanel" id="tab_events" class='react_div hide'>
+               <div class="ReactTabs react-tabs" data-tabs="true">
+                  <ul class="ReactTabs__TabList eventsTabList" role="tablist">
+
+                     <li class="ReactTabs__Tab eventsHead tabactive" role="tab" id="upcoming_tab" onclick="show_events_tab('upcoming')">Upcoming</li>
+
+                     <li class="ReactTabs__Tab eventsHead" role="tab" id="past_tab" onclick="show_events_tab('past')">Past</li>
+                     
+                     <li class="ReactTabs__Tab eventsHead" role="tab" id="calendar_tab" onclick="show_events_tab('calendar')">Calendar</li>
+                  
+                  </ul>
+                  {% with course.get_events as eventdata %}
+
+                  <div id="upcoming_events_div" class="eventsTabPanel hide">
+                  {% for event in eventdata.uevents %}
+                     <div>
+                        <div class="dateEvents">{{event.start_date|date:'l F d, Y'}}</div>
+                        <div class="detailsEvents">
+                           <div class="col-sm-10">
+                              <div class="nameEvents">
+                                 {{event.name}}
+                              </div>
+                              <div class="timeEvents">
+                                 {{event.start_time|date:'h:i A'}} - {{event.end_time|date:'h:i A'}}
+                              </div>
+                           </div>
+                           <div class="col-sm-2">
+                              <div class="viewLink">
+                                 View <span class="glyphicon glyphicon-menu-right"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  {% endfor %}
+                  </div>
+                  <div id="past_events_div" class="eventsTabPanel hide">
+                  {% for event in eventdata.pevents %}
+                     <div>
+                        <div class="dateEvents">{{event.start_date|date:'l F d, Y'}}</div>
+                        <div class="detailsEvents">
+                           <div class="col-sm-10">
+                              <div class="nameEvents">
+                                 {{event.name}}
+                              </div>
+                              <div class="timeEvents">
+                                 {{event.start_time|date:'h:i A'}} - {{event.end_time|date:'h:i A'}}
+                              </div>
+                           </div>
+                           <div class="col-sm-2">
+                              <div class="viewLink">
+                                 View <span class="glyphicon glyphicon-menu-right"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  {% endfor %}
+                  </div>
+               {% endwith %}
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+   function show_tab(tab){
+      $('.react_div').addClass('hide');
+      $('.ReactTabs__Tab').removeClass('active');
+
+      $('#tab_'+tab).removeClass('hide');
+      $('#react_tab_'+tab).addClass('active');
+
+      if(tab=='events'){
+         show_events_tab('upcoming')
+      }
+
+   }
+   function show_events_tab(tab){
+      $('.eventsHead').removeClass('tabactive');
+      $('#'+tab+'_tab').addClass('tabactive');
+
+      $('.eventsTabPanel').addClass('hide');
+      $('#'+tab+'_events_div').removeClass('hide');
+
+   }
+
+</script>
+<script type="text/javascript">
+   $().ready(function() 
+   {
+      LoadMap();
+   });
+   function LoadMap() {
+   {% if course.lat and course.lon %}
+      var lat = {{course.lat}};
+      var lon = {{course.lon}};
+      var center = {lat: lat, lng: lon};
+      var zoom = {{course.zoom}}
+    {% else %}
+      var center = {lat: 40.714224, lng: -73.961452};
+      var zoom = 14;
+    {% endif %}
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: zoom,
+      center: center,
+    });
+     var marker = new google.maps.Marker({
+      map:map,
+      position:center,
+     });
+  }
+</script>

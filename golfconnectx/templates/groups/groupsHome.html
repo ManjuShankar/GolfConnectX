@@ -1,0 +1,67 @@
+{% extends 'common/base.html' %}
+{% block header %}
+  <title>Group Home Page | GolfConnectx</title>
+{% endblock %}
+{% block content %}
+<style type="text/css">
+  .groupHomepage .groupRow {
+    width: 100% !important;
+  }
+  .groupHomepage .secondRowColumn{
+    width: 8.4% !important;
+  }
+  .groupHomepage .col-sm-2 {
+    text-align: center;
+  }
+</style>
+<div class="groupHomepage">
+	<div class="bgPic">
+		<img src="/static/themes/img/bg_image.png" class="bgimage">
+	</div>
+	<div class="col-sm-12">
+	   <div class="col-sm-4 paneltab">
+	      <div class="panel panel-default col-sm-12">
+          <ul class="nav nav-pills panel-body col-sm-12">
+            <li class="active grptab text-center col-sm-6">
+              <a href="/groups">GROUPS</a>
+            </li>
+            <li class=" forumtab text-center col-sm-6">
+              <a href="/forums">FORUMS</a>
+            </li>
+          </ul>
+        </div>
+	   </div>
+	</div>
+	<div class="row m0px">
+     <div class="hmephotos col-sm-12">
+        <div class="col-sm-12 ml15pc wd85pc">
+           <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+           </div>
+        </div>
+     </div>
+  </div>
+  <div class="adimg col-sm-6"><img src="/static/themes/img/adimg.png"></div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+     	$('.menu').parent().removeClass('active');
+     	$('#groups_sidebar').parent().addClass('active');
+      load_groups();
+  	});
+
+  function load_groups(){
+       $.ajax({
+         datatype: 'JSON',
+         url: "{% url 'ajax_load_groups' %}",
+         method: "GET",
+           success: function (data) {
+             if(data.status == 1){
+                $('#myCarousel').html(data.html);
+             }
+           }
+       });
+    }
+
+</script>
+{% endblock %}

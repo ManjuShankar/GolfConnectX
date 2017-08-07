@@ -1,0 +1,412 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>{% if object %}Update{% else %}Create{% endif %} Events</h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% if object %}{% url 'event_edit' object.id %}{% else %}{% url 'event_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data" id='eventForm'>{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+            <label for="is_private" class="col-md-2 control-label">Cover Image
+             &nbsp;
+            </label>
+            <div class="col-sm-10">
+                <div class="updload-file" id='file-upload-div' {% if object.cover_image %}style='display:none'{% endif %}>
+                   <input class="btn btn-primary" style="opacity:0;width:160px;" type="file" name="images"  id="fileupload" multiple=""  data-url="{% url 'upload_event_cover_image' %}" accept="image/*" tabindex="-1">
+                    <input type='button' class="btn btn-primary" value="Upload Image" style='margin-top:-32px'>
+                </div>
+                <div class="row" id='event_cover_images_div'>
+                {% if object.cover_image %}
+                  {% with object.cover_image as image %}
+                    {% include 'admin/events/include_event_cover_image.html' %}
+                  {% endwith %}
+                {% endif %}
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+             <label for="category" class="col-md-2 control-label">Category
+             <strong style="color: red">&#42;</strong>
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" data-allow-blank="1" data-role="select2" id="category" name="category">
+                {% for category in categories %}
+                   <option {% if object.category == category %}selected='selected'{% endif %} value="{{category.id}}">{{category.name}}</option>
+                {% endfor %}
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="start_date" class="col-md-2 control-label">Start Date
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+             	{{form.start_date}}
+             </div>
+             <label for="end_date" class="col-md-2 control-label">End Date
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.end_date}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="start_date" class="col-md-2 control-label">Start Time
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+             	{{form.start_time}}
+             </div>
+             <label for="end_date" class="col-md-2 control-label">End Time
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.end_time}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="description" class="col-md-2 control-label">Description
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.description}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="venue" class="col-md-2 control-label">Venue Name
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.venue}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="address1" class="col-md-2 control-label">Address1
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.address1}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="address2" class="col-md-2 control-label">Address2
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.address2}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="city" class="col-md-2 control-label">City
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.city}}
+             </div>
+             <label for="zip_code" class="col-md-2 control-label">Zip Code
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.zip_code}}
+             </div>
+          </div>
+          <div class="form-group">
+          	<div id="map" style="width:50%;height:250px;margin-left: 20%;"></div>
+          </div>
+          <div class="form-group">
+             <label for="phone" class="col-md-2 control-label">Phone
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.phone}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="email" class="col-md-2 control-label">Email
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.email}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="email" class="col-md-2 control-label">Private Event
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.is_private}}
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'events' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+          <input type="hidden" id='id_lat' name='lat' value='{% if object.lat %}{{object.lat}}{% endif %}'>
+          <input type="hidden" id='id_lon' name='lon' value='{% if object.lon %}{{object.lon}}{% endif %}'>
+          <input type="hidden" id='id_zoom' name='zoom' value='{% if object.zoom %}{{object.zoom}}{% endif %}'>
+          <input type="hidden" id='id_venue_course' name='venue_course' value='{% if object.venue_course_id %}{{object.venue_course_id}}{% endif %}'>
+       </form>
+    </div>
+ </div>
+
+<style>
+.error{
+	border: 2px solid red;
+}
+  .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+  .delete_link{
+    background: white none repeat scroll 0 0;
+    border-radius: 6px;
+    color: black;
+    float: right;
+    height: 14px;
+    margin: -14px 10px 0 0;
+    padding: 1px 1.5px;
+    position: relative;
+    width: 14px;
+  }
+</style>
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+ <script>
+	$().ready(function() {
+    load_courses();
+
+		$('.datepicker').datetimepicker({
+			pickTime: false,
+			dateFormat: "mm/dd/yy",
+			minDate: new Date(),
+			onSelect: function() { $(this).valid(); }
+		})
+		$('.timepicker').datetimepicker({
+			pickDate: false
+		})
+        $("#eventForm").validate({
+        	highlight: function(element, errorClass){
+	          	$(element).addClass('error');  
+	        },
+	        unhighlight: function(element, errorClass){
+	            $(element).removeClass('error');
+	        },
+	        errorPlacement: function(error, element){},
+            rules: {
+                name: "required",
+                start_date: {
+                	required: true,
+                	date:true
+                },
+                end_date: {
+                	required: true,
+                	date:true
+                },
+                venue: "required",
+                address1: "required",
+                city: "required",
+                zip_code: "required",
+                email: {
+                    required: true,
+                    email: true
+                },
+            },
+        });
+    });
+
+  function initMap() {
+  	{% if object.lat and object.lon %}
+  	var lat = {{object.lat}};
+    var lon = {{object.lon}};
+    var center = {lat: lat, lng: lon};
+    var zoom = {{object.zoom}}
+    {% else %}
+    var center = {lat: 40.714224, lng: -73.961452};
+    var zoom = 14;
+    {% endif %}
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: zoom,
+      center: center,
+    });
+	  var marker = new google.maps.Marker({
+	  	map:map,
+	  	position:center,
+      draggable: true,
+	  });
+    google.maps.event.addListener(marker, 'dragend', function(evt){
+      $('#id_lat').val(evt.latLng.lat());
+      $('#id_lon').val(evt.latLng.lng())
+      $('#id_zoom').val(map.getZoom());
+    });
+  }
+
+function getaddress()
+{
+	return $('#id_address1').val()+" "+$('#id_address2').val()+" "+$('#id_city').val()+" "+$('#id_zip_code').val();
+}
+function getLocation() {
+	var geocoder = new google.maps.Geocoder();
+	var map = new google.maps.Map(document.getElementById('map'));
+
+  	var address = getaddress();
+
+  	geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) 
+    {
+      	var lat = results[0].geometry.location.lat();
+      	var lon = results[0].geometry.location.lng()
+
+      	map.setCenter(results[0].geometry.location);
+      	map.setZoom(13);
+
+      	var marker = new google.maps.Marker({
+        	map: map,
+        	position: results[0].geometry.location,
+        	title:address,
+          draggable: true,
+      	});
+      	google.maps.event.clearListeners(marker, 'click');
+
+      	$('#id_lat').val(lat);
+      	$('#id_lon').val(lon);
+        $('#id_zoom').val(map.getZoom());
+
+        google.maps.event.addListener(marker, 'dragend', function(evt){
+          $('#id_lat').val(evt.latLng.lat());
+          $('#id_lon').val(evt.latLng.lng())
+          $('#id_zoom').val(map.getZoom());
+        });
+
+    } else 
+    {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+function load_courses(){
+  var courses_list = []
+  $.ajax({
+      url: "{% url 'events_load_courses' %}",
+      method: "GET",
+      success: function (data) {
+        courses_list = data;
+      }
+  });
+  
+  $('#id_venue').autocomplete({
+      minLength: 0,
+      source: function (request, response) {
+          var result = $.ui.autocomplete.filter(courses_list, request.term);
+          response(result);
+      },
+      select: function (e, ui) {
+        e.preventDefault()
+        $(this).val(ui.item.label);
+        load_course_details(ui.item.id);
+      }
+    }).focus(function () {
+        $(this).autocomplete("search", "")
+  });
+}
+function load_course_details(id){
+    var datastring = 'id='+id
+    $.ajax({
+        data: datastring,
+        datatype: 'JSON',
+        url: "{% url 'events_load_course_details' %}",
+        method: "GET",
+          success: function (data) {
+            if(data.success){
+              $('#id_address1').val(data.address1);
+              if(data.address2){('#id_address2').val(data.address2);}
+              $('#id_city').val(data.city);
+              $('#id_state').val(data.state);
+              $('#id_zip_code').val(data.zip_code);
+              $('#id_lat').val(data.lat);
+              $('#id_lon').val(data.lon);
+              $('#id_zoom').val(data.zoom);
+              $('#id_venue_course').val(data.id);
+              getMapLocation(data.lat,data.lon,data.zoom);
+            }
+            else{
+              alert('Error occurred while fetching data!');
+            }
+        }
+    });
+
+}
+function getMapLocation(lat,lon,zoom){
+  var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: zoom,
+      center: {lat:lat,lng:lon},
+    });
+  var marker = new google.maps.Marker({
+      map:map,
+      position:{lat:lat,lng:lon},
+      draggable: true,
+    });
+
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwORYpTXIOPRZN6P2afgar_DuSEs81eoQ&callback=initMap">
+</script>
+<script type="text/javascript">
+$(function () {
+    $('#fileupload').fileupload({
+        dataType: 'json',
+        done: function (e, data) {
+            if(data._response.result.status){
+                $('#event_cover_images_div').append(data._response.result.html);
+                $('#file-upload-div').hide();
+            }
+        }
+    });
+});
+function delete_image(imageId){
+  var datastring = 'image_id='+imageId;
+  $.ajax({
+      data: datastring,
+      datatype: 'JSON',
+      url: "{% url 'delete_event_cover_image' %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status){
+            $('#image_'+imageId).remove();
+            $('#file-upload-div').show();
+          }
+          else{
+            alert('Error occurred while deleting!');
+          }
+      }
+  });
+}
+</script>
+
+
+ {% endblock %}

@@ -1,0 +1,18 @@
+
+   <span>Events</span>
+   {% for event in events %}
+   <div class="dividerLine2"></div>
+   <span class="fntbold">{{event.name}}</span>
+   <div>
+      <span class="fnt12px">{{event.start_date}}</span>
+      <br>
+      <span class="fnt12px">{{event.address1}} {{event.city}},{{event.state}} {{event.zip_code}}</span>
+      <br>
+      <span class="fnt12px">{{event.start_time}} - {{event.end_time}}</span>
+      <br><br>
+      <span>{{event.description}}</span>
+      <br>
+      <button class="viewevntPage">View EventPage</button>
+   </div>
+   <br>
+   {% endfor %}

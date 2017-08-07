@@ -1,0 +1,218 @@
+{% extends 'common/base.html' %}
+{% block header %}
+  <title>Group {{group.name|title}} Page | GolfConnectx</title>
+{% endblock %}
+{% block content %}
+<div class="GroupInfo">
+	<div class="editgrpimg">
+		<img src="{% if group.cover_image %}{{group.cover_image.get_ajax_image_url}}{% else %}/static/themes/img/coverimg.png{% endif %}" class="coverimg">
+		<div class="captionDiv">
+			<span class="imgtag"><b>{{group.name|title}}</b>({{group.get_members_count}} Members)</span>
+    </div>
+	</div>
+	<div class="tabsForEvents">
+		<div class="ReactTabs react-tabs" data-tabs="true">
+			<ul class="ReactTabs__TabList EventsTabHeader" role="tablist">
+				<li class="ReactTabs__Tab active" role="tab" id="react_tab_info" onclick="show_tab('info')">Info</li>
+            <li class="ReactTabs__Tab" role="tab" id="react_tab_posts" onclick="show_tab('posts')">Posts</li>
+				<li class="ReactTabs__Tab" role="tab" id="react_tab_members" onclick="show_tab('members')">Members</li>
+				<li class="ReactTabs__Tab" role="tab" id="react_tab_gallery" onclick="show_tab('gallery')">Gallery</li>
+				<li class="ReactTabs__Tab" role="tab" id="react_tab_events" onclick="show_tab('events')">Events</li>
+        {% if user == group.created_by %}
+        <a href="{% url 'ajax_edit_group' group.id %}">
+          <button class="btnEditGroup">Edit Group</button>
+        </a>
+        {% endif %}
+			</ul>
+      {% if user == group.created_by %}
+			   <img src="/static/themes/img/black-male-user-symbol.png" class="adminicon" id="react-tabs-109">
+      {% endif %}
+		</div>
+   	</div>
+
+   	<div id="id_info_tab" class="col-sm-12 react_div">
+   		<div>
+   			<span class="tabTitle">Info</span>
+   			<button class="btnLeaveGroup">Leave Group</button>
+   		</div>
+   		<div class="dividerLine1"></div>
+   		<div class="col-sm-6 mt15">
+   			<span class="tabTitle">Description</span>
+   			<div class="dividerLine2"></div>
+   			<div class="mt15 ml20px mr15px" id="group_description">
+   				<p>{{group.description}}</p>
+          <!--textarea style="width: 100%; margin-bottom: 2%;">{{group.description}}</textarea-->
+   			</div>
+   			<button class="btnEdit" onclick="save_description()" id="desc_edit_btn">Edit</button>
+   		</div>
+   		<div class="col-sm-1 mt15">
+   			<img src="/static/themes/img/fileObject.png"><span class="fileTag">Files</span>
+   		</div>
+   		<div class="col-sm-5 mt15" id="id_files_div"></div>
+      <form>{% csrf_token %}
+        <input style="opacity: 0; margin-left: 59%; position: absolute; margin-top: -2%;" type="file" name="file"  id="fileupload" multiple=""  data-url="{% url 'ajax_group_upload_file' group.id %}" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" tabindex="-1">
+      </form>
+   	</div>
+      
+    <div id="id_posts_tab" class="pdng col-sm-12 groupPosts react_div hide"></div>
+
+    <div id="id_members_tab" class="col-sm-12 react_div hide"></div>
+
+   	<div id="id_gallery_tab" class="col-sm-12 react_div hide">
+         <div>
+            <span class="tabTitle"><span id="photos_count">0</span> Photo(s)</span>
+            <button class="btnLeaveGroup" onclick="$('#imageupload').click()">Add Photos</button>
+            <form>{% csrf_token %}
+              <input style="opacity: 0; margin-left: 74%; position: absolute; margin-top: -2%;" type="file" name="image"  id="imageupload" multiple=""  data-url="{% url 'ajax_group_upload_image' group.id %}" accept="image/*" tabindex="-1">
+            </form>
+         </div>
+         <div class="dividerLine"></div>
+         <div id="id_images_div"></div>
+	  </div>
+
+     <div id="id_events_tab" class="col-sm-12 react_div hide">
+        <div>
+          <span class="tabTitle">Events</span>
+          <button class="btnLeaveGroup" onclick="add_new_event()">Create Event</button>
+        </div>
+        <div class="col-sm-4">Calendar</div>
+        <div class="col-sm-8 eventsPage" id="event_details"></div>
+    </div>
+
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $('.menu').parent().removeClass('active');
+      $('#groups_sidebar').parent().addClass('active');
+      load_files();
+      load_posts();
+      load_members();
+      load_images();
+      load_events();
+   });
+   $(function () {
+      $('#fileupload').fileupload({
+          dataType: 'json',
+          done: function (e, data) {
+              if(data._response.result.status){
+                  $('#id_files_div').html(data._response.result.html);
+              }
+          }
+      });
+  });
+   $(function () {
+      $('#imageupload').fileupload({
+          dataType: 'json',
+          done: function (e, data) {
+              if(data._response.result.status){
+                  $('#id_images_div').html(data._response.result.html);
+                  $('#photos_count').text(data._response.result.count)
+              }
+          }
+      });
+  });
+	function show_tab(tab){
+   	$('.react_div').addClass('hide');
+   	$('.ReactTabs__Tab').removeClass('active');
+
+   	$('#id_'+tab+'_tab').removeClass('hide');
+   	$('#react_tab_'+tab).addClass('active');
+	}
+  function load_files(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_group_files' group.id %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#id_files_div').html(data.html);
+          }
+        }
+    });
+  }
+  function load_images(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_group_images' group.id %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#id_images_div').html(data.html);
+             $('#photos_count').text(data.count)
+          }
+        }
+    });
+  }
+  function load_posts(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_group_posts' group.id %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#id_posts_tab').html(data.html);
+          }
+        }
+    });
+  }
+  function load_members(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_group_members' group.id %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#id_members_tab').html(data.html);
+          }
+        }
+    });
+  }
+  function load_events(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_group_events' group.id %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#event_details').html(data.html);
+          }
+        }
+    });
+  }
+  function add_new_event()
+    { 
+      $.ajax({
+          datatype: 'JSON',
+          url: "{% url 'ajax_group_create_event' group.id %}",
+          method: "GET",
+            success: function (data) {
+                if(data.status == 1){
+                  $('#event_details').html(data.html);
+                }
+            }
+        });
+    }
+    function save_event(){
+      var valid = $('#eventForm').validate().form();
+      if(valid)
+      { 
+        var datastring = $('#eventForm').serialize();
+        $.ajax({
+          data:datastring,
+              datatype: 'JSON',
+              url: "{% url 'ajax_group_create_event' group.id %}",
+              method: "POST",
+              success: function (data) {
+                  if(data.status == 1){
+                    load_events();
+                  }
+              }
+          });
+      }
+    }
+
+</script>
+{% endblock %}
+

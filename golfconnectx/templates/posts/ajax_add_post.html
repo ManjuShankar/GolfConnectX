@@ -1,0 +1,51 @@
+   <div class="modal-header">Add Post
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+   </div>
+   <div class="modal-body">
+    <form class="form-horizontal" method="POST" id='newPostForm' role="form">{% csrf_token %}   
+       <div class="form-group">
+          <div class="col-md-12 chckbx radio" data-toggle="buttons">
+            <span>
+              <input type="radio" name="post_parent_module" value="groups" autocomplete="off" onclick="show_dropdown('groups')" checked> Groups
+            </span>
+            <span>
+              <input type="radio" name="post_parent_module" value="events" autocomplete="off" onclick="show_dropdown('events')"> Events
+            </span>
+          </div>
+       </div>
+       <div class="form-group select-div" id="select_groups_div">
+          <select class="selectpicker col-md-12 select-menu" multiple title="Select Groups" id="select_groups" name="groups">
+          	{% for group in groups %}
+             <option value="{{group.id}}">{{group.name|title}}</option>
+          	{% endfor %}
+          </select>
+       </div>
+       <div class="form-group select-div hide" id="select_events_div">
+          <select class="selectpicker col-md-12 select-menu" multiple title="Select Events" id="select_events" name="events">
+          	{% for event in events %}
+             <option value="{{event.id}}">{{event.name|title}}</option>
+          	{% endfor %}
+          </select>
+       </div>
+       <div class="form-group">
+          <div class="col-md-12">
+             <input id="post_title" class="form-control" placeholder="Title" name="title" type="text">
+          </div>
+       </div>
+       <div class="form-group">
+         <div class="col-md-12">
+             <textarea id="post_body" class="form-control" placeholder="Body" cols="40" name="body" rows="6"></textarea>
+         </div>
+       </div>
+    </form>
+ </div>
+ <div class="modal-footer">
+   <button type="button" class="btn btn-primary" id="btnSend" onclick="save_post()">Save</button>
+   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+</div> 
+<script type="text/javascript">
+  function show_dropdown(id){
+    $('.select-div').addClass('hide');
+    $('#select_'+id+'_div').removeClass('hide');
+  }
+</script>

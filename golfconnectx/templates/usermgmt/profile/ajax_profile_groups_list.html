@@ -1,0 +1,47 @@
+{% if groups_lists %}
+<ol class="carousel-indicators bottom-40px">
+{% for count in glen %}
+	<li data-target="#groups_carousel" data-slide-to="{{count}}" class="{% if forloop.counter == 1 %}active{% endif %}">
+    
+  </li>
+{% endfor %}
+</ol>
+<div class="carousel-inner" role="listbox">   
+ {% for group_list in groups_lists %}
+ {% with group_list as groups %}
+ <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+    <div class="groupRow">
+       	<div class="col-sm-2"></div>
+       	<div class="col-sm-2">
+          	<div class="carousel-item active">
+             	<img src="/static/themes/img/POST.png" alt="" class="panelimg addgrpimg wd80pc m10px brd3white"/>
+             	<span class="txtblack">Add Group</span>
+          	</div>
+       	</div>
+       	{% for group in groups %}
+       	<div class="col-sm-2">
+          	<div class="carousel-item active">
+             	<img src="{{group.get_cover_image_url}}" alt="" class="panelimg addgrpimg wd80pc m10px brd3white"/>
+             	<span class="txtblack">{{group.name|title}}</span>
+          	</div>
+       </div>
+       	{% if forloop.counter == 3 %}
+         	<div class="col-sm-2 extraGrp"></div>
+       	</div>
+       	<div class="groupRow">
+         	<div class="col-sm-2"></div>
+       	{% endif %}
+       	{% endfor %}
+       	<div class="col-sm-2"></div>
+    </div>
+</div>
+{% endwith %}
+{% endfor %}
+</div>
+<a class="left carousel-control br3ccc wd2pc"  role="button" data-slide="prev"  href="#groups_carousel">
+     <span class="icon-prev" aria-hidden="true"></span>
+</a>
+<a class="right carousel-control bl3ccc wd2pc"  role="button" data-slide="next" href="#groups_carousel">
+    <span class="icon-next" aria-hidden="true"></span>
+</a>
+{% endif %}

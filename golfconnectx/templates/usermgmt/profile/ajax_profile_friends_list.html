@@ -1,0 +1,23 @@
+{% load humanize %}
+<div class="col-sm-12">
+   <div class="pdngTp">
+      <div class="col-sm-12">
+        {% for friend in friends %}
+         <div class="col-sm-6">
+            <span class="col-sm-12">
+               <img src="{{user.get_profile_image_url}}" class="aldoImg brdrrad col-sm-3"/>
+               <div class="frnd-name col-sm-8">
+                  <h3>{{friend.get_full_name|title}}</h3>
+                  <p>{{friend.email}}</p>
+                  <p>Joined: {{friend.created_on|naturaltime}}
+               </div>
+            </span>
+         </div>
+        {% if forloop.counter|divisibleby:2 %}
+        </div>
+        <div class="col-sm-12">
+        {% endif %}
+        {% endfor %}
+      </div>
+   </div>
+</div>

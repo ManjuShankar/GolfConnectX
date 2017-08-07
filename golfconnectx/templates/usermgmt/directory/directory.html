@@ -1,0 +1,57 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>Directory | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+ 
+<div class="frndsGridPage">
+   	<div class="frndsgrid">
+      <div class="grid">
+         <div class="col-sm-12 row">
+            {% for user in users %}
+            <div class="col-sm-3">
+               <div class="r1c1 meo">
+                  	<span class="img1">
+                  		<img src="{{user.get_profile_image_url}}" class="aldo"/>
+                  	</span>
+                  	<div class="name col-sm-12">
+                  		<a href="{% url 'ajax_directory_profile' user.id %}">
+                           <span class="namexx col-sm-6">{{user.first_name|title}}</span>
+                        </a>
+                     	<a class="btn btn-info btn-lg" onclick="send_message({{user.id}},'{{user.first_name|title}}')">
+                     		<span class="glyphicon glyphicon-envelope envlp col-sm-6"></span>
+                     	</a>
+                  	</div>
+               </div>
+            </div>
+            {% if forloop.counter|divisibleby:4 %}
+            </div>
+            <div class="col-sm-12 row">
+            {% endif %}
+            {% endfor %}
+         </div>
+      </div>
+   	</div>
+	<div class="modal fade" id="send_message_modal" role="dialog">
+		<div class="modal-dialog modal-sm">
+		 <div class="modal-content">
+		     <div class="modal-header">Send Message</div>
+		    <div class="modal-body">
+		    	<textarea class="txtarea" placeholder="write something.." name="txtArea"></textarea>
+		    </div>
+		    <div class="modal-footer">
+		      <button type="button" class="btn btn-primary" id="btnSend">Send</button>
+		      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		   </div> 
+		  </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function send_message(id,name){
+		var mymodal = $('#send_message_modal');
+		mymodal.find('.modal-header').text('Send Message To '+name);
+		$('#send_message_modal').modal('show');
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+<head>
+   
+  <link type="text/css" rel="stylesheet" href="/static/themes/fonts/googlefonts.txt">
+  <style type="text/css">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px}</style>
+  <style type="text/css">@media print {  .gm-style .gmnoprint, .gmnoprint {    display:none  }}@media screen {  .gm-style .gmnoscreen, .gmnoscreen {    display:none  }}</style>
+  <style type="text/css">.gm-style{font-family:Roboto,Arial,sans-serif;font-size:11px;font-weight:400;text-decoration:none}.gm-style img{max-width:none}</style>
+  <style id="jss-styles">.react-tabs [role=tablist] {
+    border-bottom: 1px solid #aaa;
+    margin: 0 0 10px;
+    padding: 0;
+  }
+
+  .react-tabs [role=tab] {
+    display: inline-block;
+    border: 1px solid transparent;
+    border-bottom: none;
+    bottom: -1px;
+    position: relative;
+    list-style: none;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .react-tabs [role=tab][aria-selected=true] {
+    background: #fff;
+    border-color: #aaa;
+    color: black;
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+  }
+
+  .react-tabs [role=tab][aria-disabled=true] {
+    color: GrayText;
+    cursor: default;
+  }
+
+  .react-tabs [role=tab]:focus {
+    box-shadow: 0 0 5px hsl(208, 99%, 50%);
+    border-color: hsl(208, 99%, 50%);
+    outline: none;
+  }
+
+  .react-tabs [role=tab]:focus:after {
+    content: "";
+    position: absolute;
+    height: 5px;
+    left: -4px;
+    right: -4px;
+    bottom: -5px;
+    background: #fff;
+  }
+  </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    {% block header %}
+    {% endblock %}
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/themes/css/style.css" rel="stylesheet">
+    <script src="/static/themes/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/themes/js/jquery.min.js"></script>
+    <script src="/static/themes/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div id="app">
+   <div data-reactroot="">
+      {% include 'common/sidebar.html' %}
+      {% block leftnavigation %}
+        {% include 'common/navigation.html' %}
+      {% endblock %}
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+
+
+
+</body>

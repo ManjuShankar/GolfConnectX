@@ -1,0 +1,36 @@
+{% for event in events %}
+<div class="EventsLink" id='div_{{event.id}}'>
+   <div class="eventListLeft">
+      	<ul>
+        	<li>
+	            <div class="eventListTop">
+	               <div class="eventDate">{{event.start_date|date:'l F d, Y'}}</div>
+	               <div class="priImg">
+	               		<span class="privateTxt">{% if event.is_private %}Private{% else %}Public{% endif %}</span>
+	               		<img src="">
+	               	</div>
+	            </div>
+	            <div class="eventListMiddle">
+	               <div class="eventListName">{{event.name|title}}</div>
+					<a onclick="get_event({{event.id}})">
+						<div class="ElViewLink">View
+							<span class="glyphicon glyphicon-menu-right"></span>
+						</div>
+					</a>
+					<div class="EventListDT">
+					{% if event.start_time and event.end_time %}
+						{{event.start_time|date:'h:i A'}} - {{event.end_time|date:'h:i A'}}
+					{% else %}
+						Full Day Event
+					{% endif %}
+					</div>
+				</div>
+				<div class="attending">
+					<div class="friendAttend">0 attending</div>
+					<div class="friendThumb"><img src=""></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endfor %}

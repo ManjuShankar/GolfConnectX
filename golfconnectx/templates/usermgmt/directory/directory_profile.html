@@ -1,0 +1,134 @@
+{% extends 'common/base.html' %}
+{% load humanize %}
+{% block header %}
+    <title>Directory Profile {{user.first_name|title}} | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="myProfile">
+	<div class="profileimg">
+		<img class="coverimg" src="/static/themes/img/background.png">
+	</div>
+	<div class="friend_buttons">
+		<button type="button" class="fndBtn snd col-sm-5">Send Message</button>
+		{% if is_friend %}
+			<button type="button" class="fndBtn snd col-sm-5">Friends</button>
+		{% else %}
+		{% if friend_request %}
+			<button type="button" class="fndBtn snd col-sm-5">Friend Request Sent</button>
+		{% else %}
+			<button type="button" class="fndBtn snd col-sm-5" id="request_button" onclick="send_friend_request()">Send Friend Request</button>
+		{% endif %}
+		{% endif %}
+	</div>
+	<div class="profileContent">
+		<div class="header">
+			<div class="headerlogo">
+			   <img src="{{user.get_profile_image_url}}" class="nameImg">
+			   <h3>{{user.get_full_name}}</h3>
+			   <h4>Joined {{user.created_on|naturaltime}}</h4>
+			</div>
+			<div class="menuList">
+			   <div class="list1">
+			      <table>
+			         <tr>
+			            <th>Skill Level</th>
+			            <td>{{user.skill_level}}</td>
+			         </tr>
+			         <tr>
+			            <th>Type of Golfer</th>
+			            <td>{{user.golfer_type}}</td>
+			         </tr>
+			      </table>
+			   </div>
+			   <div class="list2">
+			      <table>
+			         <tr>
+			            <th>Profile Type</th>
+			            <td>{% if user.is_private %}Private{% else %}Public{% endif %}</td>
+			         </tr>
+			         <tr>
+			            <th>Handicap</th>
+			            <td>{{user.handicap}}</td>
+			         </tr>
+			      </table>
+			   </div>
+			</div>
+		</div>
+		<div class="tabsForEvents">
+   			<div class="ReactTabs react-tabs" data-tabs="true">
+   				<ul class="ReactTabs__TabList EventsTabHeader">
+   					<li class="ReactTabs__Tab active" role="tab" id="react_tab_posts" onclick="show_tab('posts')">Posts</li>
+   					<li class="ReactTabs__Tab" role="tab" id="react_tab_groups" onclick="show_tab('groups')">Groups</li>
+   				</ul>
+   			</div>
+   			<div id="div_posts" class="Post col-sm-12 react_div" >
+
+        	</div>
+
+        	<div id="div_groups" class="row m0px react_div hide">
+	        	<!--div class="search-icon">
+	           	<span class="CoursessearchIcon">
+	           		<img src="/static/themes/img/icons/searchBar.png"/>
+	           	</span>
+	           	<input type="text" placeholder="Search for a group" />
+	        	</div-->
+	        	<div class="col-sm-12 wd100pc">
+	              <div id="groups_carousel" class="carousel slide" data-ride="carousel">
+
+	              </div>
+	           </div>
+	        </div>
+	        
+   		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+     	load_groups();
+     	load_posts();
+  	});
+  	function load_groups(){
+	    $.ajax({
+	       	datatype: 'JSON',
+	       	url: "{% url 'ajax_directory_groups' user.id %}",
+	       	method: "GET",
+	         	success: function (data) {
+	           	if(data.status == 1){
+	              	$('#groups_carousel').html(data.html);
+	           	}
+	         }
+	    });
+	}
+  	function load_posts(){
+     	$.ajax({
+       		datatype: 'JSON',
+       		url: "{% url 'ajax_directory_posts' user.id %}",
+       		method: "GET",
+         	success: function (data) {
+           	if(data.status == 1){
+              	$('#div_posts').html(data.html);
+           		}
+     		}
+     	});
+  	}
+  	function send_friend_request(){
+  		$.ajax({
+       		datatype: 'JSON',
+       		url: "{% url 'ajax_send_friend_request' user.id %}",
+       		method: "GET",
+         	success: function (data) {
+           	if(data.status == 1){
+              	$("#request_button").text("Friend Request Sent");
+           		}
+     		}
+     	});
+  	}
+	function show_tab(tab){
+	   	$('.react_div').addClass('hide');
+	   	$('.ReactTabs__Tab').removeClass('active');
+
+	   	$('#div_'+tab).removeClass('hide');
+	   	$('#react_tab_'+tab).addClass('active');
+	}
+</script>
+{% endblock %}

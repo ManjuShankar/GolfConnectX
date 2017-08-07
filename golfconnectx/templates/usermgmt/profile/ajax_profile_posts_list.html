@@ -1,0 +1,38 @@
+{% load humanize %}
+<h3>Post</h3>
+{% for post in posts %}
+<div class="post">
+    <div class="subpost">
+        <img src="/static/themes/img/NameInit.png" class="post-img" />
+        <div class="post-name">
+        <h3>{{post.author|title}}</h3>
+        <h4>{{post.created|date:'M d, Y'}}</h4>
+        <p>{{post.created|naturaltime}}</p>
+    </div>
+</div>
+<div class="subpost-cntnt">
+    {{post.title}}
+</div>
+<div class='cmnt col-sm-12'>
+	<span class="like glyphicon glyphicon-heart">Like</span>
+    <span class="comment glyphicon glyphicon-comment">Comment</span>
+</div>
+	{% if post.comments.all %}
+    {% for comment in post.comments.all %}
+    {% if forloop.counter < 3 %}
+    <div class="cmt-rply">
+        <img src="/static/themes/img/Rosie Perez.png" class="cmt-img" />
+        <div class="cmt-name">
+              <h3>{{comment.author|title}}</h3>
+              <h4>{{comment.created|date:'M d'}} @ {{comment.created|date:'P'}}</h4>
+        </div>
+        <p>{{comment.body}}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+     <div class="cmt-rply"></div>
+     {% endif %}
+
+</div>
+{% endfor %}

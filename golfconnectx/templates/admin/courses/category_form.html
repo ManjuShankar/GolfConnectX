@@ -1,0 +1,36 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>{% if object %}Update{% else %}Create{% endif %} category</h2>
+    </div>
+    <div class="main-content clearfix">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="description-box" data-id="course_category_admin.create_view" role="alert">
+                <span class="text">Create a category for departments, organizations, and more. Assign a SubAdmin to manage the category and enable features like registration, database access, and more.</span>
+                <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+          </div>
+       </div>
+       <form action="{% if object %}{% url 'course_categories_edit' object.id %}{% else %}{% url 'course_categories_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'course_categories_list' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+ {% endblock %}
+

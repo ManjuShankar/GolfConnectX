@@ -1,0 +1,13 @@
+{% if is_event %}
+	<select class="selectpicker col-md-10 select-menu" data-live-search="true" title="Select a Course" id="id_course" name="course">
+		{% for course in courses %}
+		<option value="{{course.id}}" {% if event %}{% if event.venue_course_id == course.id %} selected='selected'{% endif %}{% endif %}>{{course.name}}</option>		
+		{% endfor %}
+	</select>
+{% else %}
+	<select class="selectpicker col-md-9 select-menu" data-live-search="true" title="Select a Course" id="id_course" name="course">
+		{% for course in courses %}
+		<option value="{{course.id}}" {% if group %}{% if group.course == course %} selected='selected'{% endif %}{% endif %}>{{course.name}}</option>		
+		{% endfor %}
+	</select>
+{% endif %}

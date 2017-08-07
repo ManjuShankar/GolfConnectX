@@ -1,0 +1,45 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>Bubble Settings</h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% if object %}{% url 'user_role_edit' object.pk %}{% else %}{% url 'user_role_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="resume_enabled" class="col-md-2 control-label">Resume Enabled
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.resume_enabled}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="is_student" class="col-md-2 control-label">Is Student
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.is_student}}
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'user_role_list' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+{% endblock %}
+
+

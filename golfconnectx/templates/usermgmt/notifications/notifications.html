@@ -1,0 +1,48 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>Notifications | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="Notification">
+   <div class="notifcontainer">
+      <div class="content">
+         <div class="notifyhead">NOTIFICATIONS</div>
+         <div class="algrgt">
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-12 ">
+            <div class="listnotify">
+               <ul class="list-group">
+               	{% for notification in notifications %}
+                  <a href="{% url 'ajax_notification_details' notification.id %}"  class="list-group-item col-sm-12 brdr zeroPad">
+                     <div class="notifchckbx col-xs-2">
+                     	<input type="checkbox" class="customchk">
+                     </div>
+                     <div class="notifchckbx col-xs-2">
+                     	<img src="/static/themes/img/icons/eclipse.png" class="profileimg1 notifgreendot"/>
+                     </div>
+                     <div class="notifmsg col-sm-4">
+                        <img src="/static/themes/img/GolfHome.png" class="profileimg"/>
+                        <span class="fromName">   {{notification.object_name}}
+                        </span>
+                     </div>
+                     <div class="msg">
+                        <div class="col-sm-5 msgbody">
+                           <span class="msgbody">{{notification.message}}</span>
+                        </div>
+                        <div class="col-xs-2 mt15 fr">
+                           <span class="msgtime">{{notification.created_on|date:'M d - P'}}</span>
+                        </div>
+                     </div>
+                  </a>
+                {% endfor %}
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+{% endblock %}

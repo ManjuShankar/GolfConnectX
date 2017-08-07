@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>General - Dashboard - Bubble</title>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <!--[if lt IE 9]>
+      <script scr="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+      <link rel="stylesheet" href="/static/admin/css/screen.css?h=da793293327bf0ac956d71203cab6a80">
+      <link rel="stylesheet" href="/static/admin/js/datetimepicker-bs3/bootstrap-datetimepicker.min.css">
+   </head>
+   <body>
+      <script src="/static/admin/js/jquery-2.0.3.min.js" type="text/javascript"></script>
+      <script src="/static/admin/js/bootstrap/bootstrap3/js/bootstrap.min.js" type="text/javascript"></script>
+      <div class="app-container clearfix">
+         {% include 'admin/topbar.html' %}
+         {% include 'admin/sidebar.html' %}
+         {% block content %}
+         {% endblock %}
+      </div>
+      <script src="/static/admin/js/moment-2.7.0.min.js" type="text/javascript"></script>
+      <script src="/static/admin/js/select2/select2.min.js" type="text/javascript"></script>
+      <script src="/static/admin/js/underscore.js" type="text/javascript"></script>
+      <script src="/static/admin/js/scripts.js?h=181839a2bb85c1b969bffb4eb9639caf" type="text/javascript"></script>
+      <!--Start of Zopim Live Chat Script-->
+      <script type="text/javascript">
+         window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+         d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+         _.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
+         $.src='//v2.zopim.com/?2HQBUSLmOy4UxNYR1fF8ioS62RI2tr22';z.t=+new Date;$.
+         type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
+      </script>
+      <!--End of Zopim Live Chat Script-->
+      <script src="/static/admin/js/filters.js"></script>
+      <script src="/static/admin/js/form.js"></script>
+      <script src="/static/admin/js/actions.js"></script>
+      <script src="/static/admin/js/datetimepicker-bs3/bootstrap-datetimepicker.min.js"></script>
+      <script language="javascript">
+       var modelActions = new AdminModelActions("Please select at least one model.", {"del": "Are you sure you want to delete selected models?"});
+      </script>
+     <script language="javascript">
+        (function($) {
+            $('[data-role=tooltip]').tooltip({
+                html: true,
+                placement: 'bottom'
+            });
+            
+                var filter = new AdminFilters(
+                    '#filter_form', '.field-filters',
+                    {"Email": [{"arg": "4", "index": 4, "operation": "equals", "options": null, "type": null}, {"arg": "5", "index": 5, "operation": "not equal", "options": null, "type": null}, {"arg": "6", "index": 6, "operation": "contains", "options": null, "type": null}, {"arg": "7", "index": 7, "operation": "not contains", "options": null, "type": null}], "Name": [{"arg": "8", "index": 8, "operation": "equals", "options": null, "type": null}, {"arg": "9", "index": 9, "operation": "not equal", "options": null, "type": null}, {"arg": "10", "index": 10, "operation": "contains", "options": null, "type": null}, {"arg": "11", "index": 11, "operation": "not contains", "options": null, "type": null}], "User Roles / Is Student": [{"arg": "16", "index": 16, "operation": "equals", "options": [["1", "Yes"], ["0", "No"]], "type": null}, {"arg": "17", "index": 17, "operation": "not equal", "options": [["1", "Yes"], ["0", "No"]], "type": null}], "User Roles / Name": [{"arg": "12", "index": 12, "operation": "equals", "options": null, "type": null}, {"arg": "13", "index": 13, "operation": "not equal", "options": null, "type": null}, {"arg": "14", "index": 14, "operation": "contains", "options": null, "type": null}, {"arg": "15", "index": 15, "operation": "not contains", "options": null, "type": null}], "User Roles / Resume Enabled": [{"arg": "18", "index": 18, "operation": "equals", "options": [["1", "Yes"], ["0", "No"]], "type": null}, {"arg": "19", "index": 19, "operation": "not equal", "options": [["1", "Yes"], ["0", "No"]], "type": null}], "Username": [{"arg": "0", "index": 0, "operation": "equals", "options": null, "type": null}, {"arg": "1", "index": 1, "operation": "not equal", "options": null, "type": null}, {"arg": "2", "index": 2, "operation": "contains", "options": null, "type": null}, {"arg": "3", "index": 3, "operation": "not contains", "options": null, "type": null}]}
+                );
+            
+        })(jQuery);
+     </script>
+   </body>
+</html>
+

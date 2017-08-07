@@ -1,0 +1,209 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2>Courses</h2>
+    </div>
+    <div class="main-content clearfix">
+       <div class="model-actions clearfix">
+          <div class="btn-group btn-menu pull-left">
+             <div class="dropdown-toggle btn-title" style="font-size: 16px">{{courses.count}} Items </div>
+          </div>
+          <div class="btn-menu">
+             <a class="btn btn-primary pull-right" onclick="add_course()">Assign Courses To User</a>
+          </div>
+       </div>
+       <br/>
+       <form id="filter_form" method="GET" action="/admin/course_admin/">
+          <table class="filters">
+          </table>
+          <div class="clearfix filter-footer">
+             <button type="submit" class="btn btn-primary pull-right" style="display: none">Apply</button>
+          </div>
+       </form>
+       <div class="clearfix"></div>
+       <div class="table-container">
+          <div class="table-container-inner">
+             <table class="table table-striped table-bordered table-hover model-list">
+                <thead>
+                   <tr>
+                      <th class="list-checkbox-column">
+                         <input type="checkbox" name="rowtoggle" class="action-rowtoggle" title="Select all records"/>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/course_admin/?sort=0" title="Sort by Name">Name</a>
+                      </th>
+                      <th class="column-header">
+                         Is Premium
+                      </th>
+                      <th class="column-header">
+                         Phone
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/course_admin/?sort=4" title="Sort by Last Activity">Last Activity</a>
+                      </th>
+                      <th class="column-header">
+                         <a href="/admin/course_admin/?sort=5" title="Sort by Member Count">Followers Count</a>
+                      </th>
+                      <th class="column-header list-actions-column fixed-column">Actions</th>
+                   </tr>
+                </thead>
+                {% for course in courses %}
+                <tr id='row_{{course.id}}'>
+                   <td>
+                      <input type="checkbox" name="rowid" class="action-checkbox" value="1" title="Select record"/>
+                   </td>
+                   <td>{{course.name}}</td>
+                   <td id="li_premium_{{course.id}}">{{course.is_premium}}</td>
+                   <td>{{course.phone}}</td>
+                   <td>{{course.last_activity}}</td>
+                   <td>{{course.followers.count}}</td>
+                   <td class="fixed-column">
+                      <a onclick="remove_course({{course.id}})" class="btn btn-secondary">Remove</a>
+                      <!-- Large button group -->
+                   </td>
+                </tr>
+                {% endfor %}
+             </table>
+          </div>
+       </div>
+       {% if objects.paginator.num_pages > 1 %}
+       <ul class="pagination">
+          <li>
+          {% if search %}
+              <a href="{% url 'admin_course_search' %}?kw={{kw}}&page=1">«</a>
+          {% else %}
+              <a href="{% url 'courses' %}?page=1">«</a>
+          {% endif %}
+          </li>
+          
+          {% if objects.has_previous %}
+            {% if search %}
+            <li><a href="{% url 'admin_course_search' %}?kw={{kw}}&page={{objects.previous_page_number}}">&lt;</a></li>
+            {% else %}
+            <li><a href="{% url 'courses' %}?page={{objects.previous_page_number}}">&lt;</a></li>
+            {% endif %}
+          {% else %}
+          <li class="disabled"><a href="javascript:void(0)"><</a></li>
+          {% endif %}
+
+          {% for num in page_range %}
+            {% ifequal num objects.number %}
+              <li class="active">
+                  <a href="javascript:void(0)">{{num}}</a>
+              </li>
+            {% else %}
+              <li>
+                {% if search %}
+                  <a href="{% url 'admin_course_search' %}?kw={{kw}}&page={{num}}">{{num}}</a>
+                {% else %}
+                  <a href="{% url 'courses' %}?page={{num}}">{{num}}</a>
+                {% endif %}
+              </li>
+            {% endifequal %}
+          {% endfor %}
+          
+          {% if objects.has_next %}
+          <li>
+              {% if search %}
+                  <a href="{% url 'admin_course_search' %}?kw={{kw}}&page={{objects.next_page_number}}">&gt;</a>
+              {% else %}
+                <a href="{% url 'courses' %}?page={{objects.next_page_number}}">&gt;</a>
+              {% endif %}
+          </li>
+          {% else %}
+          <li class="disabled">
+            <a href="javascript:void(0)">&gt;</a>
+          </li>
+          {% endif %}
+
+          <li>
+              {% if search %}
+                  <a href="{% url 'admin_course_search' %}?kw={{kw}}&page={{objects.paginator.num_pages}}">»</a>
+              {% else %}
+                <a href="{% url 'courses' %}?page={{objects.paginator.num_pages}}">»</a>
+              {% endif %}
+          </li>
+      </ul>
+      {% endif %}
+
+       <form id="action_form" action="/admin/course_admin/action/" method="POST" style="display: none">
+          <input type="hidden" id="action" name="action" />
+       </form>
+    </div>
+ </div>
+ <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<script src="/static/themes/js/jquery-3.1.1.min.js"></script>
+<script src="/static/themes/js/jquery.min.js"></script>
+<script src="/static/themes/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+</div>
+ <script type="text/javascript">
+   function upgrade_to_premium(courseid){
+    var datastring = 'courseid='+courseid;
+      $.ajax({
+          data: datastring,
+          datatype: 'JSON',
+          url: "{% url 'courses_upgrade_to_premium' %}",
+          method: "GET",
+            success: function (data) {
+              if(data.success){
+                $('#li_premium_'+courseid).text('True');
+                $('#li_premium_text_'+courseid).remove();
+              }
+              else{
+                alert('Error occurred while removing!');
+              }
+          }
+      });
+   }
+   	function add_course(){
+	    $.ajax({
+	        datatype: 'JSON',
+	        url: "{% url 'course_admins_course_add' suser.id %}",
+	        method: "GET",
+	          success: function (data) {
+          		$('#addCourse').html(data.html);
+          		$('.select-menu').selectpicker();
+          		$('#addCourse').modal('show');
+	        }
+	    });
+	}
+	function save_course(){
+	  	var datastring = $('#courseAddForm').serialize();
+	    $.ajax({
+	        data: datastring,
+	        datatype: 'JSON',
+	        url: "{% url 'course_admins_course_add' suser.id %}",
+	        method: "POST",
+	        success: function (data) {
+	          	if(data.success){
+	          		$('#addCourse').modal('hide');
+	          		location.reload();
+	          	}
+	          	else{
+	          		alert('Error occurred while adding!');
+	          	}
+	        }
+	    });
+	}
+	function remove_course(courseid){
+    if (confirm("Are you sure you want to remove the course!") == true) {
+  		$.ajax({
+  			data:"courseid="+courseid,
+  			datatype: 'JSON',
+  			url: "{% url 'course_admins_course_remove' suser.id %}",
+  			method: "GET",
+  			success: function (data) {
+  				if(data.success){
+            $('#row_'+courseid).remove();
+            $('.btn-title').text(data.count +' Items')
+  					alert('Removed access to user');
+  				}
+  			}
+  		});
+    }
+	}
+</script>
+{% endblock %}

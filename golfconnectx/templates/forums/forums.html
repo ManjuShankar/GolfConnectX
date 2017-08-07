@@ -1,0 +1,157 @@
+{% extends 'common/base.html' %}
+{% load messages_tags %}
+{% block header %}
+    <title>Forums | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="forumsPage">
+    <div class="frmspage col-sm-12">
+     <div class="bgPic">
+     	<img src="/static/themes/img/bg_image.png" class="bgimage" />
+     </div>
+     <div class="forumGrup col-sm-12">
+
+	   	<div class="col-sm-4 paneltab">
+	      	<div class="panel panel-default">
+	         	<ul class="nav nav-pills panel-body col-sm-12">
+                    <li class="grptab text-center col-sm-6">
+                        <a href="/groups">GROUPS</a>
+                    </li>
+                    <li class="active forumtab text-center col-sm-6">
+                        <a href="/forums">FORUMS</a>
+                    </li>
+                </ul>
+	      	</div>
+	   	</div>
+	   	<div class="col-sm-12">
+        	<div class="col-sm-3"></div>
+        	<div class="icons col-sm-9">
+          		<div class="col-sm-12">
+           			<div class="symbols-one col-sm-6">
+
+            			<div class="icon-one col-sm-12">
+             				<div class="waterImg col-sm-12">
+                				<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+                				<a href="{% url 'ajax_forum_detail' 'water-cooler' %}" class="xx col-sm-12">
+                					<span class="glyphicon glyphicon-tint skyblue brdr col-sm-2"></span>
+                					<span class="icon-name skyblue size-a col-sm-10">Water Cooler</span>
+                				</a>
+             				</div>
+            			</div>
+
+            			<div class="icon-one col-sm-12">
+             				<div class="waterImg col-sm-12">
+                				<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+                				<a href="{% url 'ajax_forum_detail' 'courses' %}" class="xx col-sm-12">
+                					<span class="glyphicon glyphicon-tint green brdr col-sm-2"></span>
+                					<span class="icon-name green size-a col-sm-10">Courses</span>
+                				</a>
+             				</div>
+            			</div>
+
+            			<div class="icon-one col-sm-12">
+             				<div class="waterImg col-sm-12">
+                				<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+                				<a href="{% url 'ajax_forum_detail' 'equipment' %}" class="xx col-sm-12">
+                					<span class="glyphicon glyphicon-tint blueviolet brdr col-sm-2"></span>
+                					<span class="icon-name blueviolet size-a col-sm-10">Equipment</span>
+                				</a>
+             				</div>
+            			</div>
+
+            			<div class="icon-one col-sm-12">
+             				<div class="waterImg col-sm-12">
+                				<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+                				<a href="{% url 'ajax_forum_detail' 'instruction-playing-tips' %}" class="xx col-sm-12">
+                					<span class="glyphicon glyphicon-tint blue brdr col-sm-2"></span>
+                					<span class="icon-name blue size-a col-sm-10">Instruction & Playing Tips</span>
+                				</a>
+             				</div>
+            			</div>
+
+            			<div class="icon-one col-sm-12">
+             				<div class="waterImg col-sm-12">
+                				<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+                				<a href="{% url 'ajax_forum_detail' 'rules-golf-etiquette' %}" class="xx col-sm-12">
+                					<span class="glyphicon glyphicon-tint brown brdr col-sm-2"></span>
+                					<span class="icon-name brown size-a col-sm-10">Rules & Golf Etiquette</span>
+                				</a>
+             				</div>
+            			</div>
+
+          			</div>
+	           		
+	           		<div class="symbols-two col-sm-6">
+	            		
+	            		<div class="icon-two col-sm-12">
+	                		<div class="holeImg col-sm-12">
+	                    		<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+	                    		<a href="{% url 'ajax_forum_detail' '19th-hole' %}" class="xx col-sm-12">
+	                    			<span class="glyphicon glyphicon-tint purple brdr col-sm-2"></span>
+	                    			<span class="icon-name purple size-f col-sm-10">19th Hole</span>
+	                    		</a>
+	                		</div>
+            			</div>
+
+            			<div class="icon-two col-sm-12">
+	                		<div class="holeImg col-sm-12">
+	                    		<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+	                    		<a href="{% url 'ajax_forum_detail' 'get-local' %}" class="xx col-sm-12">
+	                    			<span class="glyphicon glyphicon-tint orange brdr col-sm-2"></span>
+	                    			<span class="icon-name orange size-f col-sm-10">Get Local</span>
+	                    		</a>
+	                		</div>
+            			</div>
+
+            			<div class="icon-two col-sm-12">
+	                		<div class="holeImg col-sm-12">
+	                    		<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+	                    		<a href="{% url 'ajax_forum_detail' 'golf-travel' %}" class="xx col-sm-12">
+	                    			<span class="glyphicon glyphicon-tint lime brdr col-sm-2"></span>
+	                    			<span class="icon-name lime size-f col-sm-10">Golf Travel</span>
+	                    		</a>
+	                		</div>
+            			</div>
+            			
+            			<div class="icon-two col-sm-12">
+	                		<div class="holeImg col-sm-12">
+	                    		<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+	                    		<a href="{% url 'ajax_forum_detail' 'pro-am-discussion' %}" class="xx col-sm-12">
+	                    			<span class="glyphicon glyphicon-tint ashgreen brdr col-sm-2"></span>
+	                    			<span class="icon-name ashgreen size-f col-sm-10">Pro & Am Discussion</span>
+	                    		</a>
+	                		</div>
+            			</div>
+            			
+            			<div class="icon-two col-sm-12">
+	                		<div class="holeImg col-sm-12">
+	                    		<img src="/static/themes/img/Vector Smart Object copy 3.png" />
+	                    		<a href="{% url 'ajax_forum_detail' 'fitness-and-excercise' %}" class="xx col-sm-12">
+	                    			<span class="glyphicon glyphicon-tint violet brdr col-sm-2"></span>
+	                    			<span class="icon-name violet size-f col-sm-10">Fitness & Excersice</span>
+	                    		</a>
+	                		</div>
+            			</div>
+
+           			</div>
+
+          		</div>
+         	</div>
+        </div>
+        <div class="adidasRow col-sm-12">
+            <div class="col-sm-4"></div>
+    		<div class="adsimg col-sm-5">
+        		<img src="/static/themes/img/ads.png" class="adidas col-sm-12" />
+    		</div>
+    	</div>
+     </div>
+    </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+     $('.menu').parent().removeClass('active');
+     $('#groups_sidebar').parent().addClass('active');
+  });
+ </script>
+
+{% endblock %}

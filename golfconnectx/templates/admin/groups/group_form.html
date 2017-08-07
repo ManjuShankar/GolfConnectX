@@ -1,0 +1,122 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>Create Group</h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% if object %}{% url 'group_edit' object.id %}{% else %}{% url 'group_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             <strong style="color: red">&#42;</strong>
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="description" class="col-md-2 control-label">Description
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.description}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="campus" class="col-md-2 control-label">Home Course
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" data-allow-blank="1" data-role="select2" id="course" name="course">
+                {% for course in courses %}
+                   <option {% if object.course == course %}selected='selected'{% endif %} value="{{course.id}}">{{course.name}}</option>
+                {% endfor %}
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="is_private" class="col-md-2 control-label">Is Private
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.is_private}}
+             </div>
+          </div>
+          <div class="form-group">
+            <label for="is_private" class="col-md-2 control-label">Cover Image
+             &nbsp;
+            </label>
+            <div class="col-sm-10">
+                <div class="updload-file" id='file-upload-div' {% if object.cover_image %}style='display:none'{% endif %}>
+                   <input class="btn btn-primary" style="opacity:0;width:160px;" type="file" name="images"  id="fileupload" multiple=""  data-url="{% url 'upload_group_cover_image' %}" accept="image/*" tabindex="-1">
+                    <input type='button' class="btn btn-primary" value="Upload Image" style='margin-top:-32px'>
+                </div>
+                <div class="row" id='group_cover_images_div'>
+                {% if object.cover_image %}
+                  {% with object.cover_image as image %}
+                    {% include 'admin/groups/include_group_cover_image.html' %}
+                  {% endwith %}
+                {% endif %}
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'groups' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+
+<style>
+  .delete_link{
+    background: white none repeat scroll 0 0;
+    border-radius: 6px;
+    color: black;
+    float: right;
+    height: 14px;
+    margin: -14px 10px 0 0;
+    padding: 1px 1.5px;
+    position: relative;
+    width: 14px;
+  }
+</style>
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+
+<script type="text/javascript">
+$(function () {
+    $('#fileupload').fileupload({
+        dataType: 'json',
+        done: function (e, data) {
+            if(data._response.result.status){
+                $('#group_cover_images_div').append(data._response.result.html);
+                $('#file-upload-div').hide();
+            }
+        }
+    });
+});
+function delete_image(imageId){
+  var datastring = 'image_id='+imageId;
+  $.ajax({
+      data: datastring,
+      datatype: 'JSON',
+      url: "{% url 'delete_group_cover_image' %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status){
+            $('#image_'+imageId).remove();
+            $('#file-upload-div').show();
+          }
+          else{
+            alert('Error occurred while deleting!');
+          }
+      }
+  });
+}
+</script>
+{% endblock %}

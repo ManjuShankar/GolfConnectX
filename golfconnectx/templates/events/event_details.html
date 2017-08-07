@@ -1,0 +1,70 @@
+	{% if event.cover_image %}
+		<img class="eventImg" src="{{event.get_cover_image_url}}">
+	{% else %}
+		<img class="eventImg" src="/static/themes/img/4th_july.jpg">
+	{% endif %}
+	<div class="inlinedisplay">
+		<div class="eventbody">
+			<span class="datespan">{{event.start_date|date:'l F d, Y'}}</span><br>
+			<span class="addspan">{{event.address1}}, {{event.city}}, {{event.state}} {{event.zipcode}}</span><br>
+			<span class="addspan">
+			{% if event.start_time and event.end_time %}
+				{{event.start_time|date:'h:i A'}} - {{event.end_time|date:'h:i A'}}
+			{% else %}
+				Full Day Event.
+			{% endif %}
+			</span>
+		</div>
+		<div>
+		{% if user == event.created_by %}
+			<img src="/static/themes/img/black-male-user-symbol.png" class="adminicon" id="react-tabs-1">
+			<button class="editEvent" onclick="edit_event({{event.id}})">Edit Event</button>
+		{% else %}
+			{% if not past %}
+			<button class="requestinvite">Request an Invite</button>
+			{% endif %}
+		{% endif %}
+		</div>
+	</div>
+	<div class="dividerLine"></div>
+	<div class="inlinediv">
+		<img class="eventGroup" src="/static/themes/img/gallery7.png">
+		<div class="eventgrptxt">
+			<span class="evntName">{{event.name|title}}</span><br>
+			<span class="pvtevnt">{% if event.is_private %}Private{% else %}Public{% endif %} Event</span>
+		</div>
+		{% if not past %}
+		<div class="col-sm-4">
+		{% if user != event.created_by %}
+			<button class="adminimg">Contact Admin</button>
+		{% else %}
+			<button class="shareEvent">Send Invite</button>
+		{% endif %}
+		</div>
+		{% endif %}
+	</div>
+	<div class="detailsheader">Details
+		<div class="eventDetails">{{event.description}}</div>
+	</div>
+	<div class="dividerLine1"></div>
+	<div class="col-sm-10">
+		<div data-toggle="modal" data-target="#myModal" class="modaldiv">
+			<div class="eventFriends col-sm-4">
+				<span class="fr atndfrnd mt3px mr15px">0 Attending</span>
+			</div>
+		</div>
+		<div class="col-sm-4 brdright brdrleft mt3px txtAlignCentre">
+			<span>0 Not Attending</span>
+		</div>
+		<div class="col-sm-3 mt3px">
+			<span>0 Responded</span>
+		</div>
+	</div>
+	<div class="dividerLine2"></div>
+	{% if event.files.all %}
+	<a href="/site_media/{{event.files.all.0.file}}" target="_blank">
+		<button class="downloadbutton">
+			<img src="/static/themes/img/downloadimg.png" class="mr15px">Download Tee Time/Results
+		</button>
+	</a>
+	{% endif %}

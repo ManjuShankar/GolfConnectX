@@ -1,0 +1,183 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>{% if object %}Update{% else %}Create{% endif %} Course</h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% if object %}{% url 'course_edit' object.id %}{% else %}{% url 'course_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="description" class="col-md-2 control-label">Description
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.description}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="address1" class="col-md-2 control-label">Address1
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.address1}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="address2" class="col-md-2 control-label">Address2
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.address2}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="city" class="col-md-2 control-label">City
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.city}}
+             </div>
+             <label for="zip_code" class="col-md-2 control-label">Zip Code
+             &nbsp;
+             </label>
+             <div class="col-md-4">
+                {{form.zip_code}}
+             </div>
+          </div>
+          <div class="form-group">
+          	<div id="map" style="width:50%;height:250px;margin-left: 20%;"></div>
+
+          </div>
+          <div class="form-group">
+             <label for="phone" class="col-md-2 control-label">Phone
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.phone}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="mobile" class="col-md-2 control-label">Mobile
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.mobile}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="email" class="col-md-2 control-label">Email
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.email}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="is_premium" class="col-md-2 control-label">Is Premium
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.is_premium}}
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'courses' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+          <input type="hidden" id='id_lat' name='lat' value='{% if object.lat %}{{object.lat}}{% endif %}'>
+          <input type="hidden" id='id_lon' name='lon' value='{% if object.lon %}{{object.lon}}{% endif %}'>
+          <input type="hidden" id='id_zoom' name='zoom' value='{% if object.zoom %}{{object.zoom}}{% endif %}'>
+       </form>
+    </div>
+ </div>
+
+ <script>
+  function initMap() {
+  	{% if object.lat and object.lon %}
+  	var lat = {{object.lat}};
+    var lon = {{object.lon}};
+    var center = {lat: lat, lng: lon};
+    var zoom = {{object.zoom}}
+    {% else %}
+    var center = {lat: 40.714224, lng: -73.961452};
+    var zoom = 14;
+    {% endif %}
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: zoom,
+      center: center,
+    });
+	  var marker = new google.maps.Marker({
+	  	map:map,
+	  	position:center,
+      draggable: true,
+	  });
+    google.maps.event.addListener(marker, 'dragend', function(evt){
+      $('#id_lat').val(evt.latLng.lat());
+      $('#id_lon').val(evt.latLng.lng())
+      $('#id_zoom').val(map.getZoom());
+    });
+  }
+
+function getaddress()
+{
+	return $('#id_address1').val()+" "+$('#id_address2').val()+" "+$('#id_city').val()+" "+$('#id_zip_code').val();
+}
+function getLocation() {
+	var geocoder = new google.maps.Geocoder();
+	var map = new google.maps.Map(document.getElementById('map'));
+
+  	var address = getaddress();
+
+  	geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) 
+    {
+      	var lat = results[0].geometry.location.lat();
+      	var lon = results[0].geometry.location.lng()
+
+      	map.setCenter(results[0].geometry.location);
+      	map.setZoom(13);
+
+      	var marker = new google.maps.Marker({
+        	map: map,
+        	position: results[0].geometry.location,
+        	title:address,
+          draggable: true,
+      	});
+      	google.maps.event.clearListeners(marker, 'click');
+
+      	$('#id_lat').val(lat);
+      	$('#id_lon').val(lon);
+        $('#id_zoom').val(map.getZoom());
+
+        google.maps.event.addListener(marker, 'dragend', function(evt){
+          $('#id_lat').val(evt.latLng.lat());
+          $('#id_lon').val(evt.latLng.lng())
+          $('#id_zoom').val(map.getZoom());
+        });
+
+    } else 
+    {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwORYpTXIOPRZN6P2afgar_DuSEs81eoQ&callback=initMap">
+</script>
+
+{% endblock %}
+

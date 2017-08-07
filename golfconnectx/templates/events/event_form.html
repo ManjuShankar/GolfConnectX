@@ -1,0 +1,291 @@
+<style type="text/css">
+	.dropdown-menu.open{
+		height: 100px !important;
+	}
+</style>
+<form class="createEvent" id="eventForm">{% csrf_token %}
+	<div class="eventImage">
+	{% if event.cover_image %}
+		<img src="{{event.get_cover_image_url}}" class="eventImg" id="cover_image">
+	{% else %}
+		<img src="/static/themes/img/4th_july.jpg" class="eventImg" id="cover_image">
+	{% endif %}
+		<input type="hidden" name="cover_image" id="id_cover_image" {% if event.cover_image %}value='{{event.cover_image.id}}'{% endif %}>
+		<input style="opacity: 0; margin-left: 30%; position: absolute; margin-top: 5%;" type="file" name="images"  id="fileupload" multiple=""  data-url="{% url 'ajax_upload_event_cover_image' %}" accept="image/*" tabindex="-1">
+		<a class="btn btn-default editeventImg" onclick="$('#fileupload').click()">
+			<span class="glyphicon glyphicon-pencil"></span>{% if event %}Edit{% else %}Add{% endif %} Event Image
+		</a>
+	</div>
+	{% if event %}
+		<input type="hidden" name="eventid" value="{{event.id}}">
+	{% endif %}
+	<div class="col-sm-12">
+	   	<div class="form-group row">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">Title:</label>
+	      	<div class="col-sm-10">
+	      		{{form.name}}
+	      	</div>
+	   	</div>
+	   	<div class="form-group row" id="venue_location">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">Location Title:</label>
+	      	<div class="col-sm-10">
+	      		{{form.venue}}
+	      	</div>
+	   	</div>
+
+	   	<div class="form-group row">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">Address:</label>
+	      	<div class="col-sm-10">
+	      		{{form.address1}}
+	      	</div>
+	   	</div>
+	   	<div class="form-group row">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">City:</label>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.city}}
+	      	</div>
+	      	<div class="col-sm-2 dateLabelDiv">
+	  			<label for="example-text-input" class="col-sm-12 col-form-label">Zip code:</label>
+	      	</div>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.zip_code}}
+	      	</div>
+	   	</div>
+	   	<div class="form-group row">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">Time:</label>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.start_time}}
+	      	</div>
+	      	<div class="col-sm-2 dateLabelDiv">
+	      		<label for="example-text-input" class="col-sm-12 col-form-label">To:</label>
+	      	</div>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.end_time}}
+	      	</div>
+	   	</div>
+	   	<div class="form-group row">
+	      	<label for="example-text-input" class="col-sm-2 col-form-label">Start Date:</label>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.start_date}}
+	      	</div>
+	      	<div class="col-sm-2 dateLabelDiv">
+	      		<label for="example-text-input" class="col-sm-12 col-form-label">End Date:</label>
+	      	</div>
+	      	<div class="col-sm-2 dateInputDiv">
+	      		{{form.end_date}}
+	      	</div>
+	   	</div>
+	   	<div class="form-group row">
+	   		<label for="example-text-input" class="col-xs-2 col-form-label">Tee-Time File:</label>
+	   		<div class="col-sm-4">
+	   			<span class="teeTimeUpload" onclick="$('#teetimeupload').click()">Upload File</span>
+	   			<input style="opacity: 0; position: absolute; margin-top: -5%;" type="file" name="file"  id="teetimeupload" multiple=""  data-url="{% url 'ajax_upload_event_teetime_file' %}" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" tabindex="-1">
+	   		</div>
+	   		<div class="col-sm-6">
+	   		{% if event.files.all %}
+	   			{% for file in event.files.all %}
+	   			<label class="col-sm-12 col-form-label" for="example-text-input" id="tee_time_file">{{file.name}}</label>
+	   			<input type="hidden" name="teetime_file" id="id_teetime_file" value="{{file.id}}">
+	   			{% endfor %}
+	   		{% else %}
+	   			<label class="col-sm-12 col-form-label" for="example-text-input" id="tee_time_file"></label>
+	   			<input type="hidden" name="teetime_file" id="id_teetime_file" value="{{file.id}}">
+	   		{% endif %}
+	   		</div>
+	   	</div>
+	   	<div class="form-group row">
+	   		{% if not group %}
+		   	<div class="col-sm-6">
+		      	<div class="mt15">
+		         	<label for="example-text-input" class="col-xs-7 col-form-label">Associate Group:</label><br>
+		         	<label class="switch" style="margin-left: -55% !important;">
+		         		<input name="associateGroup" id="associateGroup" value="on" type="checkbox" onchange="show_group_div()" {% if event.event_group_id %}checked="checked"{% endif %}>
+		            	<div class="slider round"></div>
+		         	</label>
+		      	</div>
+		   	</div>
+		   	{% endif %}
+		   	<div class="col-sm-6">
+		      	<div class="mt15">
+		         	<label for="example-text-input" class="col-xs-6 col-form-label">Private Event:</label>
+		         	<br>
+		         	<label class="switch">
+		            	<input name="is_private" value="on" type="checkbox" {% if event.is_private %}checked="checked"{% endif %}>
+		            	<div class="slider round"></div>
+		         	</label>
+		      	</div>
+		   	</div>
+		</div>
+	   	<div class="row {% if not event.event_group_id %}hide{% endif %}" id="event_group" style="margin-top: 5%;">
+	       	<label for="example-text-input" class="col-xs-2 col-form-label">Group:</label>
+	       	<div id="groups_select">
+	       		<select class="selectpicker col-md-10 select-menu" data-live-search="true" title="Select a Group" id="id_group" name="group">
+					{% for group in groups %}
+					<option value="{{group.id}}" {% if group %}{% if event.event_group_id == group.id %} selected='selected'{% endif %}{% endif %}>{{group.name}}</option>		
+					{% endfor %}
+				</select>
+	       	</div>
+	   	</div>
+	</div>	
+	<div class="col-sm-12 mt25">
+		<span class="detailshead">Details</span><br>
+		<div class="mt15 col-sm-12">
+			{{form.description}}
+		</div>
+	</div>
+	<input type="hidden" id='id_venue_course' name='venue_course' value='{% if event.venue_course_id %}{{event.venue_course_id}}{% endif %}'>
+</form>
+<button class="savebtn mt15" onclick="save_event()">Save</button>
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/static/themes/css/jquery-ui.css"/>
+<script type="text/javascript" src="/static/themes/js/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/static/themes/css/jquery.timepicker.css"/>
+<script type="text/javascript" src="/static/themes/js/jquery.timepicker.min.js"></script>
+
+<style type="text/css">
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+</style>
+<script type="text/javascript">
+	$(function () {
+	    $('#fileupload').fileupload({
+	        dataType: 'json',
+	        done: function (e, data) {
+	            if(data._response.result.status){
+	                $('#cover_image').attr('src',data._response.result.url);
+	                $('#id_cover_image').val(data._response.result.id);
+	            }
+	        }
+	    });
+	});
+	$(function () {
+	    $('#teetimeupload').fileupload({
+	        dataType: 'json',
+	        done: function (e, data) {
+	            if(data._response.result.status){
+	                $('#tee_time_file').text(data._response.result.name);
+	                $('#id_teetime_file').val(data._response.result.id);
+	            }
+	        }
+	    });
+	});
+	function delete_image(imageId){
+	  var datastring = 'image_id='+imageId;
+	  $.ajax({
+	      data: datastring,
+	      datatype: 'JSON',
+	      url: "{% url 'delete_event_cover_image' %}",
+	      method: "GET",
+	        success: function (data) {
+	          if(data.status){
+	            $('#image_'+imageId).remove();
+	            $('#file-upload-div').show();
+	          }
+	          else{
+	            alert('Error occurred while deleting!');
+	          }
+	      }
+	  });
+	}
+	function load_courses(){
+	  var courses_list = []
+	  $.ajax({
+	      url: "{% url 'events_load_courses' %}",
+	      method: "GET",
+	      success: function (data) {
+	        courses_list = data;
+	      }
+	  });
+	  
+	  $('#id_venue').autocomplete({
+	      minLength: 0,
+	      source: function (request, response) {
+	          var result = $.ui.autocomplete.filter(courses_list, request.term);
+	          response(result);
+	      },
+	      select: function (e, ui) {
+	        e.preventDefault()
+	        $(this).val(ui.item.label);
+	        load_course_details(ui.item.id);
+	      }
+	    }).focus(function () {
+	        $(this).autocomplete("search", "")
+	  });
+	}
+  	function load_course_details(id){
+	    var datastring = 'id='+id
+	    $.ajax({
+	        data: datastring,
+	        datatype: 'JSON',
+	        url: "{% url 'events_load_course_details' %}",
+	        method: "GET",
+	          success: function (data) {
+	            if(data.success){
+	              $('#id_address1').val(data.address1);
+	              $('#id_city').val(data.city);
+	              $('#id_zip_code').val(data.zip_code);
+	              $('#id_venue_course').val(data.id);
+	            }
+	            else{
+	              alert('Error occurred while fetching data!');
+	            }
+	        }
+	    });
+	}
+  	function show_group_div(){
+  		if($('#associateGroup').is(':checked')){
+  			$('#event_group').removeClass('hide');
+  		}
+  		else{
+  			$('#event_group').addClass('hide');
+  		}
+  	}
+	$(document).ready(function() {
+		load_courses()
+		$('.selectpicker').selectpicker();
+	    $('.datepicker').datepicker({
+	    	dateFormat: "mm/dd/yy",
+	    	minDate: new Date(),
+	    	onSelect: function() { $(this).valid(); }
+	    });
+	    $('.timepicker').timepicker({ 'timeFormat': 'h:i A' });
+	    $("#eventForm").validate({
+        	highlight: function(element, errorClass){
+	          	$(element).addClass('error');  
+	        },
+	        unhighlight: function(element, errorClass){
+	            $(element).removeClass('error');
+	        },
+	        errorPlacement: function(error, element){},
+            rules: {
+                name: "required",
+                start_date: {
+                	required: true,
+                	date:true
+                },
+                end_date: {
+                	required: true,
+                	date:true
+                },
+                venue: "required",
+                address1: "required",
+                city: "required",
+                zip_code: "required",
+                email: {
+                    required: true,
+                    email: true
+                },
+            },
+        });
+	});
+</script>

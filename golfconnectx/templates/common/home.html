@@ -1,0 +1,44 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>GolfConnectx Home Page</title>
+{% endblock %}
+{% block content %}
+<div class="homepage">
+   <div class="headingdiv">
+      <div class="topbar">
+         <span class="tagline"><b>Hi {{user.first_name}}!</b></span><br>
+         <span class="desc">Managing your golf life just got easier</span>
+      </div>
+      <div class="btnEvent"><img src="/static/themes/img/Events_Nav_Icon copy.png" ></img></div>
+   </div>
+   <div class="bgPic"><img src="/static/themes/img/bg_image.png" class="bgimage"></img></div>
+   <div class="col-sm-12 tileimg">
+      <a href="{% url 'ajax_profile_details' %}">
+        <img class="card-img-top imagetile col-sm-3" src="/static/themes/img/Profile_Home_Icon.png" alt="Card image cap"/>
+      </a>
+      <a href="{% url 'course_list' %}">
+        <img class="card-img-top imagetile col-sm-3" src="/static/themes/img/COURSES copy.png" alt="Card image cap"/>
+      </a>
+      <a href="{% url 'ajax_directory' %}">
+         <img class="card-img-top imagetile col-sm-3 col-sm-offset-3" src="/static/themes/img/Friend_Tile.png" alt="Card image cap"/>
+      </a>
+      <a href="{% url 'ajax_groups_home' %}">
+         <img class="card-img-top imagetile col-sm-3" src="/static/themes/img/GROUPS.png" alt="Card image cap"/>
+      </a>
+      <a href="{% url 'ajax_forums_list' %}">
+        <img class="card-img-top imagetile col-sm-3" src="/static/themes/img/FORUMS.png" alt="Card image cap"/>
+      </a>
+      <a href="{% url 'ajax_feeds_home' %}">
+        <img class="card-img-top imagetile col-sm-3" src="/static/themes/img/FEED.png" alt="Card image cap"/>
+      </a>
+   </div>
+   <div class="col-sm-12"><img src="/static/themes/img/Banner_Ad.png" class="Adimg"></img></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+   $('.menu').parent().removeClass('active');
+   $('#home_sidebar').parent().addClass('active');
+});
+</script>
+
+{% endblock %}

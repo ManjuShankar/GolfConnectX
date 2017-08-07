@@ -1,0 +1,46 @@
+<ol class="carousel-indicators bottom-40px">
+{% for count in glen %}
+	<li data-target="#myCarousel" data-slide-to="{{count}}" class="{% if forloop.counter == 1 %}active{% endif %}"></li>
+{% endfor %}
+</ol>
+ <div class="carousel-inner" role="listbox">
+ {% for group_list in groups_lists %}
+ {% with group_list as groups %}
+	<div class="item {% if forloop.counter == 1 %}active{% endif %}">
+	    <div class="groupRow">
+	      <div class="col-sm-1"></div>
+	        <div class="col-sm-2">
+	        	<a href="{% url 'ajax_groups_create' %}" title="Add New Group">
+	        		<img src="/static/themes/img/POST.png" alt="" class="panelimg addgrpimg wd95pc m10px brd3white">
+	        		<span class="txtwhite">Add Group</span>
+	        	</a>
+	        </div>
+	        {% for group in groups %}
+	        <div class="col-sm-2">
+	        	<a href="{% url 'ajax_group_details' group.id %}" title="{{group.name|title}}">
+	        		<img src="{{group.get_cover_image_url}}" alt="" class="panelimg addgrpimg wd95pc m10px brd3white">
+	        		<span class="txtwhite">{{group.name|title|truncatechars:18}}</span>
+	        	</a>
+	        </div>
+	        {% if forloop.counter == 4 %}
+	          <div class="col-sm-1"></div>
+	        </div>
+	        <div class="groupRow">
+	          <div class="col-sm-1 secondRowColumn"></div>
+	        {% endif %}
+	      {% endfor %}
+	      <div class="col-sm-1"></div>
+	    </div>
+	</div>
+{% endwith %}
+{% endfor %}
+</div>
+
+<a class="left carousel-control br3ccc wd5pc" role="button" data-slide="prev" href="#myCarousel">
+	<span class="glyphicon glyphicon-triangle-left previcon" aria-hidden="true"></span>
+	<span class="sr-only">Previous</span>
+</a>
+<a class="right carousel-control bl3ccc wd5pc" role="button" data-slide="next" href="#myCarousel">
+	<span class="glyphicon glyphicon-triangle-right nexticon" aria-hidden="true"></span>
+	<span class="sr-only">Next</span>
+</a>

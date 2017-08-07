@@ -1,0 +1,84 @@
+<style type="text/css">
+   .map-div{
+      height: 250px;
+      left: 30px;
+      top: 30px;
+      width: 90%;
+   }
+</style>
+<div class="col-sm-8">
+   <div class="col-sm-3">
+      <div class="following">
+         <div {% if not cud.is_following %}style="display:none"{% endif %} id="following_div">
+             <span class="OrnageDot"><img src="/static/themes/img/icons/eclipse.png"></span>
+             <span class="following_text">Following</span>
+          </div>
+          <div {% if cud.is_following %}style="display:none"{% endif %} id="following_2_div"><br></div>
+      </div>
+      <div class="unfollowCourses">
+          <button class="true" id='follow_course_button' onclick="follow_course({{course.id}})">
+            {% if cud.is_following %}Unfollow{% else %}Follow{% endif %} Course
+          </button>
+      </div>
+   </div>
+   <div class="col-sm-6">
+      <div class="coursesTitle">{{course.name}}</div>
+      <div class="coursesAddress">
+         {{course.address1}}{% if course.address2 %},{{course.address2}}{% endif %}<br>{{course.city}}
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="played">{% if cud.is_played %}Played{% endif %}</div>
+      {% if not cud.is_played %}<br><br>{% endif %}
+      <br>
+      <div class="coursescontact">
+         	{% if course.phone %}{{course.phone}}{% endif %}
+            {% if course.email%}<br>{{course.email}}{% endif %}
+      </div>
+   </div>
+   <div class="divider"></div>
+      <div id="map" class='map-div'>
+   </div>      
+   <div class="upgrade"><button data-toggle="modal" data-target="#myModal">UPGRADE TO PREMIUM</button></div>
+   <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">×</button>
+               <h4 class="modal-title">UPGRADE TO PREMIUM</h4>
+            </div>
+            <div class="modal-body">
+               <p>Please Contact GolfConnectx Admin.</p>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+   $().ready(function() 
+   {
+      LoadMap();
+   });
+   function LoadMap() {
+   {% if course.lat and course.lon %}
+      var lat = {{course.lat}};
+      var lon = {{course.lon}};
+      var center = {lat: lat, lng: lon};
+      var zoom = {{course.zoom}}
+    {% else %}
+      var center = {lat: 40.714224, lng: -73.961452};
+      var zoom = 14;
+    {% endif %}
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: zoom,
+      center: center,
+    });
+     var marker = new google.maps.Marker({
+      map:map,
+      position:center,
+     });
+  }
+</script>
+
+

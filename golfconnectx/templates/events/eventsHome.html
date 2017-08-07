@@ -1,0 +1,155 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>Events | GolfConnectx</title>
+{% endblock %}
+{% block content %}
+<div class="eventsPage">
+	<div class="leftBody">
+	   	<div class="coursesContainner">
+	   		<div class="eventsHeader">
+	   			<img src="/static/themes/img/events/events.png" style="width:100%;">
+	   			<div class="img-event">My Events</div>
+	   		</div>
+		   	<div class="coursesContent">
+		   		<div class="tabsForEvents">
+		   			<div class="ReactTabs react-tabs" data-tabs="true">
+		   				<ul class="ReactTabs__TabList EventsTabHeader" role="tablist">
+		   					<li class="ReactTabs__Tab active" role="tab" id="react_tab_upcoming" onclick="show_tab('upcoming')">Upcoming</li>
+		   					<li class="ReactTabs__Tab" role="tab" id="react_tab_past" onclick="show_tab('past')">Past</li>
+		   					<li class="ReactTabs__Tab" role="tab" id="react_tab_calendar" onclick="show_tab('calendar')">Calender</li>
+		   					<a onclick='add_new_event()'>
+		   						<button class="btn-createEvent">+ Create Event</button>
+		   					</a>
+		   				</ul>
+		   			</div>
+		   		</div>
+
+		   		<div class="col-sm-4 eventScroll">
+			   		<div id="upcoming_events_div" class="eventsTabPanel">
+                {% include 'events/events_list.html' %}
+					   </div>
+					   <div id="past_events_div" class="eventsTabPanel hide">
+	               {% include 'events/events_list.html' %}
+					   </div>
+            </div>
+            <div class="col-sm-8" id='event_details'>
+            {% if event %}
+	            	{% include 'events/event_details.html' %}
+            {% endif %}
+            </div>
+		   	</div>
+	   	</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+     	$('.menu').parent().removeClass('active');
+     	$('#events_sidebar').parent().addClass('active');
+     	load_upcoming_events();
+     	load_past_events();
+  	});
+  	function load_upcoming_events(){
+  		$.ajax({
+          datatype: 'JSON',
+          url: "{% url 'ajax_upcoming_events' %}",
+          method: "GET",
+            success: function (data) {
+              	if(data.status == 1){
+                 	$('#upcoming_events_div').html(data.html);
+                  if(data.event_id){
+                      get_event(data.event_id)
+                  }
+              	}
+          	}
+	    });
+  	}
+  	function load_past_events(){
+  		$.ajax({
+          datatype: 'JSON',
+          url: "{% url 'ajax_past_events' %}",
+          method: "GET",
+            success: function (data) {
+              	if(data.status == 1){
+                 	$('#past_events_div').html(data.html);
+              	}
+          	}
+	    });
+  	}
+   function show_tab(tab)
+   {
+      $('.eventsTabPanel').addClass('hide');
+      $('.ReactTabs__Tab').removeClass('active');
+
+      $('#'+tab+'_events_div').removeClass('hide');
+      $('#react_tab_'+tab).addClass('active');
+
+   }
+   function get_event(id)
+   {
+     var datastring = 'id='+id;
+      $.ajax({
+          data: datastring,
+          datatype: 'JSON',
+          url: "{% url 'ajax_event_details' %}",
+          method: "GET",
+            success: function (data) {
+              if(data.status == 1){
+                 $('#event_details').html(data.html);
+              }
+          }
+      });
+  	}
+  	function add_new_event()
+  	{	
+  		$.ajax({
+      		datatype: 'JSON',
+      		url: "{% url 'ajax_save_event' %}",
+      		method: "GET",
+            success: function (data) {
+              	if(data.status == 1){
+                 	$('#event_details').html(data.html);
+              	}
+          	}
+      	});
+  	}
+  	function edit_event(id)
+  	{
+  		var datastring = 'eventid='+id;
+  		$.ajax({
+  			data: datastring,
+      		datatype: 'JSON',
+      		url: "{% url 'ajax_save_event' %}",
+      		method: "GET",
+            success: function (data) {
+              	if(data.status == 1){
+                 	$('#event_details').html(data.html);
+              	}
+          	}
+      	});
+
+  	}
+  	function save_event(){
+  		var valid = $('#eventForm').validate().form();
+  		if(valid)
+  		{	
+  			var datastring = $('#eventForm').serialize();
+	  		$.ajax({
+	  			data:datastring,
+	          	datatype: 'JSON',
+	          	url: "{% url 'ajax_save_event' %}",
+	          	method: "POST",
+	            success: function (data) {
+	              	if(data.status == 1){
+	              		$('#event_details').html(data.html);
+                    load_upcoming_events();
+                    setTimeout(function(){ 
+                        get_event(data.id); 
+                    }, 1000);
+                    
+	              	}
+	          	}
+	      	});
+  		}
+  	}
+</script>
+{% endblock %}

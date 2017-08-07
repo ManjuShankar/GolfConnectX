@@ -1,0 +1,12 @@
+{% for course in courses %}
+  <a class="active" onclick="get_course({{course.id}})">
+    <li id='li_{{course.id}}' link="{% url 'frontend_course_details' course.id %}">
+    {% if course.is_premium %}
+      <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 
+    {% endif %}
+      <span class="fieldName col-sm-10">{{course.name}}</span>
+      <span class="col-sm-1 glyphicon glyphicon-menu-right"></span>
+    </li>
+  </a>
+{% endfor %}
+<button class="btn btn-warning col-sm-12" onclick="load_more_courses({{page}})">Load More</button>

@@ -1,0 +1,105 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>GolfConnectx Courses</title>
+{% endblock %}
+{% block content %}
+<div class="leftBody">
+   <div class="coursesContainner">
+      <div class="coursesHeader">Courses</div>
+      <div class="coursesContent">
+         <div class="col-sm-4">
+            <div class="searchResult">
+               <div class="CoursesSearchBox">
+                  <span class="CoursessearchIcon">
+                    <img src="/static/themes/img/icons/Search_Icon.png">
+                  </span>
+                  <input placeholder="Search Courses" type="text" id='searchKeyword' onchange="search_courses()">
+               </div>
+               <ul id="golfCourseList">
+                  {% include 'courses/course_list.html' %}
+               </ul>
+            </div>
+         </div>
+         <div id='course_details'>
+           
+         </div>
+      </div>
+      <div class="ads"><img src="/static/themes/img/ads.png"></div>
+   </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+     $('.menu').parent().removeClass('active');
+     $('#courses_sidebar').parent().addClass('active');
+     load_courses();
+  });
+  function get_course(id){
+     var url = $('#li_'+id).attr('link');
+     var datastring = 'id='+id;
+      $.ajax({
+          data: datastring,
+          datatype: 'JSON',
+          url: url,
+          method: "GET",
+            success: function (data) {
+              if(data.status == 1){
+                 $('#course_details').html(data.html);
+                 $('.active').removeClass('selected');
+                 $('#li_'+id).parent().addClass('selected');
+              }
+          }
+      });
+  }
+  $('#searchKeyword').keydown(function (event) {
+      var keypressed = event.keyCode || event.which;
+      if (keypressed == 13) {
+          search_courses();
+      }
+  });
+  function load_courses(){
+    $.ajax({
+      datatype: 'JSON',
+      url: "{% url 'ajax_get_courses' %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#golfCourseList').html(data.html);
+             get_course(data.course_id);
+          }
+        }
+    });
+  }
+  function load_more_courses(page_no){
+    var datastring = 'page='+page_no;
+    $.ajax({
+      data:datastring,
+      datatype: 'JSON',
+      url: "{% url 'ajax_get_courses' %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#golfCourseList').html(data.html);
+             get_course(data.course_id);
+          }
+        }
+    });
+  }
+  function search_courses(){
+    var datastring = 'kw='+$('#searchKeyword').val();
+    $.ajax({
+      data: datastring,
+      datatype: 'JSON',
+      url: "{% url 'ajax_course_search' %}",
+      method: "GET",
+        success: function (data) {
+          if(data.status == 1){
+             $('#golfCourseList').html(data.html);
+          }
+        }
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwORYpTXIOPRZN6P2afgar_DuSEs81eoQ&callback=LoadMap">
+</script>
+{% endblock %}
+

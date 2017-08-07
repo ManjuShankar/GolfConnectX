@@ -1,0 +1,90 @@
+{% load humanize %}
+
+{% if posts %}
+{% for post in posts %}
+<div class="users col-sm-12">
+   <div class="user1">
+      	<img class="Harvey-img" src="/static/themes/img/Rosie Perez.png"/>
+      	<div class="user1-header">
+         	<h3>{{post.author.get_full_name}}</h3>
+         	<p class="ryt">{{post.created|date:'M d, Y - P'}}<br/>{{post.created|naturaltime}}</p>
+      	</div>
+      	<div class="tglng">
+         	<div class="user1-spl">
+            	<h3>{{post.title}}</h3>
+         	</div>
+         	{% if post.body %}
+         	<div>
+            	<h4 class="detil">Details</h4>
+            	<p class="xplin">{{post.body}}</p>
+         	</div>
+         	{% endif %}
+      	</div>
+      	<div class="user-footer">
+         	<span class="footer1">
+         		<img src="/static/themes/img/icons/like.png" class="like-img" />Like
+         	</span>
+         	<span class="footer2">
+         		<img src="/static/themes/img/icons/comment.png" class="cmnt-img" onclick="show_comment({{post.id}})"/>Comment
+         	</span>
+         	<span class="footer3">
+         		<img src="/static/themes/img/icons/share.png" class="share-img" />Share
+         	</span>
+         	<span class="footer4">
+         		<a class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">
+         			<span class="glyphicon glyphicon-exclamation-sign err"></span>Report, Block, or hide/delete post
+         		</a>
+         	</span>
+         	<div class="modal fade secondModal" id="myModal" role="dialog">
+            	<div class="modal-dialog modal-sm">
+               	<div class="modal-content">
+                  		<div class="modal-body">
+                     		<div class="checkbox">
+                        		<input type="checkbox" value="1" id="checkboxInput" name="" />Hide/DeletePost
+                     		</div>
+                     		<div class="checkbox">
+                        		<input type="checkbox" value="1" id="checkboxInput" name="" />Block
+                     		</div>
+                     		<div class="checkbox">
+                        		<input type="checkbox" value="1" id="checkboxsInput" name="" />Report
+                     		</div>
+                     		<div class="reason">Reason for reporting</div>
+                     		<textarea class="txtarea" name="txtArea"></textarea>
+                  		</div>
+                  		<div class="modal-footer">
+                  			<button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+                  			<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                  		</div>
+               	</div>
+            	</div>
+         	</div>
+      	</div>
+         <div id="{{post.id}}_comment_area" class="hide">
+         	<div class="cmnt-matter">
+         		<textarea type="text" class="txtarea" placeholder="Write Something..."></textarea>
+         	</div>
+         	<div>
+         		<input type="button" value="Add Comment" class="btnAddComment"/>
+         	</div>
+         </div>
+   </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="users col-sm-12">
+	<div class="user1">
+		<h3>No Feed Posts Found!</h3>
+	</div>
+</div>
+{% endif %}
+<script type="text/javascript">
+   function show_comment(id){
+      if($('#'+id+'_comment_area').hasClass('hide'))
+      {
+         $('#'+id+'_comment_area').removeClass('hide');
+      }
+      else{
+         $('#'+id+'_comment_area').addClass('hide');
+      }
+   }
+</script>

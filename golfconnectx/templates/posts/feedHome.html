@@ -1,0 +1,69 @@
+{% extends 'common/base.html' %}
+{% load messages_tags %}
+{% load humanize %}
+{% block header %}
+    <title>Feed | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+
+
+<div class="feedPage">
+   <div class="pageFeed">
+      <div class="feedcntnt col-sm-12">
+         <div class="img-cntnt col-sm-12">
+            <div class="cover-img"><img src="/static/themes/img/feedImg.png" class="feedImg" /></div>
+            <div class="img-feed">
+               <h3>Feed</h3>
+               <span class="search-feed">
+               		<input type="search" id="id_feed_keyword" placeholder="Search Feed" class="searching" onsubmit="search_posts()" />
+               		<button class="search-btn" onclick="search_posts()">
+               			<span class="searchbtn-img">
+               				<img src="/static/themes/img/icons/Search_Icon.png" />
+               			</span>
+               		</button>
+               	</span>
+            </div>
+         </div>
+         <div id="feed_list">
+         	{% include 'posts/ajax_feed_list.html' %}
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+  	$(document).ready(function() {
+     	$('.menu').parent().removeClass('active');
+     	$('#feed_sidebar').parent().addClass('active');
+     	load_posts();
+ 	});
+  	function load_posts(){  		
+	  	$.ajax({
+	        datatype: 'JSON',
+	        url: "{% url 'ajax_load_posts' %}",
+	        method: "GET",
+	           	success: function (data) {
+	             	if(data.status == 1){
+	                	$('#feed_list').html(data.html);
+	             	}
+	           	}
+	    });
+  	}
+  	function search_posts(){
+  		var datastring = 'keyword='+$('#id_feed_keyword').val();
+  		$.ajax({
+  			data:datastring,
+	        datatype: 'JSON',
+	        url: "{% url 'ajax_search_posts' %}",
+	        method: "GET",
+	           	success: function (data) {
+	             	if(data.status == 1){
+	                	$('#feed_list').html(data.html);
+	             	}
+	           	}
+	    });
+  	}
+ </script>
+
+
+
+{% endblock %}

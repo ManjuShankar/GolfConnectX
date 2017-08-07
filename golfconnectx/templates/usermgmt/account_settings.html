@@ -1,0 +1,508 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>GolfConnectx Account Settings</title>
+{% endblock %}
+{% block content %}
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+<div class="Profile">
+	<div class="container">
+		<div id="accordion" role="tablist" aria-multiselectable="true">
+			<div class="Headerdiv">ACCOUNT SETTINGS</div>
+
+			<div id="accordion" role="tablist" aria-multiselectable="true">
+
+				<div class="card">
+				   <div class="card-header" role="tab" id="headingOne" onclick="changeIcon('headingOneSpan')">
+				      <h5 class="mb-0 Titles collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Profile
+				      <span class="glyphicon glyphicon-plus" id="headingOneSpan"/>
+				      </h5>
+				   </div>
+				   <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;">
+				      <div class="alignForm">
+				         <form class="formdiv" id="profileForm">{% csrf_token %}
+				            <div class="form-group row">
+				               	<label for="example-text-input" class="col-xs-3 col-form-label">First Name:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" value="{{user.first_name}}" id="id_first_name" name="first_name" type="text">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-search-input" class="col-xs-3 col-form-label">Last Name:</label>
+				               <div class="col-xs-4">
+				               		<input class="form-control" value="{{user.last_name}}" id="id_last_name" name="last_name" type="text">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-email-input" class="col-xs-3 col-form-label">Email:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" readonly='readonly' value="{{user.email}}" id="id_email" name="email" type="email">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-url-input" class="col-xs-3 col-form-label">Phone:</label>
+				               <div class="col-xs-4">
+				               		<input class="form-control" value="{{user.phone}}" id="id_phone" name="phone" type="text">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-tel-input" class="col-xs-3 col-form-label">Current Password:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" id="id_password" name="password" type="password" onchange="check_password()">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-password-input" class="col-xs-3 col-form-label">New Password:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" id="id_new_password" name="new_password"
+				               		type="password" readonly='readonly' onchange="check_new_password()">
+				               	</div>
+				               	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Changing your password requires you to login again."></span> 
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-number-input" class="col-xs-3 col-form-label">Confirm New Password:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" id="id_confirm_password" name="confirm_password" type="password" readonly='readonly' onchange="check_new_password()">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				            	<input class="btn btn-default Savebtn" value="Save Changes" type="button" onclick="save_profile_settings()">
+				            	<input class="btn btn-default Savebtn" value="Cancel" type="button" data-toggle="collapse" data-target="#collapseOne" onclick="changeIcon('headingOneSpan')">
+				            </div>
+				            <input type="hidden" value="{% if user.profile_image %} {{user.profile_image.id}} {% endif %}" name="profile_image" id="id_profile_image">
+				         </form>
+				         <div class="NameInitials">
+
+				            <img id="profile_image" {% if user.profile_image %} src="{{user.get_profile_image_url}}" {% else %} src="/static/themes/img/NameInit.PNG" {% endif %}>
+				            <div class="btnPhoto">
+				            <form>{% csrf_token %}
+				            	<input style="opacity: 0; position: absolute; margin-top: 5%;" type="file" name="image"  id="fileupload" multiple=""  data-url="{% url 'ajax_upload_user_profile_image' %}" accept="image/*" tabindex="-1">
+				            </form>
+				            	<input class="btn btn-default btnUploadPhoto" value="Upload a Photo" type="button" onclick="$('#fileupload').click()">
+				            	<p>Accepted file formats: .PNG,.JPG,.JPEG,.GIF.</p>
+				            </div>
+				         </div>
+				      </div>
+				   </div>
+				</div>
+				<div class="card">
+				   <div class="card-header" role="tab" id="headingTwo" onclick="changeIcon('headingTwoSpan')">
+				      <h5 class="mb-0 Titles collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Golfer Skills
+				      <span class="glyphicon glyphicon-plus" id="headingTwoSpan"/>
+				      </h5>
+				   </div>
+				   <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
+				      <div class="alignForm">
+				         <form class="formdiv" id="golfSkillForm">{% csrf_token %}
+				            <div class="form-group row">
+				               	<label for="example-text-input" class="col-xs-2 col-form-label">Skill Level:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" value="{{user.skill_level}}" id="id_skill_level" name="skill_level" type="text">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-email-input" class="col-xs-2 col-form-label">Handicap:</label>
+				               	<div class="col-xs-4">
+				               		<input class="form-control" value="{{user.handicap}}" id="id_handicap" name="handicap" type="text" pattern="[0-9]">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				               	<label for="example-url-input" class="col-xs-2 col-form-label">Golfer Type:</label>
+				               <div class="col-xs-4">
+				               		<input class="form-control" value="{{user.golfer_type}}" id="id_golfer_type" name="golfer_type" type="text">
+				               	</div>
+				            </div>
+				            <div class="form-group row">
+				            	<input class="btn btn-default Savebtn" value="Save Changes" type="button" onclick="save_golfer_skill_settings()">
+				            	<input class="btn btn-default Savebtn" value="Cancel" type="button" data-toggle="collapse" data-target="#collapseTwo" onclick="changeIcon('headingTwoSpan')">
+				            </div>
+				         </form>
+				      </div>
+				   </div>
+				</div>
+				<div class="card">
+				   <div class="card-header" role="tab" id="headingThree" onclick="changeIcon('headingThreeSpan')">
+				      <h5 class="mb-0 Titles collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Private Account
+				      <span class="glyphicon glyphicon-plus" id="headingThreeSpan"/>
+				      </h5>
+				   </div>
+				   <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false" style="height: 0px;">
+				      <form class="card-block" id="privateForm">{% csrf_token %}
+				         <div>
+				         	<span class="PvtLabel">Would you like your account to remain private?</span>
+				         </div>
+				         <div class="pvtdiv">
+				            <span class="lblPvtAcc">Private Account:</span>
+				            <label class="switch">
+				               <input value="on" type="checkbox" name="is_private" {% if user.is_private %}checked="checked"{% endif %} id="id_is_private">
+				               <div class="slider round"></div>
+				            </label>
+				         </div>
+				         <div class="form-group row buttonsdiv">
+				         	<input class="btn btn-default Savebtn" value="Save Changes" type="button" onclick="save_private_settings()">
+				         	<input class="btn btn-default Savebtn" value="Cancel" type="button" data-toggle="collapse" data-target="#collapseThree" onclick="changeIcon('headingThreeSpan')">
+				         </div>
+				      </form>
+				   </div>
+				</div>
+
+				<div class="card">
+				   <div class="card-header" role="tab" id="headingFour" onclick="changeIcon('headingFourSpan')">
+				      <h5 class="mb-0 Titles collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Notifications
+				      <span class="glyphicon glyphicon-plus" id="headingFourSpan"/>
+				      </h5>
+				   </div>
+				   <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false">
+				      <div class="card-block" >
+				         <div><span class="PvtLabel">Notify me when someone:</span></div>
+				         <form class="row" id="notificationForm">{% csrf_token %}
+				            <div class="col-sm-6">
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Likes your post</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_like_post" {% if user.notify_like_post %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Comments on your post</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_comment_post" {% if user.notify_comment_post %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Shares your post</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_share_post" {% if user.notify_share_post %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Comments on your group discussions</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_comment_discussion" {% if user.notify_comment_discussion %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				            </div>
+				            <div class="col-sm-6">
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Invites you to an event</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch ">
+				                        <input value="on" name="notify_invite_event" {% if user.notify_invite_event %}checked="checked"{% endif%}  type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Accept your invitation</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_accept_invitation" {% if user.notify_accept_invitation %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-8">
+				                  	<span class="notifyLabel">Joins an event you're attending</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="notify_event_join" {% if user.notify_event_join %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				               </div>
+				               <br>
+				            </div>
+				         </div>
+				         <div class="form-group row buttonsdiv">
+				         	<input class="btn btn-default Savebtn" value="Save Changes" type="button" onclick="save_notification_settings()">
+				         	<input class="btn btn-default Savebtn" value="Cancel" type="button" data-toggle="collapse" data-target="#collapseFour" onclick="changeIcon('headingFourSpan')">
+				         </form>
+				      </div>
+				   </div>
+				</div>
+
+				<div class="card">
+				   <div class="card-header" role="tab" id="headingFive" onclick="changeIcon('headingFiveSpan')">
+				      <h5 class="mb-0 Titles collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">Emails
+				      <span class="glyphicon glyphicon-plus" id="headingFiveSpan"/>
+				      </h5>
+				   </div>
+				   <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive" aria-expanded="false">
+				      <div class="card-block">
+				         <div>
+				         	<span class="PvtLabel">I would like to recieve emails when the following occurs:</span>
+				         </div>
+				         <form class="row" id='emailForm'>{% csrf_token %}
+				            <div class="col-sm-6">
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Invitations</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                     	<input value="on" name="email_invitation" {% if user.email_invitation %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Messages</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                     <input value="on" name="email_messages" {% if user.email_messages %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Notifications</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="email_notifications" {% if user.email_notifications %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				            </div>
+				            <div class="col-sm-6 emaildiv">
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Event Updates</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch ">
+				                        <input value="on" name="email_email_updates" {% if user.email_email_updates %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Group Updates</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="email_group_updates" {% if user.email_group_updates %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				               <div class="notify">
+				                  <div class="col-sm-6">
+				                  	<span class="notifyLabel">Golf Connectx Messages</span>
+				                  </div>
+				                  <div class="col-sm-4">
+				                     <label class="switch rightAlign">
+				                        <input value="on" name="email_site_messages" {% if user.email_site_messages %}checked="checked"{% endif%} type="checkbox">
+				                        <div class="slider round"></div>
+				                     </label>
+				                  </div>
+				                  <div class="col-sm-offset-2"></div>
+				               </div>
+				               <br>
+				            </form>
+				         </div>
+				         <div class="form-group row buttonsdiv">
+				         	<input class="btn btn-default Savebtn" value="Save Changes" type="button" onclick="save_email_settings()" >
+				         	<input class="btn btn-default Savebtn" value="Cancel" type="button" data-toggle="collapse" data-target="#collapseFive" onclick="changeIcon('headingFiveSpan')">
+				         </div>
+				      </div>
+				   </div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+	.error{
+		border: 1px solid red;
+	}
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.menu').parent().removeClass('active');
+	});
+	function changeIcon(id){
+        $('#'+id).toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
+     }
+	$(function () {
+	    $('#fileupload').fileupload({
+	        dataType: 'json',
+	        done: function (e, data) {
+	            if(data._response.result.status){
+	                $('#profile_image').attr('src',data._response.result.url);
+	                $('#id_profile_image').val(data._response.result.id);
+	            }
+	        }
+	    });
+	});
+	function check_password(){
+		var password = $('#id_password').val();
+		var datastring = 'password='+ password;
+		if(password == '')
+		{
+			$('#id_password').removeClass('error');
+		}
+		else
+		{
+			$.ajax({
+				data: datastring,
+	        	datatype: 'JSON',
+	        	url: "{% url 'ajax_check_current_password' %}",
+	        	method: "GET",
+		          success: function (data) {
+		            if(!data.status){
+		            	$('#id_password').addClass('error');
+		            	$("#id_new_password").attr("readonly", true);
+		            	$("#id_confirm_password").attr("readonly", true);
+		            }
+		            else{
+		            	$('#id_password').removeClass('error');
+		            	$("#id_new_password").attr("readonly", false);
+		            	$("#id_confirm_password").attr("readonly", false);
+		            }
+		        }
+			});
+		}
+	}
+	function check_new_password(){
+		var np = $('#id_new_password').val();
+		var cnp = $('#id_confirm_password').val();
+		if(cnp != ''){
+			if(np != cnp){
+				$('#id_confirm_password').addClass('error');
+			}
+			else{
+				$('#id_confirm_password').removeClass('error');
+			}
+		}
+	}
+	function save_profile_settings()
+	{
+		var datastring =  $('#profileForm').serialize();
+
+		var valid1 = $('#id_password').hasClass('error');
+		var valid2 = $('#id_confirm_password').hasClass('error');
+
+		if (!valid1 && !valid2)
+		{
+			$.ajax({
+	        	data: datastring,
+	        	datatype: 'JSON',
+	        	url: "{% url 'ajax_save_profile_settings' %}",
+	        	method: "POST",
+		          success: function (data) {
+		            if(data.status == 1){
+		            	$('#id_password').val('');
+		            	$('#id_new_password').val('');
+		            	$('#id_confirm_password').val('');
+		            	alert('Success');
+		            }
+		            else{
+		            	alert(data.status);
+		            }
+		        }
+		    });
+		}
+	}
+	function save_golfer_skill_settings()
+	{	
+		var datastring =  $('#golfSkillForm').serialize();
+		$.ajax({
+        	data: datastring,
+        	datatype: 'JSON',
+        	url: "{% url 'ajax_save_golf_skill_settings' %}",
+        	method: "POST",
+	          success: function (data) {
+	            if(data.status == 1){
+	            	alert('Success');
+	            }
+	        }
+	    });
+	}
+	function save_private_settings()
+	{
+		var datastring =  $('#privateForm').serialize();
+		$.ajax({
+        	data: datastring,
+        	datatype: 'JSON',
+        	url: "{% url 'ajax_save_private_settings' %}",
+        	method: "POST",
+	          success: function (data) {
+	            if(data.status == 1){
+	            	alert('Success');
+	            }
+	        }
+	    });
+	}
+	function save_notification_settings()
+	{
+		var datastring =  $('#notificationForm').serialize();
+		$.ajax({
+        	data: datastring,
+        	datatype: 'JSON',
+        	url: "{% url 'ajax_save_notification_settings' %}",
+        	method: "POST",
+	          success: function (data) {
+	            if(data.status == 1){
+	            	alert('Success');
+	            }
+	        }
+	    });
+	}
+	function save_email_settings()
+	{
+		var datastring =  $('#emailForm').serialize();
+		$.ajax({
+        	data: datastring,
+        	datatype: 'JSON',
+        	url: "{% url 'ajax_save_email_settings' %}",
+        	method: "POST",
+	        success: function (data) {
+	            if(data.status == 1){
+	            	alert('Success');
+	            }
+
+	        }
+	    });
+	}
+</script>
+
+{% endblock %}

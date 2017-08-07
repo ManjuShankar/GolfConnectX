@@ -1,0 +1,9 @@
+<div id='image_{{image.id}}' name='images' class="col-md-10 thumb">
+  <span class="thumbnail">
+      <img alt="" src="/site_media/{{image.image}}" class="img-responsive" style='max-height: 100px;'>
+  </span>
+
+ 
+  <a class='delete_link' href="javascript:void(0)" onclick='delete_image({{image.id}})'><span class="delete_icon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+  <input type='hidden' name='cover_image' value='{{image.id}}'>
+</div>

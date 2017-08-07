@@ -1,0 +1,8 @@
+{% for file in files %}
+<div class="col-sm-10">
+	<input type="hidden" id="file_{{file.id}}">
+	<span>{{file.name}}</span><br><span>{{file.uploaded_on|date:'M d, Y'}} by {{file.uploaded_by.get_full_name}}</span>
+	<div class="dividerLine3"></div>
+</div>
+{% endfor %}
+<button class="btnUploadFile" onclick="$('#fileupload').click()">Upload File</button>

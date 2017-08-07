@@ -1,0 +1,68 @@
+<div class="dvdrPage wdpc marglft col-sm-12"></div>
+<div class="brdpx bradpx col-sm-12">
+    <div class="brad">
+
+      <div class="col-sm-12 pdng">
+        <div class="pdng col-sm-12">
+          <div class="pdng col-sm-1">
+            <img src="/static/themes/img/icons/Account_Icon.png" class="bradImg" />
+          </div>
+          <div class="pdng col-sm-11">
+            <div class="col-sm-12">
+              <div class="prsnName">{{post.author}}</div>
+              <div class="prsnSeen">{{post.created}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="msgRply col-sm-12">{{post.title}}</div>
+      </div>
+      
+      <div class="col-sm-12 rspnsng">
+        <div class="col-sm-7"></div>
+        <div class="col-sm-5 pdng">
+          <div class="col-sm-12 pdng">
+            <span class="like">
+                <img src="/static/themes/img/icons/like.png" class="rspnsImg"/>Like
+            </span>
+            <span class="comment">
+                <img src="/static/themes/img/icons/comment.png" class="rspnsImg"/>Comment
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {% if post.comments.all %}
+      {% for comment in post.comments.all %}
+      {% if forloop.counter < 3 %}
+      <div class="rosieRply col-sm-12 pdng">
+        <div class="pdng col-sm-1">
+          <img src="/static/themes/img/icons/Account_Icon.png" class="rosieImg" />
+        </div>
+        <div class="col-sm-11 pdng">
+          <div class="col-sm-12 pdng">
+            <div class="pdng col-sm-12">
+              <div class="col-sm-3 pdng prsnName">{{comment.author|title}}</div>
+            </div>
+            <div class="col-sm-12 pdng prsnSeen">{{comment.created|date:'M d'}} @ {{comment.created|date:'P'}}</div>
+            <div class="col-sm-12 pdng prsnMsg">{{comment.body}}</div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      <div class="steveRply col-sm-12 pdng">
+        <div class="pdng col-sm-1">
+          <img src="/static/themes/img/icons/Account_Icon.png" class="SteveImg"/>
+        </div>
+        <div class="pdng brdrpx col-sm-11">
+          <div class="col-sm-12">
+            <textarea class="txtar"></textarea>
+          </div>
+        </div>
+        <div class="pdng col-sm-12">
+          <button type="button" class="cmtBtn">Add Comment</button>
+        </div>
+      </div>
+    </div>
+</div>

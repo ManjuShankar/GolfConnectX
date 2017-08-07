@@ -1,0 +1,7535 @@
+/*common stylesheet*/
+
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: #33cc33;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #33cc33;
+    height: 100px;
+}
+
+@font-face {
+    font-family: nerislight;
+    src: url("../fonts/Neris-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: rodusreg300;
+    src: url("../fonts/RODUSreg300.otf") format("opentype");
+}
+
+body {
+    font-family: nerislight;
+    background-color: lightgrey;
+}
+
+ol,
+ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/*Sidebar css*/
+.hide{
+    display: none !important;
+}
+.sidebar {
+    width: 15%;
+    position: fixed;
+    min-height: 100%;
+    float: left;
+    display: block;
+    z-index: 999;
+    background-color: #235C26;
+}
+
+.logo {
+    height: 89px !important;
+}
+.logo > img {
+    margin: 15px;
+}
+.menuBox {
+    background-color: #EBEBEB;
+    width: 100%;
+    height: 300px;
+}
+
+.menuBox li {
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #fff;
+    padding: 20px 30px;
+}
+
+.menuBox .icons img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    fill: #3c3c3c;
+}
+
+.menuBox li.menu {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.menuBox a {
+    color: #3c3c3c;
+    text-decoration: none;
+}
+
+.menuBox li:active a,
+.menuBox li:hover a {
+    color: #fff;
+}
+
+.menuBox li:active,
+.menuBox li:hover {
+    background-color: #595A5C;
+    border-left: 5px solid #47B64D;
+    color: #fff;
+}
+
+.menuBox a.active li {
+    background-color: #595A5C;
+    border-left: 5px solid #47B64D;
+    border-bottom: none;
+    color: #fff;
+}
+
+.menuBox a.active li a {
+    color: #fff;
+}
+
+.menuBox ul>a.active>li:before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border: 7px solid transparent;
+    border-bottom-color: #595A5C;
+    left: 100%;
+    margin-top: 5px;
+    right: -10px;
+    //margin-left: 100px;
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.menuBox ul>a>li:hover:before,
+.menuBox ul>a>li.active:before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border: 7px solid transparent;
+    border-bottom-color: #595A5C;
+    left: 100%;
+    margin-top: 5px;
+    right: -10px;
+    //margin-left: 100px;
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.lookingTxt {
+    padding: 20px 30px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+button.findFriendButton {
+    border: none;
+    background: none;
+    margin-left: 40px;
+}
+
+.sidebarBottomTxt {
+    position: absolute;
+    bottom: 0px;
+    padding: 20px 30px;
+    font-size: 11px;
+    color: #fff;
+    text-align: center;
+}
+
+
+/*Left Side css*/
+
+.leftBody {
+    position: relative;
+    margin-left: 14%;
+}
+.leftBody .signout-icon{
+    width:30px;
+    height: 30px;
+    margin-right: 7px;
+}
+.leftBody .signout-icon:hover{
+    color:white;
+    font-size:10px;
+}
+.leftBody .dropdownContent{
+    position: absolute;
+    background-color: #ddd;
+    margin-left: -255%;
+    min-width: 132px;
+    padding: 0;
+    margin-top: 21px;
+    border-radius: 0;
+}
+.leftBody .dropdown-item{
+    padding: 15px 7px 17px 7px;
+    text-decoration: none;
+    color:black;
+    text-align: center;
+}
+.leftBody .dropdown-item:hover,
+.leftBody .dropdown-item:active,
+.leftBody .dropdown-item:focus{
+    color:white;
+    background: #555;
+}
+.leftBody a{
+    text-decoration: none;
+}
+.leftBody .btn-lg{
+    padding: 0px; 
+    background: darkgreen;
+    border-radius: 20px;
+    border: none;
+    outline:none;
+}
+.leftBody a{
+text-decoration:none;
+}
+.leftBody .addPost .modal-header{
+    color:white;
+    background: darkgreen;
+    font-weight: 600;
+    border-radius: 0;
+}
+.leftBody .addPost .modal-content .close{
+    opacity: 1;
+    color: white;
+}
+.leftBody .addPost .modal-content .chckbx.radio > span {
+    margin-left: 5%;
+    margin-right: 10%;
+}
+
+.leftBody .addPost .modal-body .chckbx{
+    margin-bottom: 20px;
+}
+.leftBody .addPost .modal-body .chckbx label{
+    margin-right: 10px;
+}
+.leftBody .addPost .modal-dialog{
+    top:11%;
+}
+.leftBody .addPost .yyy {
+  max-height: 0;
+  font-size: 16px;
+  transform: scale(1);
+  transition: 0.5s;
+}
+.leftBody .addPost select option[data-default] {
+    display: none;
+}
+.leftBody .addPost  .dropdown-menu.inner {
+    height: 50px !important;
+}
+.leftBody .btn-primary,.btn-secondary {
+    font-weight: bolder;
+    padding: 1px 13px 3px;
+    border: 0px solid green;
+    color: white;
+    border-radius: 0px;
+    background: darkgreen;
+    margin-right: 10px;
+    width:65px;
+    outline:none;
+}
+.leftBody .btn-secondary{
+    float: right;
+    background: darkgreen;
+    width:65px;
+    color:white;
+    outline:none;
+}
+.leftBody .addInvite .modal-footer{
+    padding-top: 10px;
+}
+.leftBody .addInvite .modal-body {
+    padding-bottom: 30px;
+}
+.leftBody .addInvite .modal-dialog{
+    top:22%;
+}
+.leftBody .addInvite .modal-content{
+    width: 143%;
+    height: 254px;
+    border-radius: 0;
+}
+.leftBody .addInvite .modal-header input{
+    margin-left: 10px;
+    border:none;
+    outline:none;
+}
+.leftBody .addInvite .modal-body .txtarea{
+    width: 100%;
+    height: 100px;
+    border:none;
+    outline:none;
+}
+/*Header css starts here*/
+
+nav {
+    width: 100%;
+    height: 89px;
+    background-color: #44B44A;
+}
+
+nav .searchBox input[type="text"] {
+    width: 449px;
+    border-bottom-left-radius: 50%;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    position: absolute;
+    height: 30px;
+    margin: 0 auto;
+    top: 25px;
+    padding-left: 5%;
+}
+
+.searchBox button {
+    background: none;
+    border: none;
+}
+
+.searchIcon img {
+    left: 420px;
+    position: absolute;
+    top: 33px;
+}
+
+.navHeader button {
+    background: none;
+    width: 100%;
+    margin: 0px;
+    border: none;
+}
+.mt10px{
+    margin-top: 10px !important;
+}
+.navHeader {
+    float: right;
+    position: relative;
+    display: inline-flex;
+    margin-top: 10px;
+}
+.error{
+    border: 2px solid red;
+}
+.notiButton.glyphicon.glyphicon-bell{
+    color: white;
+    font-size: 28px;
+    margin-top: 40%;
+}
+/* .chatButton {
+     position: absolute;
+     top: 30px;
+     left: 40%;
+ }
+ 
+ .notiButton {
+     position: absolute;
+     top: 30px;
+     left: 15%;
+ }
+ 
+ .setButton {
+     position: absolute;
+     top: 30px;
+     left: -70px;
+ }
+ 
+ .accButton {
+     position: absolute;
+     top: 18px;
+     left: -15px;
+ }
+ 
+ .arrowButton {
+     position: absolute;
+     top: 30px;
+     padding-left: 15px;
+}*/
+
+.premium .inlinePostTittle {
+    display: inline-flex;
+}
+
+.premium .react-tabs .active{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+.premium .eventsTabs .react-tabs .active{
+    border: none;
+    padding: 10px;
+    background-color: #33cc33;
+    color: #fff;
+    border-radius: 0px;
+    box-shadow: 0px;
+    bottom: 0px;
+}
+
+
+.leftBody .row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+
+/*Main container Starts from Here*/
+
+.coursesContainner {
+    padding-top: 0px;
+    padding-left: 49px;
+    padding-right: 46px;
+    padding-bottom: 30px;
+    min-height: 100%;
+    width: 100%;
+    background-color: #ccc;
+    position: relative;
+}
+
+.coursesHeader {
+    background-color: #225B25;
+    padding: 15px;
+    font-family: 'rodusreg300';
+    color: #fff;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.premium .scrollable {
+    overflow: auto;
+    overflow-y: scroll;
+}
+
+.coursesContent {
+    background-color: #fff;
+    width: 100%;
+    min-height: 950px;
+}
+
+.navHeader button:nth-child(2) {
+    padding-right: 15px;
+}
+
+.navHeader button:nth-child(3) {
+    padding-left: 20px;
+    border-left: 2px solid #000;
+}
+
+.navHeader button:nth-child(4) {
+    padding-right: 15px;
+}
+
+.navHeader button:nth-child(5) {
+    padding-left: 30px;
+    border-left: 2px solid #000;
+}
+
+.searchResult {
+    border: 1px solid #eee;
+    margin-top: 15px;
+}
+
+.CoursesSearchBox input[type="text"] {
+    border: 1px solid #ddd;
+    width: 100%;
+    height: 35px;
+    padding-left: 45px;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.coursesContent .col-sm-4 {
+    padding: 0px;
+}
+
+.CoursessearchIcon button {
+    background: none;
+    border: none;
+}
+
+.CoursessearchIcon img {
+    position: absolute;
+    top: 23px;
+    left: 10px;
+}
+
+.searchResult ul li {
+    list-style: none;
+    min-height: 40px;
+    padding: 10px;
+    margin: 10px;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.searchResult ul {
+    overflow: auto;
+    overflow-y: scroll;
+    height: 848px;
+    margin-right: 15px;
+}
+
+.fieldName {
+    font-size: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.searchResult li .glyphicon {
+    position: relative;
+    text-align: end;
+    padding-right: 0px;
+}
+.searchResult li .glyphicon-star{
+    color: #f7931e;
+    float: left;
+    font-size: 18px;
+    margin-left: -10px;
+    margin-right: -15px;
+    margin-top: 2px;
+
+}
+.searchResult a {
+    color: #000;
+    border-left: 4px solid transparent;
+    display: block;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.searchResult a:hover,
+.searchResult a:active {
+    color: #000;
+    border-left: 5px solid #44b54a;
+    position: relative;
+    background-color: #e1e1e1;
+    text-decoration: none;
+}
+.searchResult .selected{
+    color: #000;
+    border-left: 5px solid #44b54a;
+    position: relative;
+    background-color: #e1e1e1;
+    text-decoration: none;
+}
+.OrangeDot {
+    padding-right: 15px;
+    top: -5px;
+    position: relative;
+}
+
+.following {
+    padding: 15px;
+}
+.following_text {
+    margin-left: 5px;
+}
+.unfollowCourses {
+    margin-top: 60px;
+}
+
+.unfollowCourses button {
+    background-color: #f7931e;
+    color: #fff;
+    border: none;
+    width: 135px;
+    margin-left: 17px;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 2px;
+    padding-bottom: 3px;
+}
+
+.coursesTitle {
+    font-size: 18px;
+    font-weight: bold;
+    //width: 67%;
+    //left: 10%;
+    text-align: center;
+    margin-top: 13%;
+    position: relative;
+}
+
+.played {
+    margin-top: 15px;
+    margin-right: 19px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    text-align: end;
+}
+
+.coursescontact {
+    margin-top: 26%;
+    text-align: end;
+    margin-right: 15px;
+}
+
+.coursesContent .col-sm-6 {
+    padding-left: 0px;
+}
+
+.map img {
+    width: 100%;
+}
+
+.map {
+    width: 100%;
+    position: relative;
+    top: 155px;
+    padding: 15px;
+    display: block;
+    height: 265px;
+}
+
+.divider {
+    border-bottom: 1.5px solid #ccc;
+    top: 154px;
+    position: relative;
+    width: 95.5%;
+    left: 13px;
+}
+
+.upgrade button {
+    background-color: #f7931e;
+    color: #fff;
+    border: none;
+    width: 180px;
+    margin-left: 10px;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-right: 15px;
+    position: relative;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    top: 70px;
+    left: 30%;
+}
+
+.ads img {
+    margin-left: 36%;
+    margin-top: 30px;
+}
+
+
+/*upgrade to premuim page*/
+
+.premium .coursesContent {
+    background-color: #fff;
+    width: 100%;
+    min-height: 700px;
+}
+
+.imgGolf img {
+    width: 100%;
+    top: 15px;
+    position: absolute;
+    padding-right: 30px;
+    height: 100px;
+    z-index: 1;
+}
+
+.premium .following {
+    padding: 15px;
+    color: #fff;
+    top: 10px;
+    z-index: 1;
+    position: inherit;
+}
+
+.premium .OrnageDot img {
+    top: -0px;
+    position: relative;
+    width: 9px;
+    height: 9px;
+}
+
+.premium .played {
+    margin: 15px;
+    position: inherit;
+    text-align: end;
+    right: 30px;
+    top: 10px;
+    z-index: 1;
+    color: #fff;
+}
+
+.premium .eventsContainer {
+    padding-bottom: 80px;
+}
+
+.premium .coursesTitle {
+    font-size: 18px;
+    font-weight: bold;
+    width: 92%;
+    text-align: center;
+    z-index: 1;
+    margin-top: 0px;
+    color: #fff;
+}
+
+.premium .map {
+    width: 100%;
+    position: relative;
+    padding: 15px;
+    top: -15px;
+    display: block;
+    height: 193px;
+}
+
+.premium .unfollowCourses {
+    margin-top: 0px;
+}
+
+.premium .coursesAddress {
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 15px;
+}
+
+.premium .coursescontact {
+    margin-top: 30px;
+    text-align: start;
+    margin-left: 15px;
+}
+
+.mapPremium img {
+    margin-top: 40px;
+    height: 160px;
+    width: 100%;
+}
+
+.googleMarker {
+    width: 50px;
+    position: relative;
+    height: 50px;
+    top: -50px;
+}
+
+.premium li.ReactTabs__Tab {
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    width: 24%;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-top: none;
+    bottom: 0px!important;
+}
+
+.premium ul.ReactTabs__TabList {
+    border-top: 1px solid #ccc;
+    margin: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.premium .ReactTabs__Tab.eventsHead {
+    width: 33% !important;
+}
+
+.ReactTabs__Tab.eventsHead.tabactive{
+    background-color: #33cc33;
+    border: medium none;
+    border-radius: 0;
+    bottom: 0;
+    color: #fff;
+    padding: 10px;
+
+}
+
+.premium .searchResult ul::webkit-scrollbar-corner {
+    height: 100px;
+}
+
+.premium .removePadding {
+    padding-left: 0px;
+    padding-right: 0px;
+    display: inline;
+}
+
+button.viewEveBtn {
+    background-color: #fff;
+    border: 1px solid #f7931e;
+    color: #f7931e;
+    padding: 6px 20px;
+    float: right;
+}
+
+.headerEvents {
+    background-color: #ccc;
+    height: 50px;
+    padding: 9px;
+    margin: 10px;
+}
+
+.headerEvents .col-sm-9 {
+    padding: 3px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.postTittle {
+    position: relative;
+    display: inline;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 30px;
+}
+
+.postTime {
+    font-size: 14px;
+    color: #ccc;
+    position: absolute;
+    right: 0px;
+    padding-right: 30px;
+}
+
+.postContent {
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+    margin: 15px;
+    left: 0px;
+    display: block;
+    min-height: 160px;
+}
+
+.postSumary {
+    position: relative;
+    padding: 10px;
+    color: #58595b;
+}
+
+.like {
+    padding: 10px;
+    color: #ccc;
+}
+
+.comment {
+    padding: 10px;
+    color: #ccc;
+}
+
+.share {
+    padding: 10px;
+    color: #ccc;
+}
+
+span.likeTxt {
+    padding: 10px;
+    color: #ccc;
+}
+
+span.commentTxt {
+    padding: 10px;
+    color: #ccc;
+}
+
+span.shareTxt {
+    padding: 10px;
+    color: #ccc;
+}
+
+.coursesScrollRight {
+    overflow: auto;
+    overflow-y: scroll;
+    height: 720px;
+    top: 51px;
+    position: relative;
+    display: block;
+    width: 65.6%;
+    padding-bottom: 200px;
+}
+
+.premium .searchResult ul {
+    overflow: auto;
+    overflow-y: scroll;
+    height: 648px;
+}
+
+.description {
+    margin: 30px;
+}
+
+.premium ul.eventsTabList {
+    border: 1px solid #44b54a;
+    margin: 10px;
+    border-radius: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+li.eventsHead {
+    width: 33.33%!Important;
+    color: #000;
+    border-right: 1px solid #44b54a;
+    padding: 10px;
+    font-size: 16px;
+}
+
+li:hover.eventsHead {
+    background-color: #33cc33;
+    color: #fff;
+}
+
+.dateEvents {
+    margin: 20px;
+}
+
+.detailsEvents {
+    background-color: #ddd;
+    position: relative;
+    display: block;
+    height: 60px;
+    padding: 10px;
+    margin-right: 15px;
+}
+
+.viewLink {
+    margin-top: 10px;
+}
+
+.coursesAddress {
+    text-align: center;
+    top: 25px;
+    position: relative;
+}
+
+
+/*Events Page*/
+.eventsPage .datespan{
+    font-family: NerisLight;
+    font-size: 16px;
+}
+.eventsPage .addspan{
+    font-family: NerisLight;
+    font-size: 12px;
+}
+.eventsPage .pvtevnt{
+    font-size: 14px;
+    font-family: NerisLight;
+}
+.eventsPage .evntName{
+    font-size: 16px;
+    font-family:NerisLight;
+}
+.eventsPage .modal-content {
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,.2);
+    /* border-radius: 6px; */
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.eventsPage .modal-header {
+     background-color: none; 
+}
+.eventsPage .modaldiv{
+    cursor: pointer;
+}
+.eventsPage .colsdiv{
+    padding: 15px;
+}
+.eventsPage .modal-header .close {
+   margin-top: -32px;
+    background-color: black;
+    border-radius: 50%;
+    margin-right: -28px;
+    padding-bottom: 10px;
+    border: 3px solid white;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.eventsPage .modal-body {
+    position: relative;
+     padding: 0px; 
+    /* margin-top: 10px; */
+}
+.eventsPage .attendingfrndimg1{
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+.eventsPage .eventsHeader img {
+    width: 100%;
+}
+
+.EventsTabHeader li {
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.eventsPage .tabsForEvents .react-tabs .active {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+.eventsPage .tabsForEvents hr{
+    border: 0.1px solid black;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+.eventsPage .img-event {
+    background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+    color: white;
+    font-size: 21px;
+    font-weight: 600;
+    margin-top: -42px;
+    padding: 5px 29px 8px;
+    position: relative;
+}
+.txtcenter{
+    text-align: center;
+}
+.eventsPage ul.EventsTabHeader {
+    margin-left: 30px;
+}
+.eventsPage .btn-createEvent {
+    position: relative;
+    display: inline-table;
+    float: right;
+    padding: 5px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    width: 30%;
+    margin-right: 15px;
+    margin-top: 10px;
+    border: none;
+    height: 30px;
+}
+
+.eventsPage .eventListLeft ul {
+    list-style: none;
+}
+
+.eventsPage .eventListTop {
+    position: relative;
+    width: 100%;
+    display: inline-table;
+}
+
+.priImg {
+    position: relative;
+    float: right;
+}
+
+.eventsPage .eventDate {
+    position: relative;
+    float: left;
+}
+
+.eventsPage .eventListMiddle {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ddd;
+    display: inline-table;
+    border-radius: 5px;
+}
+
+.eventsPage .eventListName {
+    position: relative;
+    float: left;
+    width: 75%;
+}
+
+.eventsPage .ElViewLink {
+    position: relative;
+    float: right;
+}
+.eventsPage .eventScroll{
+    overflow: auto;
+    overflow-y: scroll;
+    height: 890px;
+}
+
+.eventsPage .EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+.EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+.eventsPage .attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+margin-top: 10px;
+
+}
+.eventsPage .friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+.friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+/*kruthika-14-dec*/
+.eventsPage .eventImg {
+    float: right;
+    height: 103px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+}
+/*aaaaaaaaaaaaaaa*/
+
+.eventsPage .list{
+    background: #ddd;
+    border-radius: 0;
+    border:none;
+    top:-15px;
+    left:493px;
+    padding: 0;
+      padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
+}
+.eventsPage .action li a{
+    padding-bottom: 7px;
+    padding-top: 7px;
+    font-size: 12px;
+}
+.eventsPage .action li:hover{
+    background: white;
+}
+.eventsPage .list .dvdrline{
+   border-top:1px solid #ccc;
+}
+.eventsPage .list::after {
+  position: absolute;
+  top: -8px;
+  left: 142px;
+  display: inline-block;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ddd;
+  border-left: 8px solid transparent;
+  content: '';
+}
+.eventsPage .dropdown-menu.list {
+    margin-left: -10%;
+    margin-top: 16.3%;
+}
+/*.eventsPage .optionbutton{
+    
+      float: right;
+    position: relative;
+    height: 18px;
+    width: 36px;
+    margin-right: -653px;
+    top: 68px;
+    cursor: pointer;
+}*/
+
+/*Changed By Mohammed For Fixes Button 14 Dec*/
+.eventsPage .optionbutton {
+    float: right;
+    position: absolute;
+    margin-top: 50px;
+    margin-left: 85%;
+    
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    
+}
+.eventsPage .dividerLine {
+    border: 1px solid;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.eventsPage .eventbody {
+    position: inherit;
+    z-index: -1;
+}
+.eventsPage .adminimg {
+        float: right;
+    position: relative;
+    height: 26px;
+    width: 114px;
+    padding-top: 3px;
+    cursor: pointer;
+    color: white;
+    right: -10px;
+    background-color: darkgreen;
+    border: none;
+}
+.eventsPage .eventGroup {
+    position: relative;
+    width: 10%;
+    height: 8%;
+    border-radius: 50%;
+    border: 2px solid red;
+}
+.eventsPage .eventgrptxt {
+    position: relative;
+    font-weight: bold;
+    float: left;
+    font-size: large;
+    width: 100%;
+    margin: 10px;
+}
+.eventsPage .eventType {
+    font-size: medium;
+    font-weight: 400;
+    width: 29%;
+    position: relative;
+    margin-left: 15%;
+    margin-top: -4%;
+}
+.eventsPage .eventDetails {
+    position: relative;
+    font-size: 14px;
+    font-weight: normal;
+    width: 100%;
+    margin-top: 20px;
+}
+.eventsPage .detailsheader {
+    position: relative;
+    font-size: large;
+    margin: 15px;
+    font-weight: bold;
+    padding: 15px;
+}
+.txtAlignCentre{
+    text-align: center;
+}
+.eventsPage {
+    
+    height: 900px;
+}
+.eventsPage .atndfrnd{
+       font-family: NerisLight;
+    font-size: 14px;
+    
+}
+.mt3px{
+    margin-top: 3px; 
+}
+.eventsPage .dividerLine1 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.eventsPage .eventfriendimg {
+    position: relative;
+    margin-left: 10%;
+    border-right: 2px solid;
+}
+.eventsPage .frndIMG{
+   border-radius: 50%;
+    position: relative; 
+}
+.eventsPage .TLimg{
+   position: absolute;
+    left: 45px;
+}
+.eventsPage .brdright{
+    border-right: 2px solid #ccc;
+}
+.eventsPage .brdrleft{
+        border-left: 2px solid #ccc;
+}
+.eventsPage .dividerLine2 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+    margin-top: 50px;
+}
+.eventsPage .downloadbutton {
+        margin-left: 15px;
+    width: 95%;
+    height: 35px;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: white;
+    background-color: darkorange;
+    border: none;
+}
+.eventsPage .inlinediv {
+    position: relative;
+    display: inline-flex;
+    margin-left: 15px;
+    
+    width: 96%;
+}
+.eventsPage .rejected {
+    margin-left: 30px;
+}
+.eventsPage .responding {
+    margin-left: 10%;
+}
+.eventsPage .inlinedisplay {
+    display: inline;
+}
+.eventsPage .requestinvite {
+    float: right;
+    bottom: 25px;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.eventsPage .shareEvent {
+    float: right;
+    bottom: -10px;
+    margin-right: -5px;
+    position: relative;
+    cursor: pointer;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    width: 116px;
+}
+.eventsPage .editEvent {
+    float: right;
+    bottom: 10px;
+    margin-right: 5px;
+    position: relative;
+    cursor: pointer;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    width: 116px;
+    height: 20px;
+}
+.eventsPage .adminicon{
+    float: right;
+    height: 40px;
+    margin: -8% 7%;
+}
+/*Added By Mohammed For Links 14 Dec*/
+.attending_EventsDetails {
+
+    padding: 8px;
+}
+div:hover.EventsLink {
+    color: #000;
+    cursor: pointer;
+    background-color: #ccc;
+    display: block;
+    border-left: 5px solid #44B44A;
+}
+div.EventsLink {
+    color: #000;
+    cursor: pointer;
+    display: block;
+    border-left: 5px solid transparent;
+    padding: 10px;
+}
+.coursesContent #myModal {
+    width: 45%;
+    margin: 0 auto;
+    padding-top: 300px;
+}
+.coursesContent .modal-header {
+    background-color: #44B44A;
+}
+
+/*kruthika-23-dec*/
+.Profile .Headerdiv {
+    font-size: 24px;
+    text-align: left;
+    margin-bottom: 30px;
+    background-color: darkgreen;
+    color: white;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+.Profile .container {
+    width: 80%;
+    float: left;
+    margin-top: 25px;
+    margin-left: 240px;
+    position: relative;
+    background-color: white;
+}
+.Profile h5.mb-0.Titles {
+    text-align: left;
+    background-color: darkgreen;
+    font-size: 20px;
+    color: white;
+    padding: 5px;
+}
+.Profile .formdiv {
+    position: relative;
+    margin: 10px;
+    float: left;
+    width: 75%;
+    position: relative;
+}
+.Profile .alignForm {
+    position: relative;
+    display: -webkit-box;
+}
+.Profile .Savebtn {
+    border-radius: 0px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    margin-left: 15px;
+}
+.Profile .NameInitials {
+    float: right;
+    margin: 20px;
+    position: relative;
+}
+.Profile .NameInitials > img {
+    height: 140px !important;
+    width: 140px !important;
+    border-radius: 50%;
+}
+.Profile .glyphicon.glyphicon-plus {
+    float: right;
+}
+.Profile .glyphicon.glyphicon-minus {
+    float: right;
+}
+.Profile .glyphicon.glyphicon-exclamation-sign {
+    color: green;
+    font-size: 20px;
+    margin-top: 1%;
+}
+.Profile .btnPhoto {
+    display: table-caption;
+    width: 110%;
+}
+.Profile .btnTakePhoto {
+    width: 131px;
+    margin-top: 3px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.Profile .btnUploadPhoto {
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.Profile .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: 15px;
+    height: 34px;
+}
+.Profile .switch input {
+    display: none;
+}
+.Profile .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.Profile .slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+.Profile input:checked+.slider {
+    background-color: #44b44a;
+}
+.Profile input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+.Profile input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.Profile .slider.round {
+    border-radius: 34px;
+}
+.Profile .slider.round:before {
+    border-radius: 50%;
+}
+.Profile span.PvtLabel {
+    margin: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.Profile span.lblPvtAcc {
+    color: darkgray;
+    margin-top: 25px;
+    margin-left: 15px;
+    margin-right: 40px;
+}
+.Profile .pvtdiv {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+.Profile .buttonsDiv {
+    margin-bottom: 60px;
+}
+.Profile .buttonsdiv {
+    margin-left: 0px;
+    margin-bottom: 60px;
+    margin-top: 20px;
+}
+.Profile span.notifyLabel {
+    position: absolute;
+    float: left;
+    top: -4px;
+    font-size: 16px;
+}
+.Profile .notify .col-sm-6 {
+    padding-left: 70px;
+}
+.dropdownContent {
+    position: absolute;
+    background-color: #ccc;
+    margin-left: -227%;
+}
+.Profile .slider.round{
+    top: 15px;
+}
+.Profile .notify {
+    padding: 10px;
+    margin: 10px;
+}
+.Profile .emaildiv {
+    margin-left: -15%;
+    margin-top: 0px;
+}
+.bgLoginReg .BgadminDashboard {
+    background: url('../img/bg_image.png') no-repeat center center fixed;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    z-index: -1;
+    background-size: cover;
+}
+
+/*Login Page CSS Writen By Mohammed */
+.login-page .navigation {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    display: inline-flex;
+    background-color: #225e25;
+}
+.login-page .logo_login img {
+    margin: 30px;
+}
+.login-page .menu-right a:hover {}
+.formElements .form-control {
+    width: 15%;
+    vertical-align: middle;
+    display: block;
+    background-color: transparent;
+    color: white;
+    margin: 0 auto;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 3px solid #fff;
+    box-shadow: none;
+    border-radius: 0px;
+}
+.login-page .LoginButton button {
+    display: block;
+    margin: auto;
+    background-color: transparent;
+    box-shadow: 0px;
+    border: none;
+    padding: 15px;
+}
+.login-page .signup_text_main {
+    position: relative;
+    display: block;
+    width: 15%;
+    margin: auto;
+}
+.login-page .signup_text {
+    float: right;
+    color: #fff;
+    font-size: 22px;
+}
+.login-page .forget_txt {
+    float: left;
+    color: #fff;
+    font-size: 22px;
+}
+.login-page .FooterDiv img {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+.logoLoginPage img {
+    display: block;
+    margin: auto;
+    padding: 10px;
+}
+.login-page .logo_login {
+    width: 80%;
+}
+.login-page .menu-right {
+    float: right;
+    margin-top: 30px;
+    display: block;
+    margin-left: 0%;
+}
+.login-page .menu-right a {
+    position: relative;
+    color: #fff;
+    font-size: 22px;
+    padding: 15px;
+}
+.registration-page button.RegisterButton {
+    border: none;
+    background-color: transparent;
+    padding-left: 30px;
+}
+.registration-page button.CancelButton {
+    border: none;
+    background-color: transparent;
+    padding-left: -20px;
+}
+.registration-page .footer img {
+    width: 100%;
+}
+.registration-page .privateAccount {
+    color: white;
+    font-size: 13px;
+    margin-left: -5px;
+    font-weight: bold;
+}
+.registration-page .footerRegistration {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.registration-page .img-responsive2 {
+    margin: 0 auto;
+    /*  margin-left: 460px;*/
+    
+    padding-top: 30px;
+}
+.registration-page .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 22px;
+}
+.registration-page .switch input {
+    display: none;
+}
+.registration-page .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+}
+.registration-page .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    top: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    // margin-left:20px;
+    margin-left: auto;
+    margin-right: : auto;
+}
+registration-pageinput:checked+.slider {
+    background-color: forestgreen;
+}
+.registration-page input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+.registration-page input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+.registration-page .slider.round {
+    border-radius: 10px;
+}
+.registration-page .ButtonAll {
+    display: inline-flex;
+    position: relative;
+}
+.registration-page .ButtonAllvalue {
+    display: inline-flex;
+    position: relative;
+    padding-left: 60px;
+}
+.registration-page .slider.round:before {
+    border-radius: 50%;
+}
+.myButton:hover {
+    background-color: #5cbf2a;
+}
+.myButton:active {
+    position: relative;
+    top: 1px;
+}
+.login-form-1 .form-control {
+    border: 0;
+    box-shadow: 0 0 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 7px 0;
+    font-weight: bold;
+    color: white;
+}
+.login-form-1 .form-group {
+    margin-bottom: 0;
+    border-bottom: 1px solid #efefef;
+    margin-left: 50px;
+    margin-right: 35px;
+}
+.login-page fieldset {
+    padding-right: 0.75em;
+}
+.login-page .heightLine {
+    margin-left: 52px;
+    border: 2px #ccc;
+    width: 300px;
+}
+.login-page .mainUpdate {
+    background-color: #006400;
+}
+.login-page .maindiv img {
+    padding: 10px;
+}
+.login-page .rightValue a {
+    padding: 10px;
+    color: #fff;
+}
+.login-page .rightValue {
+    padding: 20px;
+    font-size: 18px;
+}
+.login-page ::-webkit-input-placeholder {
+    /* Chrome */
+    
+    color: white;
+}
+.center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 10px;
+}
+/*02 jan*/
+/*Homepage*/
+.homepage {
+    margin-left: 14%;
+    position: relative;
+    width: 86%;
+}
+.homepage .topbar {
+   position: relative;
+    float: left;
+    display: inline;
+    margin-left: 10%;
+    height: 60px;
+}
+.homepage .tagline{
+    font-size: 18px;
+}
+.homepage img.bgimage {
+    position: relative;
+    width: 100%;
+    //max-height: 600px;
+    display: block;
+}
+.homepage .imagetile {
+    margin: 10px;
+    position: relative;
+    height: 200px;
+}
+.homepage .tileimg {
+    margin-top: 30px;
+    position: relative;
+    width: 80%;
+    margin-left: 7%;
+}
+.homepage .btnEvent
+{
+  float: right;
+    position: absolute;
+    margin-top: 10px;
+    margin-right: 10px;
+    right: 3%;
+}
+.homepage .desc{
+    font-size: 14px;
+}
+.homepage .headingdiv {
+    display: flex;
+    z-index: 1;
+    background-color: #fff;
+    position: relative;
+}
+
+.homepage .Adimg {
+    position: relative;
+    display: block;
+    margin-left: 15%;
+    margin-top: 2%;
+}
+.homepage .bgPic{
+    position: absolute;
+    height: 100%;
+    z-index: 0;
+    width: 100%;
+} 
+/*messages*/
+ .Messages{
+   width: 75%;
+    display: inline;
+    float: left;
+    margin-left: 20%;
+     margin-top: 30px;
+}
+.Messages .list-group-item-primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 139, 202);
+}
+.Messages img.profileimg {
+    border-radius: 50%;
+    margin: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.Messages span.fromName {
+    font-size: 18px;
+    font-weight: bold;
+}
+.Messages img.groupimg {
+  border-radius: 50%;
+    padding-left: 15px;
+    height: 50px;
+    padding-top: 3px;
+    position: absolute;
+}
+.Messages .groupimg2{
+     border-radius: 39%;
+    position: relative;
+    left: 55px;
+    top: 3px;
+    border-color: #44b44a;
+    border-width: 2px;
+}
+.Messages .grpName{
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 75px;
+}
+.Messages .groupicon{
+    position: relative;
+    display: -webkit-inline-box;
+    width: 11%;
+}
+.Messages .msgHeading {
+    background-color: darkgreen;
+    color: white;
+    font-size: 26px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.Messages .msgbody {
+    margin: 0 15px;
+}
+.Messages .msgtime{
+    float: right;
+}
+ .mt15{
+    margin-top: 15px;
+}
+ .mt25{
+    margin-top: 25px;
+}
+.Messages .brdr{
+    border: none;
+}
+.Messages .bg{
+    background-color: #f2f2f2;
+}
+ .fr{
+    float: right;
+}
+.Messages .btnMsg{
+    background-color: darkorange;
+    color: white;
+    border: none;
+    font-size: 16px;
+    margin-right: 7px;
+}
+.Messages .alglft{
+    padding: 0px;
+    margin-bottom: 10px;
+}
+.Messages .btnDel {
+    float: right;
+    background-color: white;
+    color: black;
+    border: 2px solid darkgreen;
+    font-size: 16px;
+    margin-right: 7px;
+}
+.Messages .algrgt{
+    padding: 0px;
+    margin-bottom: 10px;
+}
+ .zeroPad{
+    padding: 0px;
+}
+/*grou homepage*/
+.groupHomepage {
+    width:86%;
+}
+.groupHomepage .bgPic{
+    position: absolute;
+    height: 86%;
+    overflow-y: hidden;
+    width: 100%;
+    z-index: 0;
+} 
+.groupHomepage .paneltab{
+    margin-left: 42.5%;
+}
+.groupHomepage .forumtab{
+    float: right;
+    margin: 0;
+    font-size: 24px;
+    border-left: 2.3px solid #33cc33;
+}
+.groupHomepage .grptab{
+    //border-right: 3px solid #33cc33;
+    padding-right: 30px;
+    //margin-left: 29px;
+    float: left;
+    font-size: 24px;
+}
+.groupHomepage .panel{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 100%;
+    background: none;
+    height: 0px;
+    border: 25px solid rgba(0,0,0,0);
+    border-bottom: 0 rgba(0,0,0,0.1);
+    border-top: 55px solid white;
+}
+.groupHomepage .grptab .text-center{
+    text-align: center;
+}
+.groupHomepage .panel-body {
+    margin-top: -52px;
+    font-family: rodusreg300;
+    font-weight: 500;
+    list-style: none;
+}
+.groupHomepage li
+{
+    display: inline-bolck;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+.groupHomepage .ml15pc{
+    margin-top: 14px;
+    margin-left: 23%;
+}
+.groupHomepage .adimg {
+    vertical-align: middle;
+    position: relative;
+    margin-left: 44%;
+    margin-top: 12px;
+}
+.groupHomepage .bottom-40px {
+    bottom: -4px;
+}
+.groupHomepage ol li.active{
+    background: green;
+    border: 3px solid white;
+}
+.groupHomepage .col-sm-2{
+    margin-top: 107px;
+}
+.groupHomepage  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 7px solid #33cc33;
+    bottom: 0px;
+    margin-right: 41px;
+    padding-right: 115px;
+    padding-left: 12px;
+    margin-left: 57px;
+    font-size: 24px;
+     font-family: Gulim;
+    font-weight: 600;
+    /* border-right: 3px solid green;*/
+}
+.groupHomepage .react-tabs [role=tablist] {
+margin-top: -82px;
+    border-bottom: none;
+}
+.groupHomepage .EventsTabHeader li {      
+    margin-top: 22px;
+    width: 7.8%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    margin-left: 20px;
+    font-weight: 590;
+    cursor: pointer;
+    color : black;
+    font-size: 24px;
+     font-family: Gulim;
+    font-weight: 600;
+   // font-size: 15px;
+}
+
+.groupHomepage .carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    height: 369px !important;
+}
+.groupHomepage li{
+    display: inline-bolck;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+.groupHomepage .carousel-indicators li{
+    background: white;
+    margin-left: 9px;
+}
+.groupHomepage .bottom-40px {
+    bottom: -4px;
+}
+.groupHomepage ol li.active{
+    background: green;
+    border: 2px solid white;
+}
+.groupHomepage .col-sm-2{
+    margin-top: 2%;
+}
+.groupHomepage .previcon,.nexticon{
+    margin-top: 160px;
+}
+.groupHomepage .wd5pc{
+    width:0;
+    border:1.2px solid #ccc;
+}
+.groupHomepage .previcon{
+    margin-left: -21px;
+}
+
+ .wd85pc{
+    width:85%;
+}
+.groupRow .addgrpimg{
+    background-color: #ccc;
+    border-radius: 50%;
+    height: 30%;
+}
+ .m0px{
+    margin: 0px;
+}
+ .wd95pc{
+    width: 95%;
+}
+.mr15px{
+    margin-right: 15px;
+}
+.mr20px{
+    margin-right: 20px;
+}
+ .m35px{
+    margin: 35px;
+}
+.m10px{
+    margin: 10px;
+}
+.ml20px{
+    margin-left: 20px;
+}
+.ml50px{
+    margin-left: 50px;
+}
+.ml30px{
+    margin-left: 30px;
+}
+.pdtp10px{
+    padding-top:10px;
+}
+.groupHomepage img.bgimage {
+    position: relative;
+    width: 100%;
+    max-height: 100%;
+    display: block;
+}
+.groupHomepage .bgPic{
+    height: 100%;
+    overflow-y: hidden;
+    position: absolute;
+    width: 100%;
+    z-index: 0;
+} 
+.txtwhite{
+    color:white;
+}
+.bottom-40px{
+    bottom: -40px;
+}
+.bl3ccc{
+    border-left: 3px solid #ccc;
+}
+.wd5pc{
+    width: 5%;
+}
+.br3ccc{
+    border-right: 3px solid #ccc;
+}
+.brd3white{
+    border: 3px solid white;
+}
+.brd3red{
+    border: 3px solid red;
+}
+.brd3green{
+    border: 3px solid green;
+}
+.brd3dblue{
+    border: 3px solid darkblue;
+}
+.brd3black{
+    border: 3px solid black;
+}
+.brd3purple{
+    border: 3px solid purple;
+}
+.brd3dorange{
+    border: 3px solid darkorange;
+}
+.bgwhite{
+    background: white;
+}
+.groupHomepage .adimg{
+    vertical-align: middle;
+    position: relative;
+    margin-left: 35%;
+    margin-top: 60px;
+}
+/*edit group*/
+.editGroup{
+    margin-left: 240px;
+    width: 80%;
+}
+.editGroup .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.editGroup .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.editGroup .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.editGroup .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.editGroup .accordionPanel{
+    position: relative;
+    display: inline;
+    margin-top: 265px;
+}
+.editGroup .cardDiv{
+    background-color: #44b44a;
+}
+.editGroup .titleclass{
+    font-size: 16px;
+    color:white;
+    padding: 10px;
+    
+}
+.editGroup .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: 15px;
+    height: 34px;
+}
+.editGroup .switch input {
+    display: none;
+}
+.editGroup .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.editGroup .slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+.editGroup input:checked+.slider {
+    background-color: #44b44a;
+}
+.editGroup input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+.editGroup input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.editGroup .slider.round {
+    border-radius: 34px;
+}
+.editGroup .slider.round:before {
+    border-radius: 50%;
+}
+.editGroup .Savebtn{
+    margin-left: 15px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.editGroup .addgrpimg{
+    vertical-align: middle;
+    display: inline;
+    position: absolute;
+    left: 500px;
+    top: 199px;
+}
+.editGroup .addgrp{
+       background: white;
+    opacity: 0.7;
+    border-radius: 0px;
+    float: right;
+}
+.editGroup .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #44b44a;
+}
+.editGroup .adminSave{
+    position: relative;
+    display: block;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 10px;
+}
+.editGroup .spanclass{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 15px;
+}
+.editGroup .sliderswitch{
+        margin-top: 10px;
+}
+.editGroup .adminimg{
+    border-radius: 50%;
+    height: 30px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.editGroup .toggleicon{
+        float: right;
+    position: relative;
+    display: inline;
+    color: white;
+}
+.editGroup .delGrp{
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+/*group gallery*/
+.GroupGallery{
+    margin-left: 240px;
+    width: 80%;
+}
+.GroupGallery .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.GroupGallery .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupGallery .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupGallery .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupGallery  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.GroupGallery .EventsTabHeader li {
+        margin-top: 254px;
+
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupGallery .adminicon{
+    float: right;
+    height: 40px;
+    margin-top: -55px;
+}
+.GroupGallery .thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+     border: none !important;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+/*group events*/
+.GroupEvents{
+    margin-left: 240px;
+    width: 80%;
+}
+
+.GroupEvents .btnCreateEvent{
+    float: right;
+    margin-top: 5px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+}
+.GroupEvents .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.GroupEvents .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupEvents .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupEvents .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupEvents  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.GroupEvents .EventsTabHeader li {
+        margin-top: 254px;
+
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupEvents .adminicon{
+    float: right;
+    height: 40px;
+    margin-top: -55px;
+}
+.GroupEvents .dividerLine1{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+.GroupEvents .dividerLine2{
+    border: 2px solid darkgreen;
+    
+}
+.fnt12px{
+    font-size:12px;
+}
+.GroupEvents .viewevntPage{
+    margin-top: 20px;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.fntbold{
+    font-weight: bold;
+}
+.fnt16px{
+    font-size: 16px;
+}
+/*group info*/
+.GroupInfo{
+    margin-left: 240px;
+    width: 80%;
+}
+.GroupInfo,
+.GroupInfo div
+ {
+    background-color: white;
+}
+.GroupInfo .groupPosts{
+    background-color: #ccc;
+}
+.GroupInfo .btnLeaveGroup{
+    float: right;
+    margin-top: 5px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+}
+.GroupInfo .btnEditGroup{
+    float: right;
+    margin-right: 5%;
+    margin-top: 2%;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+}
+.GroupInfo .coverimg {
+   
+    width: 100%;
+    position: relative;
+}
+.GroupInfo .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupInfo .captionDiv{
+   position: relative;
+    margin-top: -3%;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupInfo .captionDiv > div {
+    float: right;
+    background-color: transparent;
+}
+.groupOptionBtn{
+    background: darkorange;
+    border: none;
+    color: white;
+    font-weight: bolder;
+    padding-bottom: 6%;
+    outline: none;
+    text-align: center;
+    margin: 5px;
+}
+.GroupInfo .groupInfoList{
+    border-radius: 0;
+    left: -345%;
+    padding: 0;
+    border: 0;
+}
+.GroupInfo .groupInfolistFile a{
+    padding: 3%;
+    text-align: center;
+}
+.GroupInfo .dropdown-menu.list::after
+{
+    border-bottom: 8px solid #eee;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    content: "";
+    display: inline-block;
+    left: 91%;
+    position: absolute;
+    top: -20%;
+}
+.GroupInfo .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupInfo  .tabsForEvents .react-tabs .active {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 16px;
+    bottom: 0px;
+}
+
+
+.GroupInfo .EventsTabHeader li {
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupInfo .adminicon{
+    float: right;
+    height: 40px;
+    margin-right: 1%;
+    margin-top: -5%;
+}
+.ml5px{
+    margin-left: 5px;
+}
+.GroupInfo .dividerLine1{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+.GroupInfo .dividerLine2{
+    border: 2px solid darkgreen;
+    margin-top: 0 !important;
+}
+.GroupInfo .dividerLine{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 1%;
+}
+.GroupInfo .react_div {
+    padding-top: 1%;
+    padding-bottom: 2%;
+    margin-top: 1%;
+}
+.GroupInfo .tabTitle {
+    color: darkgreen;
+    font-weight: bolder;
+}
+.GroupInfo .col-sm-2.imageDiv{
+    padding: 0 !important;
+}
+.GroupInfo .btnEdit{
+    color: white;
+    background-color: darkgreen;
+    border: none;
+    width: 15%;
+}
+.GroupInfo .fileTag{
+  margin-left: 4px;
+    color: darkgreen;
+    font-weight: bold;
+    font-size: 14px;  
+}
+.GroupInfo .dividerLine3{
+    border: 2px solid darkgreen;
+}
+.GroupInfo .btnUploadFile{
+    margin-top: 20px;
+    margin-left: 25px;
+    color: white;
+    background-color: darkgreen;
+    border: none;
+}
+.GroupInfo .createEvent {
+    margin-top: 2%;
+}
+.GroupInfo .eventsPage {
+    height: auto !important;
+}
+/*group events admin*/
+
+.GroupEventsAdmin{
+    margin-left: 240px;
+    width: 80%;
+}
+
+.GroupEventsAdmin .btnCreateEvent{
+    float: right;
+    margin-top: 5px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+}
+.GroupEventsAdmin .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.GroupEventsAdmin .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupEventsAdmin .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupEventsAdmin .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupEventsAdmin  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.GroupEventsAdmin .EventsTabHeader li {
+    margin-top: 254px;
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupEventsAdmin .btnContactAdmin{
+    float: right;
+    margin-top: -55px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+        margin-right: 15px;
+}
+.GroupEventsAdmin .dividerLine1{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+.GroupEventsAdmin .dividerLine2{
+    border: 2px solid darkgreen;
+    
+}
+.fnt12px{
+    font-size:12px;
+}
+.GroupInfo .viewevntPage{
+    margin-top: 20px;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.fntbold{
+    font-weight: bold;
+}
+/*group gallery admin*/
+.GroupGalleryAdmin{
+    margin-left: 240px;
+    width: 80%;
+}
+.GroupGalleryAdmin .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.GroupGalleryAdmin .btnUploadpics{
+    float: right;
+    margin-top: 5px;
+    background-color: darkgreen;
+    border: none;
+        margin-right: 15px;
+    color: white;
+}
+.GroupGalleryAdmin .dividerLine1{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.GroupGalleryAdmin .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupGalleryAdmin .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupGalleryAdmin .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupGalleryAdmin  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.GroupGalleryAdmin .EventsTabHeader li {
+        margin-top: 254px;
+
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupGalleryAdmin .btnContactAdmin{
+    float: right;
+    margin-top: -55px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+        margin-right: 15px;
+}
+.GroupGalleryAdmin .thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+     border: none !important;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+/*group info admin*/
+.GroupInfoAdmin{
+    margin-left: 240px;
+    width: 80%;
+}
+
+.GroupInfoAdmin .btnLeaveGroup{
+    float: right;
+    margin-top: 5px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+}
+.GroupInfoAdmin .coverimg {
+   
+    width: 80%;
+    position: absolute;
+}
+.GroupInfoAdmin .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.GroupInfoAdmin .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.GroupInfoAdmin .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.GroupInfoAdmin  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.GroupInfoAdmin .EventsTabHeader li {
+        margin-top: 254px;
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.GroupInfoAdmin .btnContactAdmin{
+    float: right;
+    margin-top: -55px;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+        margin-right: 15px;
+}
+.ml5px{
+    margin-left: 5px;
+}
+.GroupInfoAdmin .dividerLine1{
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+.GroupInfoAdmin .dividerLine2{
+    border: 2px solid darkgreen;
+    
+}
+.GroupInfoAdmin .btnEdit{
+    color: white;
+    background-color: darkgreen;
+    border: none;
+    width: 15%;
+}
+.GroupInfoAdmin .fileTag{
+  margin-left: 4px;
+    color: darkgreen;
+    font-weight: bold;
+    font-size: 14px;  
+}
+.GroupInfoAdmin .dividerLine3{
+    border: 2px solid darkgreen;
+}
+.GroupInfoAdmin .btnUploadFile{
+    margin-top: 20px;
+    margin-left: 15px;
+    color: white;
+    background-color: darkgreen;
+    border: none;
+}
+.createEvent .editeventImg{
+    position: absolute;
+    margin-top: 35px;
+    margin-left: 30%;
+    border-radius: 0px;
+    background-color: white;
+    opacity: 0.7;
+}
+.createEvent .eventsHeader img {
+    width: 100%;
+}
+.createEvent .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #44b54a;
+}
+.createEvent .glyphimg1{
+     position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+     color: white;
+}
+.createEvent .eventScroll{
+    overflow: auto;
+    overflow-y: scroll;
+    height: 780px;
+}
+.EventsTabHeader li {
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.createEvent .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+.createEvent ul.EventsTabHeader {
+    margin-left: 30px;
+}
+
+.createEvent .btn-createEvent {
+    position: relative;
+    display: inline-table;
+    float: right;
+    padding: 5px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    width: 30%;
+    margin-right: 15px;
+    margin-top: 10px;
+    border: none;
+    height: 30px;
+}
+
+.createEvent .eventListLeft ul {
+    list-style: none;
+}
+.eventListLeft ul {
+    list-style: none;
+}
+.createEvent .eventListTop {
+    position: relative;
+    width: 100%;
+    display: inline-table;
+}
+.eventListTop {
+    position: relative;
+    width: 100%;
+    display: inline-table;
+}
+.priImg {
+    position: relative;
+    float: right;
+}
+
+.createEvent .eventDate {
+    position: relative;
+    float: left;
+}
+.eventDate {
+    position: relative;
+    float: left;
+}
+
+.createEvent .eventListMiddle {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ddd;
+    display: inline-table;
+    border-radius: 5px;
+}
+
+.createEvent .eventListName {
+    position: relative;
+    float: left;
+    width: 75%;
+}
+
+.createEvent .ElViewLink {
+    position: relative;
+    float: right;
+}
+
+.createEvent .EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+
+.createEvent .attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+margin-top: 10px;
+
+}
+.createEvent .friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+
+/*kruthika-14-dec*/
+.createEvent .eventImg {
+    float: right;
+    height: 103px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+}
+.createEvent .teeTimeUpload{
+    background-color: darkgreen;
+    border: medium none;
+    color: white;
+    margin-left: 8%;
+}
+/*.eventsPage .optionbutton{
+    
+      float: right;
+    position: relative;
+    height: 18px;
+    width: 36px;
+    margin-right: -653px;
+    top: 68px;
+    cursor: pointer;
+}*/
+
+/*Changed By Mohammed For Fixes Button 14 Dec*/
+.createEvent .optionbutton {
+    float: right;
+    position: relative;
+    top: -50px;
+    left: -30px;
+    cursor: pointer;
+}
+.createEvent .dividerLine {
+    border: 1px solid;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.createEvent .eventbody {
+    position: relative;
+}
+.createEvent .adminimg {
+        float: right;
+    position: relative;
+    height: 26px;
+    width: 114px;
+    padding-top: 3px;
+    cursor: pointer;
+    color: white;
+    right: -10px;
+    background-color: darkgreen;
+    border: none;
+}
+.createEvent .eventGroup {
+        position: relative;
+    
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid red;
+}
+.createEvent .eventgrptxt {
+    position: relative;
+    font-weight: bold;
+    float: left;
+    font-size: large;
+    width: 100%;
+    margin: 15px;
+}
+.createEvent .eventType {
+    font-size: medium;
+    font-weight: 400;
+    width: 29%;
+    position: relative;
+    margin-left: 15%;
+    margin-top: -4%;
+}
+.createEvent .eventDetails {
+    position: relative;
+    font-size: 14px;
+    font-weight: normal;
+    width: 100%;
+}
+.eventsPage .detailsheader {
+    position: relative;
+    font-size: large;
+    margin: 15px;
+    font-weight: bold;
+    padding: 15px;
+}
+/*.createEvent {
+    
+    height: 900px;
+}*/
+.createEvent .dividerLine1 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+}
+.createEvent .eventfriendimg {
+    position: relative;
+    margin-left: 10%;
+    border-right: 2px solid;
+}
+.createEvent .dividerLine2 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+}
+.createEvent .downloadbutton {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.createEvent .txtarea{
+    width: 100%;
+    height: 160px;
+}
+#event_details .savebtn{
+    width: 91%;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    font-size: 18px;
+    margin-left: 30px; 
+}
+.createEvent .grpimgdiv{
+    border-radius: 50%;
+    border: 3px solid red;
+}
+.createEvent .inlinediv {
+    position: relative;
+    display: inline-flex;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 96%;
+}
+.createEvent .detailshead{
+        margin-left: 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.createEvent .rejected {
+    margin-left: 30px;
+}
+.createEvent .responding {
+    margin-left: 10%;
+}
+.createEvent .inlinedisplay {
+    display: inline;
+}
+.createEvent .requestinvite {
+   float: right;
+    bottom: 45px;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.createEvent .shareEvent {
+   float: right;
+    bottom: 18px;
+    margin-right: -116px;
+    position: relative;
+    cursor: pointer;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    width: 116px;
+}
+.createEvent .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: -45%;
+    height: 34px;
+}
+.createEvent .switch input {
+    display: none;
+}
+.createEvent .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.createEvent .slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+.createEvent input:checked+.slider {
+    background-color: #44b44a;
+}
+.createEvent input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+.createEvent input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+.createEvent .dateInputDiv{
+    width: 30% !important;
+}
+.createEvent .dateLabelDiv{
+    width: 21% !important;
+}
+
+/* Rounded sliders */
+.createEvent .slider.round {
+    border-radius: 34px;
+    margin-top: 20px;
+}
+.createEvent .slider.round:before {
+    border-radius: 50%;
+}
+.createEvent .downloadbutton {
+        margin-left: 15px;
+    width: 95%;
+    height: 35px;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: white;
+    background-color: darkorange;
+    border: none;
+}
+/*Add group*/
+.AddGroup{
+    margin-left: 240px;
+    width: 80%;
+}
+.AddGroup .coverimg {
+   
+    width: 100%;
+    position: relative;
+}
+.AddGroup .col-sm-3 {
+    width: 23%;
+}
+.AddGroup .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.AddGroup .captionDiv{
+    position: relative;
+    margin-top: -4.5%;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.AddGroup .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 98%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+.AddGroup .accordionPanel{
+    background-color: white;
+    display: inline;
+    position: relative;
+}
+.AddGroup .cardDiv{
+    background-color: #44b44a;
+}
+.AddGroup .txtwhite:hover {
+    border-bottom: 1px solid #fff !important;
+}
+.AddGroup .col-sm-2 > a:focus,
+.AddGroup .col-sm-2 > a:hover {
+    text-decoration: none !important;
+}
+.AddGroup .titleclass{
+    font-size: 16px;
+    color:white;
+    padding: 10px;
+    
+}
+.AddGroup .dropdown-menu.inner {
+    height: 150px;
+    overflow-y: scroll !important;
+}
+.AddGroup .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: 15px;
+    height: 34px;
+}
+.AddGroup .switch input {
+    display: none;
+}
+.AddGroup .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.AddGroup .slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+.AddGroup input:checked+.slider {
+    background-color: #44b44a;
+}
+.AddGroup input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+.AddGroup input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.AddGroup .slider.round {
+    border-radius: 34px;
+}
+.AddGroup .slider.round:before {
+    border-radius: 50%;
+}
+.AddGroup .Savebtn{
+    margin-left: 15px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.AddGroup .addgrpimg{
+    vertical-align: middle;
+    display: inline;
+    position: absolute;
+    left: 500px;
+    top: 199px;
+}
+.AddGroup .addgrp{
+       background: white;
+    opacity: 0.7;
+    border-radius: 0px;
+    float: right;
+}
+.AddGroup .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #44b44a;
+}
+.AddGroup .adminSave{
+    position: relative;
+    display: block;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 10px;
+}
+.AddGroup .spanclass{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 15px;
+}
+.AddGroup .sliderswitch{
+    margin-top: 10px;
+    //margin-right: 15px;
+}
+.AddGroup .adminimg{
+    border-radius: 50%;
+    height: 30px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.AddGroup .toggleicon{
+        float: right;
+    position: relative;
+    display: inline;
+    color: white;
+}
+.AddGroup .delGrp{
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.AddGroup .menuBox li:active,
+.menuBox li:hover {
+    background-color: #595A5C;
+    border-left: 5px solid #47B64D;
+    color: #fff;
+}
+/*edit event*/
+.editEvent .editeventImg{
+    position: absolute;
+    margin-top: 35px;
+    margin-left: 30%;
+    border-radius: 0px;
+    background-color: white;
+    opacity: 0.7;
+}
+.editEvent .eventsHeader img {
+    width: 100%;
+}
+.editEventeditEvent .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #44b54a;
+}
+.editEvent .glyphimg1{
+     position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+     color: white;
+}
+.editEvent .eventScroll{
+    overflow: auto;
+    overflow-y: scroll;
+    height: 780px;
+}
+.eventScroll{
+    overflow: auto;
+    overflow-y: scroll;
+    height: 500px;
+}
+.EventsTabHeader li {
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.editEvent .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+.editEvent ul.EventsTabHeader {
+    margin-left: 30px;
+}
+
+.editEvent .btn-createEvent {
+    position: relative;
+    display: inline-table;
+    float: right;
+    padding: 5px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    width: 30%;
+    margin-right: 15px;
+    margin-top: 10px;
+    border: none;
+    height: 30px;
+}
+
+.editEvent .eventListLeft ul {
+    list-style: none;
+}
+
+.editEvent .eventListTop {
+    position: relative;
+    width: 100%;
+    display: inline-table;
+}
+
+.priImg {
+    position: relative;
+    float: right;
+}
+
+.editEvent .eventDate {
+    position: relative;
+    float: left;
+}
+
+.editEvent .eventListMiddle {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ddd;
+    display: inline-table;
+    border-radius: 5px;
+}
+.eventListMiddle {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ddd;
+    display: inline-table;
+    border-radius: 5px;
+}
+.editEvent .eventListName {
+    position: relative;
+    float: left;
+    width: 75%;
+}
+.eventListName {
+    position: relative;
+    float: left;
+    width: 75%;
+}
+.editEvent .ElViewLink {
+    position: relative;
+    float: right;
+}
+ .ElViewLink {
+    position: relative;
+    float: right;
+}
+.editEvent .EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+
+.editEvent .attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+margin-top: 10px;
+
+}
+.editEvent .friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+
+/*kruthika-14-dec*/
+.editEvent .eventImg {
+    float: right;
+    height: 103px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/*.eventsPage .optionbutton{
+    
+      float: right;
+    position: relative;
+    height: 18px;
+    width: 36px;
+    margin-right: -653px;
+    top: 68px;
+    cursor: pointer;
+}*/
+
+/*Changed By Mohammed For Fixes Button 14 Dec*/
+.editEvent .optionbutton {
+    float: right;
+    position: relative;
+    top: -50px;
+    left: -30px;
+    cursor: pointer;
+}
+.editEvent .dividerLine {
+    border: 1px solid;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.editEvent .eventbody {
+    position: relative;
+}
+.editEvent .adminimg {
+        float: right;
+    position: relative;
+    height: 26px;
+    width: 114px;
+    padding-top: 3px;
+    cursor: pointer;
+    color: white;
+    right: -10px;
+    background-color: darkgreen;
+    border: none;
+}
+.editEvent .eventGroup {
+        position: relative;
+    
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid red;
+}
+.editEvent .eventgrptxt {
+    position: relative;
+    font-weight: bold;
+    float: left;
+    font-size: large;
+    width: 100%;
+    margin: 15px;
+}
+.editEvent .eventType {
+    font-size: medium;
+    font-weight: 400;
+    width: 29%;
+    position: relative;
+    margin-left: 15%;
+    margin-top: -4%;
+}
+.editEvent .eventDetails {
+    position: relative;
+    font-size: 14px;
+    font-weight: normal;
+    width: 100%;
+}
+.editEvent .detailsheader {
+    position: relative;
+    font-size: large;
+    margin: 15px;
+    font-weight: bold;
+    padding: 15px;
+}
+.editEvent {
+    
+    height: 900px;
+}
+.editEvent .dividerLine1 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+}
+.editEvent .eventfriendimg {
+    position: relative;
+    margin-left: 10%;
+    border-right: 2px solid;
+}
+.editEvent .dividerLine2 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+}
+.editEvent .downloadbutton {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.editEvent .txtarea{
+    width: 100%;
+    height: 200px;
+}
+.editEvent .savebtn{
+       width: 91%;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    font-size: 18px;
+    margin-left: 30px; 
+}
+.editEvent .grpimgdiv{
+    border-radius: 50%;
+    border: 3px solid red;
+}
+.editEvent .inlinediv {
+    position: relative;
+    display: inline-flex;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 96%;
+}
+editEvent        margin-left: 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.editEvent .rejected {
+    margin-left: 30px;
+}
+.editEvent .responding {
+    margin-left: 10%;
+}
+.editEvent .inlinedisplay {
+    display: inline;
+}
+.editEvent .requestinvite {
+   float: right;
+    bottom: 45px;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.editEvent .shareEvent {
+   float: right;
+    bottom: 18px;
+    margin-right: -116px;
+    position: relative;
+    cursor: pointer;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    width: 116px;
+}
+.editEvent .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: -45%;
+    height: 34px;
+}
+.editEvent .switch input {
+    display: none;
+}
+.editEvent .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.editEvent .slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+.editEvent input:checked+.slider {
+    background-color: #44b44a;
+}
+.editEvent input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+.editEvent input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+.editEvent .dateInputDiv{
+    width: 30% !important;
+}
+.editEvent .dateLabelDiv{
+    width: 20% !important;
+}
+
+/* Rounded sliders */
+.editEvent .slider.round {
+    border-radius: 34px;
+    margin-top: 10px;
+}
+.editEvent .slider.round:before {
+    border-radius: 50%;
+}
+.editEvent .downloadbutton {
+        margin-left: 15px;
+    width: 95%;
+    height: 35px;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: white;
+    background-color: darkorange;
+    border: none;
+}
+.Groupadminpost{
+    margin-left: 240px;
+    width: 80%;
+    
+}
+.Groupadminpost .coverimg {
+    width: 80%;
+    position: absolute;
+}
+.Groupadminpost .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.Groupadminpost .editGroupimg{
+        
+}
+.Groupadminpost .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.Groupadminpost .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 102%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+/*edit group menu barr--------------------------------------------------------------*/
+ .Groupadminpost .menubardiv{
+font-family:Arial, Helvetica, sans-serif;      /* menu barr*/
+font-size:12px;
+width:100%;
+margin-top: 297px;
+
+}
+ .Groupadminpost body {
+    background-color: gray;
+}
+
+
+
+.Groupadminpost .menubar ul{
+list-style:none;
+background:#2d2d2d;
+margin:0;
+padding:0;
+}
+
+.Groupadminpost  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.Groupadminpost .EventsTabHeader li {
+        margin-top: 254px;
+
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.Groupadminpost .adminicon {
+    float: right;
+    width: 3%;
+    margin-top: -54px;
+    margin-right: 29px;
+}
+.Groupadminpost .formtype{
+      background-image: url(img/bgimages.png);
+    border: 0.1px solid #333;
+    width: 62%;
+}
+.Groupadminpost .forminput{
+        border: none;
+       margin-left: 14px;
+    margin-top: 36px;
+    position: relative;
+  }
+.Groupadminpost .formimg{
+    border-radius: 50%;
+}
+.Groupadminpost .cameraimg{
+    
+    margin-top: 2px;
+    margin-left: 8px;
+
+}
+.Groupadminpost .postimg{
+    
+    margin-left: 556px;
+        float: right;
+
+}
+.Groupadminpost .dividerdiv{
+    
+    border: 1px solid #ccc;
+    margin-top: 9px;
+    width: 100%;
+
+}
+.Groupadminpost .addimg{
+float:right;
+margin-top: -111px;
+margin-right: 36px;
+
+}
+.Groupadminpost .ptag{
+    float: right;
+    margin-right: 131px;
+    margin-top: -81px;
+}
+
+.Groupadminpost .horizantalline{
+      border: 1px solid #ccc;
+    width: 30%;
+    float: right;
+    margin-top: -56px;
+    margin-right: 34px;
+}
+/*memberlist-------------------------------------------------------------------------------------------------------*/
+.Groupadminpost .addmem
+    {
+    margin-top: 125px;
+           
+}
+.Groupadminpost .img1{
+    border-radius: 50%;
+}
+.Groupadminpost .img2{
+    border-radius: 50%;
+   
+}
+.Groupadminpost .img3{
+    border-radius: 50%;
+   
+}
+.Groupadminpost .img4{
+    border-radius: 50%;
+  
+}
+.Groupadminpost .img5{
+    border-radius: 50%;
+   
+}
+.Groupadminpost .img6{
+    border-radius: 50%;
+    
+}
+.Groupadminpost .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    float: right;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #ccc;
+}
+.ht35px{
+    height: 35px;
+}
+.mrt{
+    margin-top: -60px;
+        margin-left: 26px;
+}
+.mrtop{
+    margin-top: -15px;
+        margin-left: 26px;
+}
+.addbox{
+    margin-top: -174px;
+    float: right;
+    border: 1px solid black;
+    width: 32%;
+    padding: 43px;
+    margin-right: -60px;
+}
+
+    
+.secblock{
+    border-radius: 50%;
+    float: left;
+}
+.parg{
+        margin-top: -11px;
+}
+.margtp{
+
+    margin-top: -142px;
+}
+    
+.Groupadminpost .commentimg{
+        float: right;
+    margin-right: -72px;
+    margin-top: 3px;
+
+}
+.dividerdivv{
+    
+    border: 1.2px solid #ccc;
+    margin-top: 17px;
+    width: 120%;
+}
+
+.btnContactAdmin{
+    float: right;
+    margin-top: -55px;
+    background-color: darkgreen;
+    border:none;
+    margin-right: 15px;
+    color:white;
+}
+
+.Groupmember{
+    margin-left: 240px;
+    width: 80%;
+    
+}
+.Groupmember .coverimg {
+    width: 80%;
+    position: absolute;
+}
+.Groupmember .imgtag{
+    margin-left: 10px;
+    color:#fff;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.Groupmember .editGroupimg{
+        
+}
+.Groupmember .captionDiv{
+   position: relative;
+    top: 255px;
+    background-color: black;
+    height: 32px;
+    opacity: 0.6;
+}
+.Groupmember .btnoptions{
+      float: right;
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    height: 102%;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    border-radius: 0;
+}
+/*edit group menu barr--------------------------------------------------------------*/
+ .Groupmember .menubardiv{
+font-family:Arial, Helvetica, sans-serif;      /* menu barr*/
+font-size:12px;
+width:100%;
+margin-top: 297px;
+
+}
+ .Groupmember body {
+    background-color: gray;
+}
+
+
+
+.Groupmember .menubar ul{
+list-style:none;
+background:#2d2d2d;
+margin:0;
+padding:0;
+}
+
+.Groupmember  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+
+
+.Groupmember .EventsTabHeader li {
+        margin-top: 254px;
+
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.Groupmember .adminicon {
+    float: right;
+    width: 3%;
+    margin-top: -54px;
+    margin-right: 29px;
+}
+.Groupmember .formtype{
+      background-image: url(img/bgimages.png);
+    border: 0.1px solid #333;
+    width: 62%;
+}
+.Groupmember .forminput{
+        border: none;
+       margin-left: 14px;
+    margin-top: 36px;
+    position: relative;
+  }
+.Groupmember .formimg{
+    border-radius: 50%;
+}
+.Groupmember .cameraimg{
+    
+    margin-top: 2px;
+    margin-left: 8px;
+
+}
+.Groupmember .postimg{
+    
+    margin-left: 556px;
+        float: right;
+
+}
+.Groupmember .dividerdiv{
+    
+    border: 1px solid #ccc;
+    margin-top: 9px;
+    width: 100%;
+
+}
+.Groupmember .addimg{
+float:right;
+margin-top: -111px;
+margin-right: 36px;
+
+}
+.Groupmember .ptag{
+    float: right;
+    margin-right: 131px;
+    margin-top: -81px;
+}
+
+.Groupmember .horizantalline{
+      border: 1px solid #ccc;
+    width: 30%;
+    float: right;
+    margin-top: -56px;
+    margin-right: 34px;
+}
+/*memberlist-------------------------------------------------------------------------------------------------------*/
+.GroupInfo .addmem
+    {
+    margin-top: 125px;
+           
+}
+.GroupInfo .img1{
+    border-radius: 50%;
+}
+.GroupInfo .img2{
+    border-radius: 50%;
+   
+}
+.GroupInfo .img3{
+    border-radius: 50%;
+   
+}
+.GroupInfo .img4{
+    border-radius: 50%;
+  
+}
+.GroupInfo .img5{
+    border-radius: 50%;
+   
+}
+.GroupInfo .img6{
+    border-radius: 50%;
+    
+}
+.GroupInfo .glyphicon {
+    position: relative;
+    top: 8px;
+    left: 90%;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    float: left;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #ccc;
+}
+.GroupInfo .glyphicon.glyphicon-pencil{
+    left: -5% !important;
+    color: #44b54a !important;
+    top: 5px !important;
+}
+.ht35px{
+    height: 35px;
+}
+.mrt{
+    margin-top: -60px;
+        margin-left: 26px;
+}
+.mrtop{
+    margin-top: -15px;
+        margin-left: 26px;
+}
+.addbox{
+    margin-top: -174px;
+    float: right;
+    border: 1px solid black;
+    width: 32%;
+    padding: 43px;
+    margin-right: -60px;
+}
+
+    
+.secblock{
+    border-radius: 50%;
+    float: left;
+}
+.parg{
+        margin-top: -11px;
+}
+.margtp{
+
+    margin-top: -142px;
+}
+    
+.GroupInfo .commentimg{
+        float: right;
+    margin-right: -72px;
+    margin-top: 3px;
+
+}
+.dividerdivv{
+    
+    border: 1.2px solid #ccc;
+    margin-top: 17px;
+    width: 120%;
+}
+
+.btnContactAdmin{
+    float: right;
+    margin-top: -55px;
+    background-color: darkgreen;
+    border:none;
+    margin-right: 15px;
+    color:white;
+}
+
+
+
+
+/***  * groupadminmemd * * **/   
+.GroupInfo{
+  
+
+} 
+
+
+
+.GroupInfo .fontclr{
+color: darkgreen;
+
+    font-size: 23px;
+}
+.GroupInfo .tophead{
+        margin-top: 21px;
+}
+    
+.GroupInfo .imgadem{
+    
+}
+    
+.GroupInfo .searchbr{
+    
+               margin-left: 0px;
+}
+.GroupInfo .searchBox input[type="text"] {
+    position: absolute;
+    height: 30px;
+    margin: 0 auto;
+    top: 0;
+    width: 89%;
+    padding: 0 !important;
+}
+.dividertag {
+    border: 1.2px solid #ccc;
+    margin-top: 23px;
+ 
+    width: 101.4%;
+    float: left;
+}
+.GroupInfo .btnsearch {
+    height: 24px;
+}
+.GroupInfo  .moealdo {
+    border-radius: 50%;
+    height: 14%;
+    margin-left: 30%;
+    margin-top: 16px;
+    width: 80%;
+}
+ .GroupInfo .mb {
+    border-radius: 50%;
+         margin-top: 16px;
+    margin-left: 27px;
+     width: 90%;
+         border: 3px solid red;
+}
+ .GroupInfo  .imgtim{
+    border-radius: 50%;
+         margin-top: 16px;
+    margin-left: 27px;
+}
+
+
+/*myProfile Page*/
+.myProfile {
+    margin-left : 240px;
+    width : 80%;
+}
+.myProfile .coverimg {
+    width : 81%;
+    position : absolute;
+}
+.myProfile .friend_buttons{
+    float: right;
+    margin-top: 5%;
+    width: 40%;
+}
+.myProfile .friend_buttons .fndBtn{
+    border: medium none;
+    border-radius: 15px;
+    margin-right: 5%;
+    background-color: white;
+}
+.myProfile .profileContent {
+    background:  white;
+}
+.myProfile .header{
+    width: 100%;
+    height: 35% !important;
+    border-bottom: 2px solid #ddd;
+}
+.myProfile .headerlogo{
+    width: 40%;
+    position: relative;
+}
+.myProfile .headerlogo .nameImg {
+    border-radius: 50%;
+    margin-left: 5%;
+    margin-top: 45%;
+    width: 25%;
+    height: 30%;
+}
+.myProfile .headerlogo h3 {
+    margin-left: 35%;
+    margin-top: -18%;
+    font-weight: bolder;
+}
+.myProfile .headerlogo h4 {
+    margin-left: 35%;
+    font-size : 12px;
+      margin-top: 0px;
+    font-weight: bolder;
+}
+.myProfile .menuList {
+    margin-left: 40%;
+    position: relative;
+    width: 60%;
+}
+.myProfile .list1 {
+    float: left;
+    margin-top: -10%;
+    width: 50%;
+}
+.myProfile .list2 {
+    float: left;
+    margin-left: 50%;
+    margin-top: -10%;
+    width: 50%;
+}
+.myProfile .list1 th{
+    font-size: 15px;
+    padding-right: 10px;
+}
+.myProfile .list2 th{
+    font-size: 15px;
+    padding-right: 10px;
+}
+.myProfile  .tabsForEvents .react-tabs .active {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    margin-left: 20px;
+    bottom: 0px;
+}
+.myProfile .EventsTabHeader li {      
+    margin-top: 0px;
+    width: 9%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    font-weight: 590;
+    font-size: 15px;
+    cursor: pointer;
+    color : black;
+}
+.myProfile .leftsideimgs {
+    overflow-y : scroll;
+    overflow-x : hidden;
+    width: 35%;
+    margin-top: 0px;
+    padding-right: 60px;
+    border-right: 3px solid #dfdfdf;
+}
+.myProfile .rightsideimgs {
+    overflow-y : scroll;
+    overflow-x : hidden;
+    float : right;
+    width : 52%;
+    margin-top: 0%;
+    margin-left: 28%;
+    position: absolute;
+    margin-right: 0px;
+    background-color: white;
+    height: 500px;
+}
+.rytsideimg {
+    margin-top: 1%;
+}
+.myProfile  .following .OrangeDot img {
+    height : 10px;
+    width : 12px;
+    margin-top: 5.7%;
+     width : 10px;
+    font-size: 10px;
+}
+.myProfile .following {
+    margin-top: -45%;
+    color : white;
+    font-size: 12px;
+}
+.myProfile .rytsideimg .cover-img {
+    margin-left: 0 !important;
+    width: 100% !important;
+}
+.myProfile .rytsideimg .following {
+    margin-left: -15%;
+    margin-top: -28% !important;
+}
+.myProfile .rytsideimg img{
+    width : 89%;
+ margin-left: 90px;
+    margin-bottom: 40px;
+    height: 90px;
+    cursor:pointer;
+}
+.myProfile .top-ryt {
+    margin-top: -73px;
+    color : white;
+    margin-left: 91%;
+   // float: right;
+}
+.myProfile .scores {
+    margin-top: 35px;
+   padding-bottom: 5px;
+}
+.myProfile .score1 {
+    //margin-left: 13%;
+    position: absolute;
+    font-size: 11px;
+    font-weight: lighter;
+    width : 100%;
+}
+.myProfile .score {
+   border : 1px solid darkgreen;
+    background: darkgreen;
+    padding: 5px 10px;
+    text-align: center;
+    width : 30%;
+    color : white;
+}
+.myProfile ul {
+    list-style: none;
+}
+.myProfile ul li {
+    display: inline-block;
+}
+.myProfile ul.scre li.name {
+    padding: 5px 55px 2px 0px;
+    font-weight: bold;
+}
+.myProfile ul.scre li.date {
+    padding : 5px 0px 2px 55px;
+    font-weight: bold;
+}
+.myProfile .score2 {
+    float: right;
+    margin-left: 62%;
+    margin-top: 0px;
+    position: absolute;
+    font-size: 11px;
+    font-weight: lighter;
+    width : 100%;
+}
+.myProfile .rytsideimg2 {
+    float:right;
+    padding-left: -30px;
+    margin-top: 7%;
+  margin-left: 10%;
+    padding-top: 0px;
+    padding-bottom: 10px;
+       border-top: 1px solid #dfdfdf;
+     border-bottom : 1px solid #dfdfdf;
+}
+.myProfile .notes {
+    float : right;
+    font-weight: bold;
+    font-size : 15px;
+    margin-left: 2%;
+    margin-top: 10%;
+    width: 100%;
+}
+.myProfile .notes .notes_button{
+    float: left !important;
+    width: 100%;
+}
+.myProfile .notes span {
+    color : lime;
+    padding-left: 8px;
+}
+
+
+/*MyProfile--Courses*/
+
+.myProfile .profilescroll{
+   overflow-x: hidden;
+   overflow-y: scroll;
+   height: 500px;
+   display: block;
+   background-color:white;
+}
+.myProfile .leftsideimgs {
+    overflow-y : scroll;
+    overflow-x : hidden;
+    margin-top: 0px;
+    padding-right: 60px;
+}
+.myProfile .leftimg {
+    margin: -1px -148px -3px -15px;
+    padding: 8px 89px 0px 12px;
+    position: relative;
+    width: 114%;
+    display: inline-table;
+}
+.myProfile .leftimg:hover {
+    background: #dfdfdf;
+    border-left: 5px solid #33cc33;
+    margin: -1px -148px -3px -15px;
+    padding: 8px 89px 0px 7px;
+    cursor: pointer;
+    position: relative;
+    width: 114%;
+    display: inline-table;
+}
+.myProfile .leftimg1 img{
+    width: 144%;
+    height: 86px;
+    margin-bottom: 4px;
+}
+.myProfile .leftimg1 .ryt {
+        float: right;
+    margin-right: -52%;
+  //  margin-top: 30px;
+    font-size: 11px;
+    font-weight: bolder;
+}
+.myProfile .leftimg1 .left{
+    float: left;
+    margin-left: -12px;
+  //  margin-top: 30px;
+    font-size: 11px;
+    font-weight: bolder;
+}
+.myProfile .leftimg .center{
+    margin-top: -15%;
+    position: absolute;
+    text-align: center;
+    width: 70%;
+}
+.myProfile .center {
+    margin-left: -40%;
+    color: white;
+    margin-top: 10px;
+    top: 100px;
+    font-size: 19px;
+    width: 20px;
+    font-weight: bolder;
+    margin-right: -46px;
+}
+.myProfile .rytsideimg center{
+    margin-top: -7%;
+}
+.myProfile .rytsideimg center .center{
+    margin-left: -15% !important;
+}
+.myProfile .leftimg1 center {
+    margin-top: -70px;
+    position: absolute;
+    /* width: 100%; */
+    display: inline-table;
+    /* font-size: 15px; */
+}
+
+.myProfile .leftimg .following .OrangeDot img{
+    margin-top: 0px;
+}
+.myProfile .leftimg .following {
+    position: absolute;
+    margin-top: -20%;
+}
+
+.myProfile .OrangeDot{
+    padding-right: 5px;
+    top: 0 !important;
+}
+.myProfile .rytsideimg1 .following{
+    position: absolute;
+    margin-top: -22%;
+}
+.myProfile  .rytsideimg1 .following .OrangeDot {
+    top:24% !important;
+}
+.myProfile .top-ryt {
+    color : white;
+    position: absolute;
+    margin-left: 88%;
+}
+.myProfile .rytsideimg1 center{
+    margin-top: 10px;
+}
+.myProfile .rytsideimg1 .center{
+    top: 0;
+    margin-top: 26px;
+    position: absolute;
+    width: auto;
+    display: inline-table;
+    margin-left: 30%;
+    color: white;
+}
+.myProfile .scores {
+   margin-top: 10%;
+   padding-bottom: 5px;
+}
+.myProfile .score1 {
+    position: absolute;
+    font-size: 11px;
+    font-weight: lighter;
+    width : 100%;
+}
+.myProfile .score {
+   border : 1px solid darkgreen;
+    background: darkgreen;
+    padding: 5px 10px;
+    text-align: center;
+    width : 30%;
+    color : white;
+}
+.myProfile .tgle{
+    margin-left: 75%;
+}
+.myProfile ul {
+    list-style: none;
+    margin-bottom: 0;
+}
+.myProfile ul li {
+    display: inline-block;
+}
+.myProfile ul.scre li.name {
+    padding: 5px 39px 2px 0px;
+    font-weight: bold;
+}
+.myProfile ul.scre li.date {
+   padding: 5px 0px 2px 20px;
+    font-weight: bold;
+    font-weight: bold;
+}
+
+
+
+/*MyProfile--Posts*/
+.myProfile {
+    margin-left: 240px;
+    width : 80%;
+}
+.myProfile .coverimg {
+    width : 81%;
+    position : absolute;
+}
+.myProfile .profileContent {
+    background:  white;
+}
+.myProfile  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 7px solid #33cc33;
+    bottom: 0px;
+}
+.myProfile .EventsTabHeader li {      
+    margin-top: 2px;
+    width: 7.8%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    margin-left: 20px;
+    font-weight: 590;
+    cursor: pointer;
+    color : black;
+    font-size: 15px;
+}
+.myProfile .Post {
+    border-right : 3px solid #dfdfdf;
+    margin: 15px 0px 20px 20px;
+    padding-right: 25px;
+    background-color: white;
+}
+.myProfile .Post h3 {
+    font-size: 15px;
+    font-weight: bolder;
+}
+.myProfile .post {
+    border : 2px solid #dfdfdf;
+    padding: 10px 10px 0 20px;
+    margin: 20px 0;
+}
+.myProfile .subpost img{
+    width : 50px;
+    padding-right: 10px;
+}
+.myProfile .subpost .post-name {
+    margin-left: 7%;
+    margin-top: -55px;
+}
+.myProfile .subpost h4 {
+    font-size : 12px;
+    color : #cfcfcf;
+    font-weight : bold;
+    margin-top: -7px;
+    margin-left: 0px;
+}
+.myProfile .subpost p {
+    float : right;
+    margin-top: -30px;
+    font-weight : bolder;
+    font-size : 12px;
+    margin-right: 30px;
+}
+.myProfile .subpost-cntnt {
+    font-size: 12px;
+    font-weight: normal;
+    color : black;
+    padding-left: 5px;
+    padding-bottom: 10px;
+}
+.myProfile .cmnt {
+    border-bottom: 1px solid #dfdfdf;
+    border-top: 1px solid #dfdfdf;
+    float: right;
+    margin-bottom: 2%;
+    padding: 0 0 0 80%;
+}
+.myProfile .cmnt img{
+    padding-right: 6px;
+}
+.myProfile .cmnt .like {
+    border-right: 4px solid #dfdfdf;
+     padding: 0 10px 5px;
+}
+.myProfile .cmt-rply{
+    margin-top: 30px;
+    padding-top: 15px; 
+    //padding-bottom: 40px;
+}
+.myProfile .cmt-rply img{
+    border-radius: 50%;
+}
+.myProfile .cmt-name {
+    margin-left: 8%;
+    margin-top: -8%;
+}
+.myProfile .cmt-rply p{
+    font-weight: 700;
+    font-size: 13px;
+}
+.myProfile .cmt-name h4 {
+    font-size: 12px;
+    margin-top: -7px;
+    color: #cfcfcf;
+    font-weight: bold;
+    margin-left: 0px;
+}
+.myProfile .post2 h4 {
+    color: black;
+    font-weight: 700;
+}
+.myProfile .extra-cntnt {
+    border: 1px solid #dfdfdf;
+    padding: 10px 10px 15px;
+    background: #dfdfdf;
+    font-weight: bolder;
+}
+.myProfile .photos {
+    float: right;
+    margin-right: -20px;
+}
+.myProfile .photos h3 {
+    font-size: 15px;
+    font-weight: bolder;
+    margin-top: 35px;
+    margin-left: 15px;
+}
+.myProfile .photos .imgs {
+    padding-top: 10px;
+}
+.myProfile .photos img {
+    width : 120px;
+    height: 120px;
+    padding-bottom: 5px;
+}
+
+/*myProfile*/
+.myProfile .private-event{
+    padding: 0;
+}
+.myProfile .pdng{
+    padding: 0;
+}
+.myProfile .admnIcon{
+width: 24%;
+    float: right;
+}
+.myProfile .eventview h3{
+    margin: 0;
+}
+.myProfile .private-event h3{
+    margin-top: 20px !important;
+    margin-right: 0;
+    font-size: 14px;
+    font-weight: bolder;
+}
+.myProfile .private-event h4{
+    margin-top: 10px !important;
+    font-size: 12px;
+    margin-left: 0 !important;
+}
+.myProfile .ml30px{
+     margin-left: 30px;
+}
+.myProfile .panelimg{
+    border-radius: 50%;
+    width: 10%;
+    height: 10%;
+    padding: 0;
+}
+.myProfile .wd100pc{
+    width:100%;
+    height: 400px;
+}
+.myProfile .wd80pc{
+    width:70%;
+    height: 33%;
+}
+.myProfile .addgrpimg{
+    background-color: #ccc;
+}
+ .myProfile .m0px{
+    margin: 0px;
+}
+ .myProfile .m35px{
+    
+     margin-bottom: 50px;
+}
+.myProfile .m10px{
+    margin: 10px 20px;
+}
+.myProfile .ml20px{
+    margin-left: 34px;
+}
+.myProfile .ml50px{
+    margin-left: 50px;
+}
+.myProfile .ml30px{
+    margin-left: 30px;
+}
+.myProfile .ml30pxl {
+    margin-left: 34px;
+}
+.myProfile .pdtp10px{
+    padding-top:10px;
+}
+.myProfile .txtblack {
+    color:black;
+    font-size: 11px;
+}
+.myProfile .bottom-40px{
+    bottom: -40px;
+}
+.myProfile .bl3ccc{
+    border-left: 3px solid #ccc;
+}
+.myProfile .wd2pc{
+    width: 5%;
+}
+.myProfile .right {
+    //margin-right: 134px;
+}
+.myProfile .carousel {   
+    margin-left: 0%;
+    margin-top: 50px;
+    height: 300px;
+}
+.myProfile .groupRow {
+    width: 100%;
+}
+.myProfile .extraGrp {
+    height: 45%;
+}
+.myProfile .carousel-item{
+    text-align: center;
+    vertical-align: middle;
+}
+.myProfile .icon-prev, .icon-next {
+    margin-top: -20px;
+    position: absolute;
+    color : green;   
+}
+.myProfile .search-icon input {
+    //margin-left: 30px;
+    //margin-top: 2%;
+    width: 30%;
+    border: 2px solid #ccc;
+    font-size: 13px;
+    padding: 5px 20px 5px 40px;
+}
+.myProfile .search-icon img {
+    left: 3%;
+    top: -3.3% !important;
+    position: relative;
+}
+.myProfile .carousel-indicators li.active {
+    margin-left: 10px;
+    border : 3px solid green;
+    background: white;
+}
+.myProfile .carousel-indicators li {
+    margin-left: 10px;
+    border : 3px solid green;
+    background: green;
+}
+.myProfile .wytbckgrnd{
+    background: white;
+  //  padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 0;
+    padding-right: 0;
+}
+.myProfile .pdngTp{
+    padding-top: 20px;
+}
+.myProfile .brdrrad{
+    border-radius: 50%;
+}
+.myProfile .michelImg{
+    height: 113px;
+}
+.myProfile .frnd-name {
+    margin-top: 15px;
+}
+.myProfile .frnd-name h3{
+    margin-top: 0;
+    font-size: 17px;
+    font-weight: bolder;
+}
+.myProfile .friendlist .col-sm-12{
+    background-color: white; 
+}
+.myProfile .friendlist .aldoImg{
+    height: 8%;
+}
+.myProfile .createEventButton{
+    width:100%;
+    text-align: center;
+    margin-bottom: 2%;
+}
+.myProfile .createEventButton button{
+    background: darkgreen;
+    border: none;
+    outline: none;
+    text-align: center;
+    color:white;
+    width: 80%;
+
+}
+.myProfile .dataEntry{
+    padding: 0;
+}
+.myProfile .dataEntry .ryt{
+    width:0%;
+    text-align: center;
+    float: left;
+}
+.myProfile .cntnt1 .spl .ryt{
+    margin-top: 18px;
+    margin-right: 0;
+}
+/*myprofile_friends*/
+
+.myProfile_Friends {
+    margin-left: 240px;
+    width : 80%;
+}
+.myProfile_Friends .coverimg {
+    width : 81%;
+    position : absolute;
+}
+.myProfile_Friends .profileContent {
+    background:  white;
+}
+.myProfile_Friends .headerlogo .nameImg {
+    margin-top: 20%;
+    width : 10%;
+    margin-left: 20px;
+}
+.myProfile_Friends .headerlogo h3 {
+    margin-left: 15%;
+    margin-top: -7%;
+    font-weight: bolder;
+}
+.myProfile_Friends .headerlogo h4 {
+    margin-left: 15%;
+    font-size : 12px;
+      margin-top: 0px;
+    font-weight: bolder;
+}
+.myProfile_Friends table {
+    margin-left: 40%;
+    margin-top:  -4%;
+}
+.myProfile_Friends .list1 th{
+    font-size: 15px;
+    padding-right: 10px;
+}
+.myProfile_Friends .list2 {
+    margin-left:  50%;
+    margin-top:  -3.5%;
+}
+.myProfile_Friends .list2 th {
+    font-size: 15px;
+    padding-right: 10px;
+}
+.myProfile_Friends .header {
+    border-bottom:  2px solid #ddd;
+    padding-bottom: 4.7%;
+}
+.myProfile_Friends  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 7px solid #33cc33;
+    bottom: 0px;
+}
+.myProfile_Friends .EventsTabHeader li {      
+    margin-top: 2px;
+    width: 7.8%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    margin-left: 20px;
+    font-weight: 590;
+    cursor: pointer;
+    color : black;
+    font-size: 15px;
+}
+.myProfile_Friends .EventsTabHeader {
+    border-bottom : 10px solid #dfdfdf;
+}
+.myProfile_Friends .search-icon input {
+    margin-left: 30px;
+    margin-top: 2%;
+    width: 30%;
+    border: 2px solid #ccc;
+    font-size: 13px;
+    padding: 5px 20px 5px 40px;
+}
+.myProfile_Friends .search-icon img {
+    left: 18.5%;
+    position: absolute;
+    margin-top: 30px;
+}
+.myProfile_Friends .friendlist img {
+    border-radius: 50%;
+    width : 100px;
+    height: 100px;
+}
+.myProfile_Friends .friendlist{
+    padding: 3% 5%;
+}
+.myProfile_Friends .col-sm-6 {
+    width : 40%;
+    margin: 0 0px 0 50px;
+}
+.myProfile_Friends .spl img{
+    border : 5px solid red;
+      margin: 0px 70px 0 -20px;
+}
+.myProfile_Friends .frnd-name {
+    margin-left: 25%;
+    margin-top: -32%;
+    padding: 25px;
+}
+.myProfile_Friends .frndlist1 {
+    padding: 0 20px 0 0;
+}
+.myProfile_Friends .frndlist2 img {
+  margin: 0 70px 0 -20px;
+}
+.myProfile_Friends .frnd-name h3 {
+    font-weight: bolder;
+    font-size: 17px;
+}
+.myProfile_Friends .frnd-name p {
+    font-weight: bolder;
+    font-size: 13px;
+}
+
+
+
+/*myProfile*/
+
+.myProfile {
+    margin-left: 240px;
+    width : 80%;
+}
+.myProfile .coverimg {
+    width : 80%;
+    position : absolute;
+}
+.myProfile .profileContent {
+    background:  white;
+}
+.myProfile  .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 7px solid #33cc33;
+    bottom: 0px;
+}
+.myProfile  .ReactTabs.react-tabs
+{
+    height: 5.3%;
+}
+.myProfile .EventsTabHeader li{      
+    margin-top: 2px;
+    width: 7.8%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    margin-left: 20px;
+    font-weight: 590;
+    cursor: pointer;
+    color : black;
+    font-size: 15px;
+}
+.myProfile .react_div {
+    margin-top: 1%;
+    background-color: white
+}
+.myProfile .events-content {
+    padding: 0 10px;
+}
+.myProfile .eVdL{
+    margin-top: 30% !important;
+}
+.myProfile .eventsPage{
+    height: 850px;
+}
+.myProfile .btn-createEvent{
+    text-align : center;
+}
+.myProfile .cntnt {
+    padding: 10px 0;
+    font-size : 13px;
+    font-weight: 800;
+}
+.myProfile .cntnt1 {
+    background: #bbb;
+    padding: 15px 10px 5px;
+    border-left: 5px solid #33cc33;
+    margin-bottom: 20px;
+}
+.myProfile .cntnt1 img {
+    border-radius: 50%;
+    padding: 5px;
+    width  :45px;
+    height: 40px;
+    margin: 0px 10px 5px;
+}
+.myProfile .spl {
+    background: #ddd;
+    padding: 5px 15px;
+    margin-bottom: 5px;
+}
+.myProfile .spl .ryt{
+    margin-top: -40px;
+    margin-right: 28px;
+}
+.myProfile .lft {
+    float: left;
+    width:50%;
+}
+.myProfile .ryt {
+    float: right;
+    width: 50%;
+    //margin-top: -40px;
+}
+.myProfile .cntnt2:hover, .cntnt1:hover {
+    background: #bbb;
+   // padding: 10px 10px 5px;
+    border-left: 5px solid #33cc33;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.myProfile .cntnt2 .ryt {
+    float: right;
+    margin-top: -27px;
+}
+.myProfile .cntnt2 .spl .ryt{
+    margin-top: -40px;
+    margin-right: 28px;
+}
+.myProfile .cntnt2 {
+    padding-bottom: 5px;
+    border-bottom : 2px solid #ccc;
+}
+.myProfile .event-img{
+      border-bottom : 3px solid #ccc;
+   // margin-top: -30px;
+    margin-left: 5px;
+}
+.myProfile .nameDetail{
+
+}
+.myProfile .eventImg {
+    float: right;
+    height: 103px;
+    width: 100%;
+   margin-bottom: 10px;
+    position: relative;
+}
+.myProfile .optionbutton {
+    float: right;
+    position: relative;
+    top: -43px;
+    left: -10px;
+    cursor: pointer;
+}
+.myProfile .eventview h3{
+    font-size:17px;
+    margin-bottom: 10px;
+}
+.myProfile .eventview p {
+    font-size:13px;
+}
+.myProfile .eventview p.tym {
+    margin-top: -10px;
+}
+.myProfile .adminicon {
+    width : 30px;
+    height: 40px;
+}
+.myProfile .wd80pc {
+    //width : 50px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+.myProfile span.name h3,h4 {
+    margin-left: 10%;
+    margin-top: -50px;
+}
+.myProfile .txtblack h3{
+    font-size: 17px;
+    font-weight: bolder;
+}
+.myProfile span.name h4 {
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: -5px;
+}
+.myProfile .details {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size:17px;
+}
+.myProfile .explain{
+    margin-left: 10px;
+    text-align:left;
+    margin-right: 12px;
+    font-weight: 590;
+}
+.myProfile .btnEvent{
+    width: 282px;
+    background-color: darkgreen;
+    color: white;
+    border: none;
+}
+.posrelative{
+    position: relative;
+}
+.left3pc{
+    left: 3%;
+}
+.regis.bgLoginReg .BgadminDashboard {
+    background: url('../img/bg_image.png') no-repeat center center fixed;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    position: fixed;
+    z-index: -1;
+    background-size: cover;
+}
+.regis .logoimg {
+    display: block;
+    margin: auto;
+    padding: 50px;
+    margin-top: -39px;
+    width: 272px;
+}
+.regis .logogolf{
+    width: 260px;
+    margin-top: 10px;
+}
+.regis .formcontrol {
+    width: 20%;
+    vertical-align: middle;
+    display: block;
+    background-color: transparent;
+    margin: 0 auto;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 2px solid #fff;
+    box-shadow: none;
+    border-radius: 0px;
+}
+.ptag{
+    margin-top: 13px;
+    margin-left: 42.7%;
+    color: white;
+}
+ .switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: 4%;
+    height: 34px;
+}
+ .switch input {
+    display: none;
+}
+ .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+ input:checked+.slider {
+    background-color: #44b44a;
+}
+ input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+ input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+        margin-left: 15px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+.switchround{
+    margin-left: 40%;
+    position: relative;
+    margin-top: 11px;
+    color: white;
+}
+  .signupimages{
+    width: 94px;
+    margin-left: 42%;
+    margin-top: 19px;
+}
+
+.mrgtop10px{
+  margin-top: 10px;  
+}
+
+
+regis.cancelimages{
+    
+    width: 94px;
+    margin-left: 51%;
+    margin-top: -56px;
+
+}
+.login-page .FooterDiv img {
+    width: 100%;
+    position: relative;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+.registsign {
+    width: 105px;
+    height: 38px;
+    border-radius: 36px;
+    background-color: darkorange;
+    border: 1px;
+    color: white;
+        margin-left: 40%;
+    margin-top: 19px;
+}
+regis.registcancel {
+    width: 105px;
+    height: 38px;
+    border-radius: 36px;
+    background-color: #44b44a;
+    border: 1px;
+    color: white;
+        margin-left: 57px;
+}
+
+.switch {
+    position: relative;
+    display: inline;
+    width: 60px;
+    margin-left: 8%;
+    height: 34px;
+}
+ .switch input {
+    display: none;
+}
+ .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 20px;
+    width: 45px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    left: 0px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+}
+ input:checked+.slider {
+    background-color: #44b44a;
+}
+ input:focus+.slider {
+    box-shadow: 0 0 1px #44b44a;
+}
+ input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+.mrgtopp10px{
+    margin-top: 15px;
+}
+.regis .login-page .logo_login img {
+    margin: 30px;
+}
+.regis .bgLoginReg .BgadminDashboard {
+    background: url('../img/bg_image.png') no-repeat center center fixed;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    position: fixed;
+    z-index: -1;
+    background-size: cover;
+}
+.regis .registcancel {
+    width: 105px;
+    height: 38px;
+    border-radius: 36px;
+    background-color: #44b44a;
+    border: 1px;
+    color: white;
+    margin-left: 57px;
+}
+.padding5px{
+    padding: 5px;
+}
+.GroupInfo .buttoninvite{
+    border: none;
+    color: white;
+    background-color: darkgreen;
+    float: right;
+}
+.GroupInfo .membersbtn{
+ border: none;
+    background-color: darkorange;
+    color: white;
+    width: 80%;   
+}
+.myProfile .datespan{
+    font-family: NerisLight;
+    font-size: 16px;
+}
+.myProfile .addspan{
+    font-family: NerisLight;
+    font-size: 12px;
+}
+.myProfile .pvtevnt{
+    font-size: 14px;
+    font-family: NerisLight;
+}
+.myProfile .evntName{
+    font-size: 16px;
+    font-family:NerisLight;
+}
+.myProfile .modal-content {
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,.2);
+    /* border-radius: 6px; */
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.myProfile .modal-header {
+     background-color: none; 
+}
+.myProfile .modaldiv{
+    cursor: pointer;
+}
+.myProfile .colsdiv{
+    padding: 15px;
+}
+.myProfile .modal-header .close {
+   margin-top: -32px;
+    background-color: black;
+    border-radius: 50%;
+    margin-right: -28px;
+    padding-bottom: 10px;
+    border: 3px solid white;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.myProfile .modal-body {
+    position: relative;
+     padding: 0px; 
+    /* margin-top: 10px; */
+}
+.myProfile .attendingfrndimg1{
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+.myProfile .eventsHeader img {
+    width: 100%;
+}
+
+.EventsTabHeader li {
+    width: 10%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.myProfile .tabsForEvents .react-tabs [role=tab][aria-selected=true] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 5px solid #33cc33;
+    padding-bottom: 15px;
+    bottom: 0px;
+}
+.txtcenter{
+    text-align: center;
+}
+
+.myProfile .btn-createEvent {
+    position: relative;
+    display: inline-table;
+    float: right;
+    padding: 5px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    width: 30%;
+    margin-right: 15px;
+    margin-top: 10px;
+    border: none;
+    height: 30px;
+}
+
+.myProfile .eventListLeft ul {
+    list-style: none;
+}
+
+.myProfile .eventListTop {
+    position: relative;
+    width: 100%;
+    display: inline-table;
+}
+
+.priImg {
+    position: relative;
+    float: right;
+}
+
+.myProfile .eventDate {
+    position: relative;
+    float: left;
+}
+
+.myProfile .eventListMiddle {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ddd;
+    display: inline-table;
+    border-radius: 5px;
+}
+
+.myProfile .eventListName {
+    position: relative;
+    float: left;
+    width: 75%;
+}
+
+.myProfile .ElViewLink {
+    position: relative;
+    float: right;
+}
+.myProfile .eventScroll{
+    overflow: auto;
+    overflow-y: scroll;
+    height: 820px;
+}
+
+.myProfile .EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+.EventListDT {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+.myProfile .attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.attending {
+    position: relative;
+    display: inline-table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+margin-top: 10px;
+
+}
+.myProfile .friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+.friendAttend {
+    width: 80%;
+    position: relative;
+    float: left;
+}
+/*kruthika-14-dec*/
+.myProfile .eventImg {
+    float: right;
+    height: 103px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/*.eventsPage .optionbutton{
+    
+      float: right;
+    position: relative;
+    height: 18px;
+    width: 36px;
+    margin-right: -653px;
+    top: 68px;
+    cursor: pointer;
+}*/
+
+/*Changed By Mohammed For Fixes Button 14 Dec*/
+.myProfile .optionbutton {
+    float: right;
+    position: absolute;
+    margin-top: 50px;
+    margin-left: 85%;
+    
+    opacity: 1 !important;
+    background-color: orange;
+    color: white;
+    border: none !important;
+    padding: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    
+}
+.myProfile .dividerLine {
+    border: 1px solid;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.myProfile .eventbody {
+    position: inherit;
+    z-index: -1;
+}
+.myProfile .adminimg {
+        float: right;
+    position: relative;
+    height: 26px;
+    width: 114px;
+    padding-top: 3px;
+    cursor: pointer;
+    color: white;
+    right: -10px;
+    background-color: darkgreen;
+    border: none;
+}
+.myProfile .eventGroup {
+    position: relative;
+    width: 11%;
+    //height: 100%;
+    border-radius: 50%;
+    border: 2px solid red;
+}
+.myProfile .eventgrptxt {
+    position: relative;
+    font-weight: bold;
+    float: left;
+    font-size: large;
+    width: 100%;
+    margin: 10px;
+}
+.myProfile .eventType {
+    font-size: medium;
+    font-weight: 400;
+    width: 29%;
+    position: relative;
+    margin-left: 15%;
+    margin-top: -4%;
+}
+.myProfile .eventDetails {
+    position: relative;
+    font-size: 14px;
+    font-weight: normal;
+    width: 100%;
+    margin-top: 20px;
+}
+.myProfile .detailsheader {
+    position: relative;
+    font-size: large;
+    margin: 15px;
+    font-weight: bold;
+    padding: 15px;
+}
+.txtAlignCentre{
+    text-align: center;
+}
+.myProfile {
+    
+    height: 900px;
+}
+.myProfile .atndfrnd{
+       font-family: NerisLight;
+    font-size: 14px;
+    
+}
+.mt3px{
+    margin-top: 3px; 
+}
+.myProfile .dividerLine1 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.myProfile .eventfriendimg {
+    position: relative;
+    margin-left: 10%;
+    border-right: 2px solid;
+}
+.myProfile .frndIMG{
+   border-radius: 50%;
+    position: relative; 
+}
+.myProfile .TLimg{
+   position: absolute;
+    left: 45px;
+}
+.myProfile .brdright{
+    border-right: 2px solid #ccc;
+}
+.myProfile .brdrleft{
+        border-left: 2px solid #ccc;
+}
+.myProfile .dividerLine2 {
+    border: 1px solid #44b54a;
+    position: relative;
+    width: 100%;
+    margin-top: 50px;
+}
+.myProfile .downloadbutton {
+        margin-left: 15px;
+    width: 95%;
+    height: 35px;
+    border-radius: 3px;
+    margin-top: 10px;
+    color: white;
+    background-color: darkorange;
+    border: none;
+}
+.myProfile .inlinediv {
+    position: relative;
+    display: inline-flex;
+    margin-left: 15px;
+    
+    width: 96%;
+}
+.myProfile .rejected {
+    margin-left: 30px;
+}
+.myProfile .responding {
+    margin-left: 10%;
+}
+.myProfile .inlinedisplay {
+    display: inline;
+}
+.myProfile .requestinvite {
+   float: right;
+    bottom: 45px;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: darkgreen;
+    color: white;
+}
+.myProfile .shareEvent {
+   float: right;
+    margin-right: -20%;
+    position: relative;
+    cursor: pointer;
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    width: 116px;
+}
+
+
+.frndsGridPage{
+   // overflow-x:hidden;
+}
+.frndsGridPage .frndsgrid{
+    position:relative;
+    margin-left: 20%;
+    margin-top: 1%;
+   // overflow-y: scroll;
+}
+.frndsGridPage .r1c1{
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding-top: 14px;
+    margin-right: 50px;
+    background: #f8f5f6;
+    margin-bottom: 30px;
+    cursor: pointer;
+  //  padding-right: 81%;
+}
+.frndsGridPage .meo,.gina,.michel,.tim{
+     position: absolute;
+}
+.frndsGridPage a{
+    color:#000;
+}
+.frndsGridPage .r1c1 img{
+    border-radius: 50%;
+    margin-bottom: 20px;
+    margin-left: 11px;
+    width:110px;
+    height: 116px;
+}
+.frndsGridPage .col-sm-12.row {
+    margin-bottom: 20%;
+}
+.frndsGridPage .r1{
+    margin-bottom: 30px;
+}
+.frndsGridPage .r2,.r3,.r4{
+    margin-bottom: 30px;
+    margin-top: 197px;
+}
+.frndsGridPage .r1c1 .name{
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #ddd;
+    background: #eee;
+    font-size: 16px;
+    font-weight: bolder;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.frndsGridPage .namexx{
+    float: left;
+    position: relative;
+}
+.frndsGridPage .envlp{
+    padding-left: 67px;
+    position: absolute;
+    float: right;
+    padding-top: 12px;
+    color: black;
+    font-size: 15px;
+}
+.frndsGridPage .envlp:hover{
+    font-size:17px;
+}
+.frndsGridPage .img1{
+    padding-left: 30px;
+    padding-right: 20px;
+}
+.frndsGridPage .r1c1:hover{
+    background: #eee;
+}
+.frndsGridPage .r1c1:hover .name{
+    background: #ddd;
+}
+.frndsGridPage .mb{
+    width:100px;
+    height:100px;
+    background: white;
+    border:5px solid crimson;
+}
+.frndsGridPage a.btn-lg{
+    background: white;
+    border: none;
+    color: #ddd;
+    padding: 0;
+    font-size: 11px;
+}
+.frndsGridPage .modal {
+    position: fixed; 
+    top:25%;
+    color:black;
+    padding-right: 0;
+}
+.frndsGridPage .modal-content{
+    width: 450px;
+    height: 300px;
+    border-radius: 0px;
+}
+.frndsGridPage .btn-primary,.btn-secondary{
+    font-weight: bolder;
+    padding: 1px 13px 3px;
+    border: 0px solid green;
+    color:white;
+    border-radius: 0px;
+    background: darkgreen;
+    margin-right: 10px;
+}
+.frndsGridPage .btn-secondary{
+    width:65px;
+}
+.frndsGridPage .txtarea{
+    width:100%;
+    height: 150px;
+}
+.frndsGridPage .modal-header{
+    background: darkgreen;
+    color:white;
+    font-weight: 600;
+    font-size:16px;
+}
+.txtarea {
+    resize: none;
+    outline: none;
+}
+/*notifications------------------------------------*/
+.Notification{
+   width: 82%;
+    display: inline;
+    float: left;
+    margin-left: 18%;
+    padding-right: 41px;
+  //  margin-top: 6%;
+    height: 560px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.Notification .notifyhead {
+    background-color: darkgreen;
+    color: white;
+    font-size: 26px;
+    margin-bottom: 10px;
+    padding: 10px 20px 10px;
+    font-family: 'rodusreg300';
+}
+.Notification .notifcontainer{
+    margin-top: 4%;
+}
+.Notification .btnDel {
+    float: right;
+    background-color: white;
+    color: darkolivegreen;
+    font-weight: bolder;
+    padding: 0px 25px 3px;
+    border: 3px solid darkgreen;
+    font-size: 16px;
+     text-align: center;
+    outline: none;
+}
+.Notification .algrgt{
+      float: right;
+    margin-top: 18px;
+    margin-bottom: 7px;
+}
+.Notification .delmodal{
+    padding: 0;
+    font-size: 16px;
+    color:darkgreen;
+    text-decoration: none;
+}
+.Notification .modal-dialog{
+    top:25%;
+}
+.Notification .modal-content{
+    border-radius: 0;
+}
+.Notification .checkng{
+    background: darkgreen;
+    color:white;
+    border:none;
+    margin-left: 10px;
+    padding: 1px 10px 3px;
+    outline: none;
+}
+.Notification .bg{
+    background-color: #f2f2f2;
+}
+.Notification .profileimg {
+    border-radius: 50%;
+    margin: 10px;
+    width:40px;
+    height: 35px;
+    margin-left: -8px;
+}
+.Notification .customchk{
+    margin-top: 21px;
+    position: absolute;
+}
+.Notification .profileimg1 {
+ //  margin-left: 26px;
+    width:10px;
+}
+.Notification .brdr{
+  border:0;
+    color:black;
+}
+.Notification .notifchckbx{
+    width:0;
+}
+.Notification .notifgreendot{
+    position: absolute;
+    margin-top: 21px;
+}
+.Notification .notifmsg{
+    margin-left: 17px;
+}
+.Notification .fromName {
+    font-weight: bolder;
+    font-size:15px;
+    padding: 1px;
+    margin-left: 35px;
+    color:black;
+}
+.Notification .msgbody{
+    margin-top: 13px;
+    margin-left: -7px;
+    margin-right: -35px;
+    color:black;
+}
+.Notification .msgtime{
+   float: right;
+    color:black;
+}
+.Notification .mt15{
+    margin-top: 15px;
+    margin-right: 10px;
+}
+.Notification .fr{
+    float: right;
+}
+
+
+.viewNotification{
+   width: 82%;
+    display: inline;
+    float: left;
+    margin-left: 18%;
+    padding-right: 41px;
+//    margin-top: 6%;
+    height: 560px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.viewNotification .notifcontainer{
+    margin-top: 4%;
+}
+.viewNotification .notifyhead {
+    background-color: darkgreen;
+    color: white;
+    font-size: 26px;
+    font-family: 'rodusreg300';
+    margin-bottom: 10px;
+    padding: 10px 20px 10px;
+}
+.viewNotification .btns{
+    padding-bottom: 15px;
+}
+.viewNotification .btnback{
+      background-color: white;
+    color: darkolivegreen;
+    padding: 0px 30px 3px;
+     border: 3px solid darkgreen;
+    font-size: 16px;
+    font-weight: bolder;
+      margin-top: 17px;
+    text-align: center;
+    font-weight: bolder;
+}
+.viewNotification .alglft{
+    margin-bottom: 10px;
+}
+.viewNotification .btnDel {
+    float: right;
+    background-color: white;
+    color: darkolivegreen;
+    font-weight: bolder;
+    padding: 0px 25px 3px;
+    border: 3px solid darkgreen;
+    font-size: 16px;
+     text-align: center;
+}
+.viewNotification .algrgt{
+      float: right;
+    margin-top: -40px;
+    margin-bottom: 10px;
+}
+.viewNotification .golf-img {
+    width:45px;
+    height:33px;
+}
+.viewNotification .img-heading {
+    margin-left: 8px;
+}
+.viewNotification h3{
+    font-size: 16px;
+    font-weight: bolder;
+    margin-left: 6%;
+    margin-top: -24px;
+}
+.viewNotification .ryt{
+    float: right;
+    margin-top: -27px;
+    margin-right: 17px;
+}
+.viewNotification .notifmsg{
+    background: #eee;
+    padding: 10px;
+    margin-top: 5px;
+    padding-bottom: 20%;
+}
+.viewNotification .notifheader{
+    margin-bottom: 30px;
+}
+.viewNotification .msg{
+    padding: 10px;
+    margin: 0 13px;
+    font-size: 14px;
+}
+
+.Messages{
+   width: 82%;
+    display: inline;
+    float: left;
+    margin-left: 18%;
+    padding-right: 41px;
+ //   margin-top: 6%;
+    //height: 577px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.Messages .list-group-item-primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 139, 202);
+}
+.Messages img.profileimg {
+    border-radius: 50%;
+    margin-left: 10px;
+    height: 40px;
+    margin-top: 7px;
+}
+.Messages .list-group {
+    margin-top: 10px;
+}
+.Messages span.fromName {
+    font-weight: bolder;
+    font-size:15px;
+    margin-left: 51px;
+    color:black;
+    position: absolute;
+    margin-top: 12px;
+}
+.Messages img.groupimg {
+    border-radius: 50%;
+    //margin-left: 10px;
+    height: 40px;
+    margin-top: 7px;
+    position: absolute;
+}
+.Messages .groupimg2{
+     border-radius: 50%;
+    position: relative;
+    left: 41px;
+    top: 7px;
+    height: 40px;
+    border-color: #44b44a;
+    border-width: 2px;
+}
+.Messages .grpName{
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 66px;
+    position: absolute;
+    margin-top: 12px;
+}
+.Messages .brdr{
+    padding-bottom: 8px;
+}
+.Messages .groupicon{
+    position: relative;
+    display: -webkit-inline-box;
+    width: 11%;
+}
+.Messages .msg{
+    margin-top: 15px;
+}
+.Messages .msgHeading {
+    background-color: darkgreen;
+    color: white;
+    font-family: 'rodusreg300';
+    font-size: 26px;
+    margin-bottom: 10px;
+    padding: 10px 20px 10px;
+}
+.Messages .btns{
+    margin-bottom: 7.1%;
+}
+.Messages .msgtime{
+    float: right;
+    margin-right: 10px;
+}
+.Messages .brdr{
+    border: none;
+}
+.Messages .bg{
+    background-color: #f2f2f2;
+}
+ .fr{
+    float: right;
+}
+.Messages .btnMsg{
+    background-color: orange;
+    color: white;
+    border: none;
+     float: left;
+    padding: 2px 14px 5px 20px;
+    font-size: 16px;
+    margin-left: -14px;
+    margin-top: 17px;
+     text-align: center;
+    outline:none;
+}
+.Messages .alglft{
+    margin-bottom: 10px;
+}
+.Messages .btnDel {
+    float: right;
+    background-color: white;
+    color: darkolivegreen;
+    font-weight: bolder;
+    padding: 0px 25px 3px;
+    border: 3px solid darkgreen;
+    font-size: 16px;
+    margin-top: 48px;
+     text-align: center;
+     outline:none;
+}
+.Messages .algrgt{
+    float: right;
+    margin-top: -30px;
+    margin-bottom: 10px;
+}
+ .zeroPad{
+    padding: 0px;
+}
+.Messages .pb12px{
+    padding-bottom: 15px;
+}
+.mt15px{
+    margin-top: 15px
+}
+.mt10px{
+    margin-top: 10px
+}
+.Messages li{
+    cursor: pointer;
+}
+.Messages li a{
+    color: black;
+}
+.Messages .customchck{
+    margin-top: 21px;
+    position: absolute;
+}
+.Messages .msgchckbx{
+    width: 20px;
+}
+button{
+    outline: none;
+}
+
+.viewMessage {
+   width: 82%;
+    display: inline;
+    float: left;
+    margin-left: 18%;
+    padding: 0 41px 0 0;
+  //  margin-top: 6%;
+    height: 577px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.viewMessage .msgcontainer{
+    margin-top: 4%;
+    background-color: white;
+}
+.viewMessage .msgHeading {
+    background-color: darkgreen;
+    color: white;
+    font-size: 26px;
+    font-family: 'rodusreg300';
+    margin-bottom: 10px;
+    padding: 10px 20px 10px;
+}
+.viewMessage .btns{
+    padding-bottom: 15px;
+    border-bottom: 4px solid lightgrey;
+}
+.viewMessage .btnback{
+    background-color: white;
+    color: darkolivegreen;
+    padding: 0px 30px 3px;
+    border: 3px solid darkgreen;
+    font-size: 16px;
+    font-weight: bolder;
+    margin-left: 10px;
+    margin-top: 17px;
+    text-align: center;
+    font-weight: bolder;
+}
+.viewMessage .btnMsg{
+    background-color: orange;
+    color: white;
+    border: none;
+     float: left;
+    padding: 2px 14px 7px 20px;
+    font-size: 16px;
+    margin-left: 0px;
+    margin-top: 17px;
+     text-align: center;
+}
+.viewMessage .alglft{
+    margin-bottom: 10px;
+}
+.viewMessage .btnDel {
+    float: right;
+    background-color: white;
+    color: darkolivegreen;
+    font-weight: bolder;
+    padding: 0px 25px 3px;
+    border: 3px solid darkgreen;
+    font-size: 16px;
+    margin-right: -14px;
+     text-align: center;
+}
+.viewMessage .algrgt{
+    float: right;
+    margin-top: 2%;
+    margin-bottom: 10px;
+    padding-right: 4%;
+}
+.viewMessage .person-img{
+    border-radius: 50%;
+}
+.viewMessage .groupmsgs {
+    margin-top: 30px;
+}
+.viewMessage .nickdetails{
+    margin-left: 20px;
+}
+.viewMessage .lastseen h3{
+    margin-left: 75px;
+    margin-top: -45px;
+    font-weight: 600;
+    font-size:19px;
+}
+.viewMessage .lastseen h4{
+    margin-left: 74px;
+    margin-top: -8px;
+    font-size: 13px;
+    color: #bbb;
+}
+.viewMessage .nickmsg p{
+    margin-top: 30px;
+    background: #eee;
+    padding: 10px 20px 15px 50px;
+    margin-left: -9px;
+}
+.viewMessage .nickmsg p::after{
+    content: "";
+    /* bottom: 54%; */
+    top: -41px;
+    position: relative;
+    left: -44px;
+    margin-left: -34%;
+    border-width: 13px;
+    border-style: solid;
+    border-color: transparent transparent #eee transparent;
+}
+.viewMessage .nickmsg{
+    margin: 5px 5px 6px 10px;
+}
+.viewMessage .stevedetails{
+    margin-left: 20px;
+}
+.viewMessage .stevemsg{
+    margin: 15px 5px 6px 10px;
+}
+.viewMessage .stevemsg p{
+    margin-top: 30px;
+    background: #ccc;
+    padding: 10px 20px 15px 50px;
+    margin-left: -9px;
+}
+.viewMessage .stevemsg p::after{
+    content: "";
+    /* bottom: 54%; */
+    top: -41px;
+    position: relative;
+    left: -44px;
+    margin-left: -34%;
+    border-width: 13px;
+    border-style: solid;
+    border-color: transparent transparent #ccc transparent;
+}
+.viewMessage .nickrply {
+    margin: 15px 5px 6px 10px;
+}
+.viewMessage .rplybox{
+    border: 16px solid #eee;
+    margin-top: 31px;
+    margin-left: -7px;
+    padding: 20px 20px 10px;
+}
+.viewMessage .txtarea{
+    width: 100%;
+    height: 200px;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+.viewMessage .rplybox::after {
+   content: "";
+    /* bottom: 54%; */
+    top: -320px;
+    position: relative;
+    left: 328px;
+    margin-left: -34%;
+    border-width: 13px;
+    border-style: solid;
+    border-color: transparent transparent #eee transparent;
+}
+.viewMessage .brdrline{
+    border-top: 4px solid #ccc;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+.viewMessage .rytside{
+    float: right;
+}
+.viewMessage .cam-img{
+    height:25px;
+    width:33px;
+}
+.viewMessage .btnCncl{
+    border: 3px solid darkgreen;
+    background: white;
+    color: darkolivegreen;
+    margin-right: 10px;
+    padding: 0px 20px 3px;
+    font-weight: bold;
+    font-size: 15px;
+    width: 45% !important;
+}
+.viewMessage .btnSnd {
+     border: 3px solid darkgreen;
+    background: darkgreen;
+    color: white;
+    margin-left: 10px;
+    padding: 0px 20px 3px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.newMessage {
+    width: 82%;
+    display: inline;
+    float: left;
+    margin-left: 18%;
+    padding-right: 41px;
+  //  margin-top: 6%;
+    height: 577px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.newMessage .msgcontainer{
+    margin-top: 4%;
+}
+.newMessage .msgHeading {
+    background-color: darkgreen;
+    color: white;
+    font-size: 26px;
+    margin-bottom: 10px;
+    font-family: 'rodusreg300';
+    padding: 10px 20px 10px;
+}
+.newMessage .compose {
+    margin: 30px 0 0;
+    border: 15px solid #eee;
+    padding: 14px;
+}
+.newMessage .sendto{
+    font-weight: bolder;
+    font-size: 16px;
+}
+.newMessage .divLine{
+    background: #eee;
+    margin: 15px -15px;
+    padding: 7px;
+}
+.newMessage .msg{
+    padding-top: 5px;
+    font-size: 14px;
+   // padding-bottom: 50px;
+//    margin-bottom: 50px;
+    margin-right: 5px;
+    background-color: white;
+}
+.newMessage .brdrline{
+    border-top: 4px solid #ccc;
+    padding-top: 20px;
+}
+.newMessage .txtarea{
+    width: 100%;
+    height: 266px;
+    border: none; 
+    outline: none;
+    background: transparent;
+}
+.newMessage .rytside{
+    float: right;
+}
+.newMessage .cam-img{
+    height:25px;
+    width:33px;
+}
+.newMessage .btnCncl{
+    border: 3px solid darkgreen;
+    background: white;
+    color: darkolivegreen;
+    margin-right: 10px;
+    padding: 0px 20px 3px;
+    font-weight: bold;
+    font-size: 15px;
+    width: 45% !important;
+}
+.newMessage .btnSnd {
+     border: 3px solid darkgreen;
+    background: darkgreen;
+    color: white;
+    margin-left: 10px;
+    padding: 0px 20px 3px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.forumsPage {
+    width : 86%;
+}
+.forumsPage .paneltab{
+    margin-left: 42.5%;
+    border-style:none;
+}
+.forumsPage .forumtab{
+    float: right;
+    margin: 0;
+    font-size: 24px;
+}
+.forumsPage .grptab{
+    border-right: 2.3px solid #33cc33;
+    float: left;
+    font-size: 24px;
+    padding-right: 50px
+}
+.forumsPage img.bgimage {
+     position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.forumsPage .bgPic{
+    position: absolute;
+    height: 100%;
+    overflow-y: hidden;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin-left: 15%;
+}
+.forumsPage .text-center{
+    text-align: center;
+}
+.forumsPage .panel{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 100%;
+    background: none;
+    height: 0px;
+    border: 25px solid rgba(0,0,0,0);
+    border-bottom: 0 rgba(0,0,0,0.1);
+    border-top: 55px solid white;
+}
+.forumsPage .panel-body {
+    margin-top: -50px;
+    font-family: rodusreg300;
+    font-weight: 500;
+    list-style: none;
+}
+.forumsPage .frmspage{
+    height: 100%;
+}
+.forumsPage li{
+    display: inline-bolck;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+.forumsPage .icon-one,.icon-two,.symbol-one,.symbol-two,.icons{
+    padding: 0;
+}
+.forumsPage .icon-one img{
+    background: white;
+    position: relative;
+    width: 100%;
+    height: 60px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.forumsPage .icon-two img{
+    background: white;
+    float: right;
+    position: relative;
+    border-radius: 5px;
+    width: 100%;
+    height: 60px;
+    margin-bottom: 10px;
+}
+.forumsPage .icon-one .xx{
+    position: absolute;
+    margin-left: -2%;
+    margin-top: -55px;
+    font-size: 17px;
+    font-weight: bolder;
+}
+.forumsPage .icon-two .xx{
+    position: absolute;
+    margin-top: 18px;
+    font-size: 17px;
+    font-weight: bolder;
+}
+.forumsPage .xx .skyblue{
+    color: deepskyblue;
+}
+.forumsPage .xx .green {
+    color: green;
+}
+.forumsPage .xx .blueviolet {
+    color: blueviolet;
+}
+.forumsPage .xx .blue {
+    color: darkblue;
+}
+.forumsPage .xx .brown {
+    color: rosybrown;
+}
+.forumsPage .xx .purple{
+    color: purple;
+}
+.forumsPage .xx .orange {
+    color: darkorange;
+}
+.forumsPage .xx .lime {
+    color: limegreen;
+}
+.forumsPage .xx .ashgreen {
+    color: darkolivegreen;
+}
+.forumsPage .xx .violet {
+    color: rebeccapurple;
+}
+.forumsPage .glyphicon {
+    font-size: 35px;
+}
+.forumsPage .xx .brdr {
+    padding-right: 15px;
+    border-right: 2.3px solid;
+}
+.forumsPage img.adidas{
+    position: relative;
+    height: 100px;
+    padding-bottom: 10px;
+}
+.forumsPage .bottom-text{
+    float: right;
+    position: relative;
+    color: white;
+    font-size: 15px;
+    text-align: right;
+}
+.forumsPage .adidasRow{
+    margin-top: 25px;
+    margin-left: 13%;
+}
+.nav-pills > .active > a,.nav-pills > .active > a:hover,
+   .nav-pills > li > a:hover {
+    color: #000 !important;
+    background-color: transparent !important;
+    text-decoration: none;
+   font-weight: normal;
+   border-radius:0px;
+   border-bottom-width: 4px;
+   border-bottom-style: solid;
+   border-bottom-color: #33cc33;
+}
+.nav-pills > li > a{
+    border-radius:0px;
+    color: black !important;
+    padding: 0;
+    text-decoration: none !important;
+}
+a,a:hover{
+    color:black ;
+    text-decoration: none;
+}
+
+.feedPage{
+    background: #ddd;
+    margin-left: 20px;
+    padding-left: 15%;
+    position: absolute;
+}
+.feedPage .feedImg{
+    width:100%;
+}
+.feedPage .img-feed {
+    margin-top: -66px;
+    position: relative;
+    padding-left: 30px;
+    background: rgba(0,0,0,0.5);
+    padding-bottom: 1px;
+}
+.feedPage .img-feed h3{
+    color:white;
+    margin-top: 17px;
+    font-size:22px;
+    font-weight: 600;
+    padding-top: 14px;
+    letter-spacing: 1.5px;
+}
+.feedPage .search-feed{
+    float:right;
+    margin-top: -38px;
+    margin-right: 158px;
+}
+.feedPage .searching{
+  width: 139%;
+    height: 30px;
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid white;
+    padding-left: 14px;
+    padding-right: 59px;
+}
+.feedPage .btnSbmt, .btNCncl{
+    width: 31% !important;
+    background: darkgreen;
+    color: white;
+    text-align: center;
+    margin-left: 1%;
+    margin-right: 2%;
+    border: none;
+    outline: none;
+    padding: 2px 10px 3px;
+    font-size: 14px;
+}
+.feedPage .search-btn{
+       border: none;
+    outline: none;
+    background: white;
+    float: right;
+    margin-top: -28px;
+    position: relative;
+    margin-right: -85px;
+    padding-left: 13px;
+    border-left: 1px solid #ccc;
+}
+.feedPage .users{
+    background: white;
+    margin-top: 22px;
+    padding: 20px;
+    width: 97%;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+.feedPage .user1{
+    margin-bottom: 20px;
+}
+.feedPage .user1-header{
+    margin-left: 65px;
+}
+.feedPage .Harvey-img,.Harry-img{
+    border-radius: 50%;
+    margin-left: 15px;
+    width: 4%;
+}
+.feedPage .user1-header h3{
+    margin-top: -26px;
+    font-size: 16px;
+    font-weight: bolder;
+}
+.feedPage .btnAddComment{
+    float: right;
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    outline: none;
+}
+.feedPage .user1-header p.ryt{
+    float:right;
+    margin-top: -35px;
+    margin-right: 12px;
+}
+.feedPage .user1-spl{
+    margin: 20px 3px 20px 12px;
+    padding: 0px 15px;
+     padding-bottom: 10px;
+}
+.feedPage .user1-spl h3{
+    font-size: 16px;
+    font-weight:bolder;
+    padding-top: 10px;
+}
+.feedPage .user1-spl h4{
+    margin: 0;
+    font-size: 12px;
+    font-weight: bolder;
+    padding-bottom: 2px;
+}
+.feedPage .ryt{
+    float:right;
+    margin-top: -34px;
+    margin-right: 20px;
+}
+.feedPage .symbol1{
+    color:#aaa;
+    margin-right: 0px;
+}
+.feedPage .user-footer{
+    padding: 10px;
+    margin: 10px;
+    color:#ddd;
+    font-size: 11px;
+    cursor: pointer;
+}
+.feedPage .user-footer .footer4{
+    float:right;
+}
+.feedPage .footer1{
+    padding-right: 10px;
+}
+.feedPage .like-img{
+    margin-right: 5px;
+}
+.feedPage .footer2{
+    padding-right: 10px;
+    padding-left: 10px;
+    border-left: 2px solid #ddd;
+    border-right: 2px solid #ddd;
+}
+.feedPage .cmnt-img{
+    margin-right: 5px;
+}
+.feedPage .footer3{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.feedPage .share-img{
+    margin-right: 5px;
+    margin-top: -3px;
+}
+.feedPage .err{
+    margin-right: 5px;
+}
+.feedPage .symbol2 {
+    color:#aaa;
+    margin-right: -6px;
+}
+.feedPage a.btn-lg{
+    background: white;
+    border: none;
+    color: #ddd;
+    padding: 0;
+    font-size: 11px;
+    text-decoration: none;
+}
+.feedPage .modal {
+    position: fixed;
+    top:25%;
+    color:black;
+}
+.feedPage .modal-content{
+    width: 407px;
+    height: 292px;
+    border-radius: 0px;
+}
+.feedPage .checkbox{
+    width: 10px;
+    margin-bottom: 30px;
+    font-size: 13px;
+    height: 0;
+    margin: 15px 90px 30px;
+    border-radius: 100%;
+    position: relative;
+    box-shadow: 0px 0px 0px rgba(0,0,0,0.5);
+}
+.feedPage .checkbox input{
+   // visibility: hidden;
+}
+.feedPage textarea{
+    resize:none;
+    overflow: hidden;
+    outline: none;
+}
+.feedPage .btn-primary,.btn-secondary{
+    font-weight: bolder;
+    padding: 1px 13px 3px;
+    border: 0px solid green;
+    color:white;
+    border-radius: 0px;
+    background: darkgreen;
+    margin-right: 10px;
+}
+.feedPage .btn-secondary{
+    width:65px;
+}
+.feedPage .reason{
+    margin-top: 40px;
+    margin-left: 89px;
+}
+.feedPage .brderline{
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    padding: 40px;
+    margin: 7px 10px 0 88px;
+}
+.feedPage .txtarea{
+    margin-left: 89px;
+    margin-top: 10px;
+    width: 70%;
+    height: 85px;
+}
+.feedPage .detil{
+    font-size: 14px;
+    font-weight: bolder;
+    margin: 13px 24px;
+}
+.feedPage .xplin{
+    margin: 13px 24px;
+    font-size: 12px;
+}
+.feedPage .modal-body{
+    position: relative;
+    padding: 0px 15px 5px 0px;
+}
+.feedPage .modal-footer{
+    margin-top: 10px;
+    padding: 1px 70px 10px 0px;
+    text-align: right;
+    border:none;
+    margin-right: 84.5px;
+}
+.feedPage .accordionPanel{
+    position: relative;
+    display: inline;
+}
+.feedPage .form-group h4{
+    margin-top: 10px;
+    font-weight: bolder;
+}
+.feedPage .form-group p{
+    font-size: 12px;
+}
+.feedPage .harry-details{
+    margin-left: 14px;
+}
+.feedPage .harry-details .detail{
+    margin-top: -13px;
+}
+.feedPage .lorem{
+    margin-bottom: -1px;
+}
+.feedPage .down{
+    margin-left: 17px;
+    margin-top: 0px;
+}
+.feedPage .user1 .user-footer{
+    margin-left: 15px;
+}
+.feedPage .down .footer4{
+    margin-right: 9px;
+}
+.feedPage .cmnt-matter{
+    margin-left: 26px;
+    margin-right: 22px;
+}
+.feedPage .cmnt-matter .txtarea{
+    margin: 20px 0 20px;
+    width:100%;
+    font-size: 11px;
+    color:black;
+    position: relative;
+    height: 100px;
+    margin-left: 0px;
+    padding: 10px;
+    outline:none;
+}
+.feedPage .users .two{
+    margin-left: 10px;
+}
+.feedPage .cmnt-matter2 .txtarea{
+    margin-top: 20px;
+    width:95%;
+    position: relative;
+    font-size: 11px;
+    color:black;
+    height: 100px;
+    margin-bottom: 5%;
+    margin-left: 23px;
+    padding: 10px;
+    outline:none;
+}
+
+.feedPage .user1 > h3 {
+    text-align: center;
+}
+
+.forumCourse{
+    margin-left: 14%;
+}
+.forumCourse .frumCrse{
+    padding: 0 4% 3% 5%;
+    background: #ddd;
+    height: 582px;
+    overflow-y: scroll;
+}
+.forumCourse .headerContent{
+    background: darkgreen;
+    color: white;
+    font-family: rodusreg300;
+}
+.forumCourse .courseHeader{
+    margin-left: 2%;
+}
+.forumCourse .searchIcon{
+    color: #aaa;
+    border-right: 1px solid #ccc;
+    padding-right: 3%;
+}
+.forumCourse .searchInput{
+    background: transparent;
+    border: none;
+    outline: none;
+    margin-left: 2%;
+    width: 80%;
+}
+.forumCourse .brdrRyt{
+    border-right: 1px solid #ccc;
+    padding-right: 1%;
+}
+.forumCourse .pdng{
+    padding: 0;
+}
+.forumCourse .searchBar{
+    border: 1px solid #ccc;
+    font-family: nerislight;
+    height: 20px;
+    margin-bottom: 4%;
+    margin-left: 2%;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 80%;
+}
+.forumCourse .arrowChevron{
+    font-size: 20px;
+    margin-right: 1%;
+}
+.forumCourse .header{
+    font-size: 25px;
+    letter-spacing: .01em;
+}
+.forumCourse .pdng7pc{
+    padding: 7% 1% 3% 1%;
+}
+.forumCourse .pdng3pc{
+    padding: 3% 1% 3% 1%;
+}
+.forumCourse .forumsCourseList{
+    height: 358px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-top: 1%;
+    padding-right: 5%;
+}
+.forumCourse .crsesLst{
+    list-style: none;
+}
+.forumCourse .crsesLst li{
+    border-bottom: 1px solid #888;
+    cursor: pointer;
+    padding: 10px 5px;
+}
+.forumCourse .crsesLst li a{
+    padding: 10px 5px;
+    color: black;
+    text-decoration: none;
+    font-family: nerislight;
+}
+.forumCourse .crsesLst li:hover{
+    border-left: 5px solid #33cc33;
+    background: #ddd;
+    padding: 10px 0px;
+}
+.forumCourse .rspnsList{
+    list-style: none;
+}
+.forumCourse .rspnsList li{
+    display: inline-block;
+}
+.forumCourse .right-column{
+    font-family: nerislight;
+}
+.forumCourse .listName{
+    border-bottom: 3px solid #999;
+}
+.forumCourse .corseListName{
+    font-weight: bolder;
+    font-size: 16px;
+}
+.forumCourse .personSeen{
+    font-size: 15px;
+    color: #aaa;
+}
+.forumCourse .personName{
+    padding-left: 0;
+    font-size: 16px;
+    font-weight: bolder;
+}
+.forumCourse .personMsg{
+    font-size: 13px;
+    font-weight: lighter;
+}
+.forumCourse .rplyMember{
+    border-bottom: 2px solid #ccc;
+}
+.forumCourse .courseDetail {
+    margin-top: 1.6%;
+}
+.forumCourse .coursesRspns{
+    margin-left: 4%;
+    margin-top: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-right: 9%;
+}
+.forumCourse .corsesLists{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 358px;
+    margin-top: 1%;
+}
+.forumCourse .brdrbtm{
+    border-bottom: 1px solid #ccc;
+}
+.forumCourse .rspnsList li{
+    color: orange;
+    padding: 0% 2% 0 0;
+    border-right: 2px solid #ddd;
+    cursor: pointer;
+    padding-left: 0;
+    margin-right: 2%;
+    font-size: 11px;
+}
+.forumCourse .txtCntr{
+    text-align: center;
+    margin-top: 1.7%;
+}
+.forumCourse .adImg{
+    height: 115px;
+}

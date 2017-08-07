@@ -1,0 +1,139 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>Create bubble</h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% if object %}{% url 'bubble_edit' object.id %}{% else %}{% url 'bubble_add' %}{% endif %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Name
+             <strong style="color: red">&#42;</strong>
+             </label>
+             <div class="col-md-10">
+                {{form.name}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="description" class="col-md-2 control-label">Description
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.description}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="color" class="col-md-2 control-label">Color
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.color}}             
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="category" class="col-md-2 control-label">Category
+             <strong style="color: red">&#42;</strong>
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" data-allow-blank="1" data-role="select2" id="category" name="category">
+                   {% for category in categories %}
+                   <option {% if object.category == category %}selected='selected'{% endif %} value="{{category.id}}">{{category.name}}</option>
+                   {% endfor %}
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="bubble_type" class="col-md-2 control-label">Bubble Type
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" id="bubble_type" name="bubble_type">
+                   <option {% if object.bubble_type == 0 %}selected=='selected'{% endif %} value="0">Private</option>
+                   <option {% if object.bubble_type == 1 %}selected='selected'{% endif %} value="1">Open</option>
+                   <option {% if object.bubble_type == 2 %}selected='selected'{% endif %} value="2">Secret</option>
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="campus" class="col-md-2 control-label">Campus
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" data-allow-blank="1" data-role="select2" id="campus" name="campus">
+                {% for campus in campuses %}
+                   <option {% if object.campus == campus %}selected='selected'{% endif %} value="{{campus.id}}">{{campus}}</option>
+                {% endfor %}
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="icon" class="col-md-2 control-label">Icon
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.icon}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="tags" class="col-md-2 control-label">Tags
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                <select class="form-control" data-role="select2" id="tags" multiple name="tags">
+               	{% for tag in tags %}
+                	<option value="{{tag.id}}">{{tag}}</option>
+               	{% endfor %}
+                </select>
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="allow_leaving" class="col-md-2 control-label">Allow Leaving
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.allow_leaving}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="read_only" class="col-md-2 control-label">Read Only
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.read_only}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="active" class="col-md-2 control-label">Active
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.active}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="suggested" class="col-md-2 control-label">Suggested
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.suggested}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="updates_delayed" class="col-md-2 control-label">Updates Delayed
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.updates_delayed}}
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+                <a href="{% url 'bubbles' %}" class="btn btn-cancel" role="button">Cancel</a>
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+{% endblock %}

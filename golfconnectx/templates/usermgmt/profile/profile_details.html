@@ -1,0 +1,283 @@
+{% extends 'common/base.html' %}
+{% load humanize %}
+{% block header %}
+    <title>GolfConnectx Profile Details</title>
+{% endblock %}
+{% block content %}
+<script src="/static/themes/js/bootstrap-datepicker.min.js"></script>
+<link href="/static/themes/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+
+<div class="myProfile">
+	<div class="profileimg">
+		<img class="coverimg" src="/static/themes/img/background.png">
+	</div>
+	<div class="profileContent">
+		
+		<div class="header">
+			<div class="headerlogo">
+			   <img src="{{user.get_profile_image_url}}" class="nameImg">
+			   <h3>{{user.get_full_name}}</h3>
+			   <h4>Joined {{user.created_on|naturaltime}}</h4>
+			</div>
+			<div class="menuList">
+			   <div class="list1">
+			      <table>
+			         <tr>
+			            <th>Skill Level</th>
+			            <td>{{user.skill_level}}</td>
+			         </tr>
+			         <tr>
+			            <th>Type of Golfer</th>
+			            <td>{{user.golfer_type}}</td>
+			         </tr>
+			      </table>
+			   </div>
+			   <div class="list2">
+			      <table>
+			         <tr>
+			            <th>Profile Type</th>
+			            <td>{% if user.is_private %}Private{% else %}Public{% endif %}</td>
+			         </tr>
+			         <tr>
+			            <th>Handicap</th>
+			            <td>{{user.handicap}}</td>
+			         </tr>
+			      </table>
+			   </div>
+			</div>
+		</div>
+		<div class="tabsForEvents">
+   			<div class="ReactTabs react-tabs" data-tabs="true">
+   				<ul class="ReactTabs__TabList EventsTabHeader">
+   					<li class="ReactTabs__Tab active" role="tab" id="react_tab_courses" onclick="show_tab('courses')">Courses</li>
+   					<li class="ReactTabs__Tab" role="tab" id="react_tab_posts" onclick="show_tab('posts')">Posts</li>
+   					<li class="ReactTabs__Tab" role="tab" id="react_tab_groups" onclick="show_tab('groups')">Groups</li>
+   					<li class="ReactTabs__Tab" role="tab" id="react_tab_friends" onclick="show_tab('friends')">Friends</li>
+   					<li class="ReactTabs__Tab" role="tab" id="react_tab_events" onclick="show_tab('events')">Events</li>
+   				</ul>
+   			</div>
+   			<div id="div_courses" class="react_div">
+				   <div class="leftsideimgs col-sm-4 profilescroll" id="div_profile_courses_list">
+					
+				   </div>
+   				 <div class="rightsideimgs col-sm-8" id="course_details">
+
+   				 </div>
+   			</div>
+        <div id="div_posts" class="Post col-sm-12 react_div hide" >
+
+        </div>
+        <div id="div_groups" class="row m0px react_div hide">
+
+        	<!--div class="search-icon">
+           	<span class="CoursessearchIcon">
+           		<img src="/static/themes/img/icons/searchBar.png"/>
+           	</span>
+           	<input type="text" placeholder="Search for a group" />
+        	</div-->
+
+        	<div class="col-sm-12 wd100pc">
+              <div id="groups_carousel" class="carousel slide" data-ride="carousel">
+
+              </div>
+           </div>
+        </div>
+        
+
+        <div id="div_friends" class="react_div hide">
+           <!--div class="search-icon">
+              <span class="CoursessearchIcon">
+                  <img src="/static/themes/img/icons/Search_Icon.png"/>
+              </span>
+              <input type="text" placeholder="Search for a friend" />
+           </div-->
+           <div class="friendlist" id="friends_list">
+
+           </div>
+        </div>          
+
+        <div class="eventsPage react_div hide" id="div_events">
+            <div class="pdng col-sm-12">
+               <div class="pdng col-sm-4 ">
+                  
+                  <div class="createEventButton">
+                    <button class="createEvent" type="button" onclick="add_new_event()">Create Event </button>
+                  </div>
+
+                  <div id="events_div" class="eventsTabPanel eventScroll">
+                  </div>
+
+               </div>
+               
+              <div class="col-sm-8" id="event_details">
+
+              </div>
+
+            </div>
+         </div>
+
+   		</div>
+	</div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+     load_courses();
+     load_groups();
+     load_posts();
+     load_friends();
+     load_events();
+  });
+  function load_courses(){
+  	$.ajax({
+  	  datatype: 'JSON',
+  	  url: "{% url 'ajax_profile_courses' %}",
+  	  method: "GET",
+  	    success: function (data) {
+  	      if(data.status == 1){
+  	         $('#div_profile_courses_list').html(data.html);
+             if(data.course_id){
+                get_course(data.course_id);
+             }
+  	      }
+  	    }
+  	});
+  }
+  function load_groups(){
+     $.ajax({
+       datatype: 'JSON',
+       url: "{% url 'ajax_profile_groups' %}",
+       method: "GET",
+         success: function (data) {
+           if(data.status == 1){
+              $('#groups_carousel').html(data.html);
+           }
+         }
+     });
+  }
+  function load_posts(){
+     $.ajax({
+       datatype: 'JSON',
+       url: "{% url 'ajax_profile_posts' %}",
+       method: "GET",
+         success: function (data) {
+           if(data.status == 1){
+              $('#div_posts').html(data.html);
+           }
+         }
+     });
+  }
+  function get_course(id){
+      var datastring = 'id='+id;
+      $.ajax({
+          data: datastring,
+          datatype: 'JSON',
+          url: '{% url "ajax_profile_course_details" %}',
+          method: "GET",
+            success: function (data) {
+              if(data.status == 1){
+                 $('#course_details').html(data.html);
+              }
+          }
+      });
+  }
+  function load_friends(){
+    $.ajax({
+        datatype: 'JSON',
+        url: "{% url 'ajax_profile_friends' %}",
+        method: "GET",
+          success: function (data) {
+              if(data.status == 1){
+                $('#friends_list').html(data.html);
+              }
+          }
+    });
+  }
+  function load_events(){
+    $.ajax({
+        datatype: 'JSON',
+        url: "{% url 'ajax_profile_events' %}",
+        method: "GET",
+          success: function (data) {
+              if(data.status == 1){
+                $('#events_div').html(data.html);
+                if(data.event_id){
+                  get_event(data.event_id)
+                }
+              }
+          }
+    });
+  }
+  function get_event(id)
+   {
+     var datastring = 'id='+id;
+      $.ajax({
+          data: datastring,
+          datatype: 'JSON',
+          url: "{% url 'ajax_event_details' %}",
+          method: "GET",
+            success: function (data) {
+              if(data.status == 1){
+                 $('#event_details').html(data.html);
+              }
+          }
+      });
+    }
+    function add_new_event()
+    { 
+      $.ajax({
+          datatype: 'JSON',
+          url: "{% url 'ajax_save_event' %}",
+          method: "GET",
+            success: function (data) {
+                if(data.status == 1){
+                  $('#event_details').html(data.html);
+                }
+            }
+        });
+    }
+    function edit_event(id)
+    {
+      var datastring = 'eventid='+id;
+      $.ajax({
+      data: datastring,
+        datatype: 'JSON',
+        url: "{% url 'ajax_save_event' %}",
+        method: "GET",
+          success: function (data) {
+              if(data.status == 1){
+                $('#event_details').html(data.html);
+              }
+          }
+      });
+    }
+    function save_event(){
+      var valid = $('#eventForm').validate().form();
+      if(valid)
+      { 
+        var datastring = $('#eventForm').serialize();
+        $.ajax({
+          data:datastring,
+              datatype: 'JSON',
+              url: "{% url 'ajax_save_event' %}",
+              method: "POST",
+              success: function (data) {
+                  if(data.status == 1){
+                    $('#event_details').html(data.html);
+                    load_events();
+                    get_event(data.id);
+                  }
+              }
+          });
+      }
+    }
+function show_tab(tab){
+   	$('.react_div').addClass('hide');
+   	$('.ReactTabs__Tab').removeClass('active');
+
+   	$('#div_'+tab).removeClass('hide');
+   	$('#react_tab_'+tab).addClass('active');
+
+}
+
+</script>
+{% endblock %}

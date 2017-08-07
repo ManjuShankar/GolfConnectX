@@ -1,0 +1,97 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <a href="#" onClick="window.history.back(); return false;" class="btn btn-primary">&lt; Back</a>
+       <h2>SMTP Server Information </h2>
+    </div>
+    <div class="main-content clearfix">
+       <form action="{% url 'email_settings' %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data" id='emailSettingsForm'>{% csrf_token %}
+          <div class="form-group">
+             <label for="name" class="col-md-2 control-label">Server
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+             	{{form.email_host}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="resume_enabled" class="col-md-2 control-label">Port
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+                {{form.email_port}}
+             </div>
+          </div>
+          <div class="form-group">
+             <label for="is_student" class="col-md-2 control-label">Secure Authentication
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+               <label for="id_secure_type_0">
+               		<input checked="checked" id="id_secure_type_0" name="secure_type" value="TLS" type="radio"> TLS
+               	</label>
+               	<label for="id_secure_type_1">
+               		<input id="id_secure_type_1" name="secure_type" value="SSL" type="radio"> SSL
+               	</label>
+				<label for="id_secure_type_2">
+					<input id="id_secure_type_2" name="secure_type" value="None" type="radio"> None
+				</label>
+             </div>
+          </div>
+           <div class="form-group">
+             <label for="is_student" class="col-md-2 control-label">Email Address
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+             	{{form.email_host_user}}
+             </div>
+          </div>
+           <div class="form-group">
+             <label for="is_student" class="col-md-2 control-label">Password
+             &nbsp;
+             </label>
+             <div class="col-md-10">
+             <input type='password' class="form-control" id='id_email_host_password' name='email_host_password' {% if object.email_host_password %}value='{{object.email_host_password}}'{% endif %}>
+             </div>
+          </div>
+          <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Save Settings" />
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+<style>
+.error{
+	border: 2px solid red;
+}
+</style>
+ <script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+ <script type="text/javascript">
+	$().ready(function() {
+		$("#emailSettingsForm").validate({
+			highlight: function(element, errorClass){
+		      	$(element).addClass('error');  
+		    },
+		    unhighlight: function(element, errorClass){
+		        $(element).removeClass('error');
+		    },
+		    errorPlacement: function(error, element){},
+		    rules: {
+		        email_host: "required",
+		        email_port: {
+		        	required: true,
+		        	number:true
+		        },
+		        password: "required",
+		        email_host_user: {
+		            required: true,
+		            email: true
+		        },
+		    },
+		});
+	});
+</script>
+{% endblock %}

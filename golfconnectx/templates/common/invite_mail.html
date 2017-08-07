@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" >
+                <div class="col-sm-offset-4 col-sm-4" style="height:auto;
+                                                             width:90%;">
+            <div style=" font-size: 10px;margin-top: 2%">
+            <span>   Hello {{name}}</span> 
+            <br>
+                 <p>
+                 {% if invite.object_type == 'Group' %}
+                  You are invited to GolfConnectX to join the Group "{{invite.object_name}}".  Please click on the below link, key-in the details along with invite code to be able to see the "{{invite.object_name}}" invitation.
+                  {% elif invite.object_type == 'Event' %}
+                  You are invited to GolfConnectX to join the Event "{{invite.object_name}}".  Please click on the below link, key-in the details along with invite code to be able to see the "{{invite.object_name}}" invitation.
+                  {% elif invite.object_type == 'Friend' %}
+                  You are invited to GolfConnectX. Please click on the below link, key-in the details along with invite code to be able to access the site.
+                  {% endif %}
+                  </p>
+            <br>
+                </p>
+                  {{message}}
+                </p>
+            <br>
+            <p>
+                URL: <a href="http://52.45.249.118/invite">GolfConnectx.com</a><br>
+                Invite Code: {{invite.token}}
+            </p>
+            <p>Have a fun time!</p>
+            <p>GolfConnectX Admin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

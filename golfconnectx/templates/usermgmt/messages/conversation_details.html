@@ -1,0 +1,97 @@
+{% extends 'common/base.html' %}
+{% load messages_tags %}
+{% block header %}
+    <title>Messages | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="viewMessage col-sm-12">
+   <div class="msgcontainer">
+        <div class="msgHeading">
+            MESSAGES
+         </div>
+       	<div class="btns row">
+           	<div class="col-sm-6 alglft">
+               	<a href="{% url 'ajax_conversations' %}">
+               		<div class="bckbtn"><button class="btnback">Back</button></div>
+               	</a>
+           	</div>
+           	<div class="col-sm-6 algrgt">
+           		<a href="{% url 'ajax_conversation_delete' conversation.id %}">
+             		<button class="btnDel">Delete</button>
+             	</a>
+           	</div>
+      	</div>
+       	<div class="groupmsgs">
+           	<div class="msgs" id="conversation_messages">
+           		{% for message in conversation.messages.all %}
+           		{% if message.created_by == user %}
+	           	<div class="nickmsg">
+	               	<div class="nickdetails">
+	                   	<img src="/static/themes/img/Nick_Zano_45x45.png" class="person-img" />
+	                   	<span class="lastseen">
+	                       <h3>Me</h3>
+	                       <h4>{{message.created_on|date:'M d, Y - P'}}</h4>
+	                   	</span>
+	               	</div>
+	               <p>{{message.message}}</p>
+	           	</div>
+	           	{% else %}
+	           	<div class="stevemsg">
+	               	<div class="stevedetails">
+	                   	<img src="/static/themes/img/Steve_Harvey_48x45.png" class="person-img"/>
+	                   	<span class="lastseen">
+	                       	<h3>Steve Harvey</h3>
+	                       	<h4>{{message.created_on|date:'M d, Y - P'}}/h4>
+	                   	</span>
+	               	</div>
+	               	<p>{{message.message}}</p>
+	           	</div>
+	           	{% endif %}
+	           	{% endfor %}
+       		</div>
+	       <div class="nxtrply">
+	           <div class="nickrply">
+	               <div class="nickdetails">
+	                   <img src="/static/themes/img/Nick_Zano_45x45.png" class="person-img" />
+	                   <span class="lastseen">
+	                       <h3>Me</h3>
+	                   </span>
+	               </div>
+	               <div class="rplybox">
+	               		<form id="addNewMessage">{% csrf_token %}
+	                   		<textarea class="txtarea" name="message_body" id="message_body"></textarea>
+	                   	</form>
+	                   	<div class="brdrline">
+	                  		<img src="/static/themes/img/Camera Icon.png" class="cam-img"/>
+	                  		<span class="rytside">
+	                    		<a href="{% url 'ajax_conversations' %}">
+	                    			<button class="btnCncl">Cancel</button>
+	                    		</a>
+	                    		<button class="btnSnd" onclick="add_message()">Send</button>
+	                  		</span>
+	                    </div>
+	               </div>
+	           </div>
+	       </div>
+        </div>
+   </div>
+</div>
+<script type="text/javascript">
+	function add_message(){
+      	var datastring = $('#addNewMessage').serialize();
+      	$.ajax({
+         	data:datastring,
+         	datatype: 'JSON',
+         	url: "{% url 'ajax_new_message' conversation.id %}",
+         	method: "POST",
+         	success: function (data) {
+            	if(data.status == 1){
+               		$('#conversation_messages').append(data.html);
+               		$('#message_body').val("");
+            	}
+         	}
+      	});
+   	}
+</script>
+
+{% endblock %}

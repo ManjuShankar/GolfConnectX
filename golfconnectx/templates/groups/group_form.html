@@ -1,0 +1,150 @@
+{% extends 'common/base.html' %}
+{% block header %}
+{% if group %}
+	<title>Edit Group {{group.name|title}} | GolfConnectx</title>
+{% else %}
+  	<title>Create Group Page | GolfConnectx</title>
+{% endif %}
+{% endblock %}
+{% block content %}
+
+<div class="AddGroup">
+	<div class="editgrpimg">
+		{% if group.cover_image %}
+			<img src="{{group.cover_image.get_ajax_image_url}}" class="coverimg" id="cover_image">
+		{% else %}
+			<img src="/static/themes/img/coverimg.png" class="coverimg" id="cover_image">
+		{% endif %}
+		<form>{% csrf_token %}
+		<input style="opacity: 0; margin-left: 30%; position: absolute; margin-top: -12.5%;" type="file" name="images"  id="fileupload" multiple=""  data-url="{% url 'ajax_upload_group_cover_image' %}" accept="image/*" tabindex="-1">
+		</form>
+		<div class="addgrpimg col-sm-3">
+			<button class="btn btn-default addgrp" onclick="$('#fileupload').click()">
+				<span class="glyphicon glyphicon-pencil"></span>{% if group %}Edit{% else %}Add{% endif %} Group Image
+			</button>
+		</div>
+		<div class="captionDiv">
+			{% if group %}<span class="imgtag"><b>{{group.name}}</b></span>{% endif %}
+		</div>
+	</div>
+	<div id="accordion" class="col-sm-12 accordionPanel" role="tablist" aria-multiselectable="true">
+
+		<div class="card">
+		   <div class="card-header cardDiv" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		      <h5 class="mb-0 titleclass">
+		         {% if group %}Edit{% else %}Add{% endif %} Group<span class="toggle-icon glyphicon glyphicon-plus toggleicon"></span>
+		      </h5>
+		   </div>
+		   <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne" aria-expanded="true" style="">
+		      <div class="card-block">
+		         <form id="groupForm" method="POST">{% csrf_token %}
+		         	<input type="hidden" name="cover_image" id="id_cover_image" {% if group.cover_image %} value="{{group.cover_image.id}}" {% endif %}>
+		            <div class="form-group row">
+		               <label for="example-text-input" class="col-xs-2 col-form-label">Group Name:</label>
+		               <div class="col-sm-9">
+		               		{{form.name}}
+		               	</div>
+		            </div>
+		            <div class="form-group row">
+		               <label for="example-text-input" class="col-xs-2 col-form-label">Golf Course:</label>
+		               <div id="courses_select">
+		               		
+		               	</div>
+		            </div>
+		            <div class="form-group row">
+		               <label for="example-text-input" class="col-xs-2 col-form-label">Description:</label>
+		               <div class="col-sm-9">
+		               		{{form.description}}
+		               	</div>
+		            </div>
+		            <div class="form-group row">
+		               <label for="example-text-input" class="col-xs-2 col-form-label">Private Group:</label>
+		               <label class="switch">
+		                  <input name="is_private" value="on" type="checkbox" {% if group.is_private %}checked="checked"{% endif %}>
+		                  <div class="slider round"></div>
+		               </label>
+		            </div>
+		            <div class="form-group row">
+		            	<input class="btn btn-default Savebtn" value="Save" type="submit">
+		            </div>
+		         </form>
+		      </div>
+
+		   </div>
+		</div>
+		{% include 'groups/include_members_panel.html' %}
+		{% if group %}
+			{% include 'groups/include_admins_panel.html' %}
+		{% endif %}
+	</div>
+</div>
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+     	$('.menu').parent().removeClass('active');
+     	$('#groups_sidebar').parent().addClass('active');
+     	load_courses();
+  	});
+  	$(function () {
+	    $('#fileupload').fileupload({
+	        dataType: 'json',
+	        done: function (e, data) {
+	            if(data._response.result.status){
+	                $('#cover_image').attr('src',data._response.result.url);
+	                $('#id_cover_image').val(data._response.result.id);
+	            }
+	        }
+	    });
+	});
+	$("#groupForm").validate({
+    	highlight: function(element, errorClass){
+          	$(element).addClass('error');  
+        },
+        unhighlight: function(element, errorClass){
+            $(element).removeClass('error');
+        },
+        errorPlacement: function(error, element){},
+        rules: {
+            name: "required",
+            course: "required",
+            description: "required",
+        },
+    });
+  	function load_courses()
+  	{
+  		$.ajax({
+	      datatype: 'JSON',
+	      url: "{% url 'ajax_load_courses' %}{% if group %}?groupid={{group.id}}{% endif %}",
+	      method: "GET",
+	        success: function (data) {
+	          if(data.status == 1){
+	             $('#courses_select').html(data.html);
+	             $('.select-menu').selectpicker();
+	          }
+	        }
+	    });
+  	}
+  	function next(){
+  		var valid = $('#groupForm').validate().form();
+  		if(valid){
+  			$('#collapseOne').collapse('hide');
+  		}
+  	}
+  	function save_group(){
+  		$.ajax({
+	      datatype: 'JSON',
+	      url: "{% if group %}{% url 'ajax_edit_group' group.id %}{% else %}{% url 'ajax_groups_create' %}{% endif %}",
+	      method: "POST",
+	        success: function (data) {
+	          if(data.status == 1){
+	             $('#courses_select').html(data.html);
+	             $('.select-menu').selectpicker();
+	          }
+	        }
+	    });
+  	}
+</script>
+{% endblock %}

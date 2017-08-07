@@ -1,0 +1,59 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<style>
+.object-heading{
+	font: 700 2.5em/1em ProximaNova,Arial,sans-serif;
+}
+.date-field{
+	font-size: 1.0em !important;
+}
+</style>
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2 class="object-heading">{{object.title}}</h2>
+       <p>{{object.created|date:'N d, Y' }} by <a>{{object.author|title}}</a></p>
+       <p>{{object.body}}</p>
+    </div>
+    <div class="main-content clearfix">
+    	<div class="col-sm-8 blog-main">
+        	<div id='comments'>
+	        	{% for comment in object.comments.all %}
+	        	<div>
+	            	<p>{{comment.created|date:'N d, Y' }} by <a>{{comment.author|title}}</a></p>
+	            	<p>{{comment.body}}</p>
+	          	</div>
+	          	<hr>
+	          	{% endfor %}
+	        </div>
+        </div>
+        <form id='commentForm'>
+        	{% csrf_token %}
+        	<textarea class="form-control" cols="40" id="id_body" name="body" rows="10"></textarea>
+        	<div class="submit-row" style='float: right;margin-top: 10px'>
+                <input class="btn btn-primary" value="Add New Comment" type="button" onclick="addComment()">
+             </div>
+        </form>
+    </div>
+
+</div>
+<script type="text/javascript">
+	function addComment(){
+		var datastring = $('#commentForm').serialize();
+	    $.ajax({
+	        data: datastring,
+	        datatype: 'JSON',
+	        url: "{% url 'posts_comment_add' object.id %}",
+	        method: "POST",
+	          success: function (data) {
+	          	if(data.success){
+	          		$('#id_body').val('');
+	          		location.reload();
+	          	}
+	          	else{
+	          		alert('Error occurred while adding!');
+	          	}
+	        }
+	    });
+	}
+</script>
+{% endblock %}

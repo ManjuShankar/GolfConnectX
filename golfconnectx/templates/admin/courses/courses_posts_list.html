@@ -1,0 +1,124 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2>Posts in Course - {{course.name|title}}</h2>
+    </div>
+    <div class="main-content clearfix">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="description-box" data-id="event_admin.index_view" role="alert">
+                <span class="text">View posts in this course.</span>
+                <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+          </div>
+       </div>
+       <div class="model-actions clearfix">
+          <div class="btn-group btn-menu pull-left">
+             <div class="dropdown-toggle btn-title" style="font-size: 16px" >{{object_list.count}} Items</div>
+          </div>
+          <div class="btn-menu">
+             <a data-toggle="modal" data-target="#addPost" class="btn btn-primary pull-right" href='{% url "courses_posts_add" course.id %}' aria-hidden="true">Add Posts To Course</a>
+          </div>
+          <div class="search-form btn-menu">
+             <form method="GET" action="/admin/event_admin/" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                   <input type="text" name="search" value="" class="span2 btn-title form-control" placeholder="Search">
+                </div>
+             </form>
+          </div>
+       </div>
+       <br/>
+       <form id="filter_form" method="GET" action="/admin/event_admin/">
+          <table class="filters">
+          </table>
+          <div class="clearfix filter-footer">
+             <button type="submit" class="btn btn-primary pull-right" style="display: none">Apply</button>
+          </div>
+       </form>
+       <div class="clearfix"></div>
+       <div class="table-container">
+          <div class="table-container-inner">
+             <table class="table table-striped table-bordered table-hover model-list">
+                <thead>
+                   <tr>
+                      <th class="list-checkbox-column">
+                         <input type="checkbox" name="rowtoggle" class="action-rowtoggle" title="Select all records"/>
+                      </th>
+                      <th class="column-header">
+                         <a>Title</a>
+                      </th>
+                      <th class="column-header">
+                         <a>Author</a>
+                      </th>
+                      <th class="column-header">
+                         <a>Posted On</a>
+                      </th>
+                      <th class="column-header">
+                         <a>View Count</a>
+                      </th>
+                        <th class="column-header">
+                         <a>Comment Count</a>
+                      </th>
+                       <th class="column-header">
+                         <a>Likes Count</a>
+                      </th>
+                      <th class="column-header list-actions-column fixed-column">Actions</th>
+                   </tr>
+                </thead>
+
+                {% for post in object_list %}
+                <tr id='row_{{post.id}}'>
+                   <td>
+                      <input type="checkbox" name="rowid" class="action-checkbox" value="1" title="Select record"/>
+                   </td>
+                   <td>{{post.title}}</td>
+                   <td>{{post.author}}</td>
+                   <td>{{post.created}}</td>
+                   <td>{{post.view_count}}</td>
+                   <td>{{post.comment_count}}</td>
+                   <td>{{post.likes_count}}</td>
+                   <td class="fixed-column">
+                   		<a class="btn btn-secondary" onclick="remove_post('{{post.id}}')">Delete</a>
+                   </td>
+                </tr>
+                {% endfor %}
+             </table>
+          </div>
+       </div>
+       <form id="action_form" action="/admin/event_admin/action/" method="POST" style="display: none">
+          <input type="hidden" id="action" name="action" />
+       </form>
+    </div>
+ </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addPost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+function remove_post(postid){
+  	var datastring = 'post_id='+postid;
+    $.ajax({
+        data: datastring,
+        datatype: 'JSON',
+        url: "{% url 'courses_posts_delete' course.id %}",
+        method: "GET",
+          success: function (data) {
+          	if(data.success){
+          		$('#row_'+postid).remove();
+          		$('.btn-title').text(data.count +' Items')
+          	}
+          	else{
+          		alert('Error occurred while removing!');
+          	}
+        }
+    });
+}
+</script>
+{% endblock %}

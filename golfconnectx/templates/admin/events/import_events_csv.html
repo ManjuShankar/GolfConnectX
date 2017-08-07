@@ -1,0 +1,46 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+
+<div class="main-container" id="main-container">
+    <div class="main-header">
+       <h2>Import Events</h2>
+    </div>
+    <div class="main-content clearfix">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="description-box" data-id="bubble_preload_users_admin.index" role="alert">
+                <span class="text">Use the .CSV template file and follow the directions below to import events instantly.</span>
+                <button class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+          </div>
+       </div>
+       <div class="import-intro">
+          <!--ul class="bullet-list">
+             <li>For the Username and Name fields, fill in based on current <a href="/admin/user_admin/">users’</a> fields.</li>
+             <li>For Name Field Fill in first and last name</li>
+             <li>For Email fill in users email</li>
+             <li>For the User Level field, fill in “admin” if Bubble Role is “ Super Admin” and fill in “normal” if Bubble Role is “user”</li>
+             <li>For External mark Y if users are shibboleth</li>
+             <li>For Active mark Y</li>
+          </ul-->
+          <a class="btn btn-default pull-right" href="/static/admin/samples/events.csv">Download Template File</a>
+       </div>
+       <div class="import-form">
+          <form action="{% url 'import_events' %}" method="POST" role="form" class="form-horizontal" enctype="multipart/form-data">
+          {% csrf_token %}
+             <div class="form-group">
+                <label for="upload_file" class="col-md-2 control-label">Upload CSV File
+                <strong style="color: red">&#42;</strong>
+                </label>
+                <div class="col-md-8">
+                   <input class="form-control" column_class="col-md-8" id="csv_file" name="csv_file" type="file">
+                </div>
+             </div>
+             <input type="submit" class="btn btn-primary pull-right" value="Submit" />
+          </form>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

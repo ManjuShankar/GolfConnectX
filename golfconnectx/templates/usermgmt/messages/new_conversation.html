@@ -1,0 +1,41 @@
+{% extends 'common/base.html' %}
+{% load messages_tags %}
+{% block header %}
+    <title>Messages | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<div class="newMessage">
+    <div class="msgcontainer">
+        <div class="msgHeading">
+            MESSAGES
+         </div>
+    </div>
+    <form class="compose" id="conversation_form" action="{% url 'ajax_new_conversation' %}" method="post">{% csrf_token %}
+        <div class="sendto">
+            TO:
+            <select class="selectpicker col-md-11 select-menu" data-live-search="true" title="Select users" id="id_participants" name="participants" multiple>
+				{% for user in users %}
+				<option value="{{user.id}}">{{user.first_name|title}},{{user.email}}</option>		
+				{% endfor %}
+			</select>
+        </div>
+        	<div class="divLine"></div>
+        <div class="msg">
+            <textarea class="txtarea" name="message"></textarea>
+        </div>
+        <div class="brdrline">
+            <img src="/static/themes/img/Camera Icon.png" class="cam-img"/>
+            <span class="rytside">
+                <a href="{% url 'ajax_conversations' %}"><button class="btnCncl">Cancel</button></a>
+                <button class="btnSnd" onclick="save_new_conversation()">Send</button>
+            </span>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+	function save_new_conversation()
+	{
+		$('#conversation_form').submit();
+	}
+</script>
+{% endblock %}

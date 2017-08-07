@@ -1,0 +1,38 @@
+
+<div class="card">
+   <div class="card-header cardDiv" role="tab" id="headingTwo">
+      <h5 class="mb-0 titleclass" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        Add Members<span class="toggle-icon glyphicon glyphicon-plus toggleicon"></span>
+      </h5>
+   </div>
+   <div id="collapseTwo" class="collapse in" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="true" style="">
+      <form id="addOrRemoveAdmin" class="card-block">
+         <div class="form-group row">
+            <div class="col-sm-12">
+            	<span class="spanclass">Add Members:</span>
+            </div>
+
+            <div class="col-sm-12">
+               	{% for member in members %}
+                  <div class="col-sm-1 sliderswitch">
+                     <label class="switch">
+                        <input id="{{member.id}}" value="on" type="checkbox">
+                        <div class="slider round"></div>
+                     </label>
+                  </div>
+                  <div class="col-sm-2">
+                  	<img src="{{member.get_profile_image_url}}" class="adminimg">
+                  	<span class="ml5px">{{member.first_name}}</span>
+                  </div>
+                {% if forloop.counter|divisibleby:4%}
+                </div><div class="col-sm-12">
+                {% endif %}
+                {% endfor %}
+            </div>
+         </div>
+        <div class="form-group row">
+        	<input class="btn btn-default Savebtn" value="Save Details" type="button">
+        </div>
+      </form>
+   </div>
+</div>

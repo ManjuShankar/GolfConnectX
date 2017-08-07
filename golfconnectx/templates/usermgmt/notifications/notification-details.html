@@ -1,0 +1,53 @@
+{% extends 'common/base.html' %}
+{% block header %}
+    <title>Notifications | GolfConnectx.com</title>
+{% endblock %}
+{% block content %}
+<style type="text/css">
+.viewNotification .rspnd{
+  background: darkgreen;
+  color: white;
+  border: none;
+  outline: none;
+  padding-bottom: 5px;
+}
+</style>
+  <div class="viewNotification">  
+      <div class="notifcontainer">   
+          <div class="notifyhead">NOTIFICATIONS</div>
+          <div class="btns">
+               <a href="{% url 'ajax_notifications' %}">
+               		<div class="alglft">
+               			<button class="btnback">Back</button>
+               		</div>
+               	</a>
+          </div>
+      </div>
+      <div class="notifmsg">
+          <div class="notifheader">
+              <div class="img-heading">
+              <img src="/static/themes/img/GolfHome.png" class="golf-img"/>
+              <h3>{{notification.object_name}}</h3>
+                  </div>
+              <p class="ryt">{{notification.created_on|date:'M d - P'}}</p>
+          </div>
+          <div class="msg">
+              {{notification.message}}
+          </div>
+          {% if nobject.submiturl %}
+          <div class="rspns col-sm-12">
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                  <div class="col-sm-12">
+                      <button class="acptBtn rspnd col-sm-5">Accept</button>
+                      <div class="col-sm-2"></div>
+                      <button class="dclnBtn rspnd col-sm-5">Decline</button>
+                  </div>
+              </div>
+              <div class="col-sm-4"></div>
+          </div>
+          {% endif %}
+      </div>
+  </div>   
+
+{% endblock %}
