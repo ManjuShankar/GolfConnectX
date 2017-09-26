@@ -63,7 +63,7 @@ class ProfileCoursesView(APIView):
 		else:
 			q = (Q(is_following=True)|Q(is_played=True))
 
-
+		print "+++++++++++++++",q,"++++++++++++++"
 		cuds = CourseUserDetails.objects.filter(q,user=request.user).values_list('course')
 		courses = Courses.objects.filter(id__in=cuds).distinct()
 
@@ -129,8 +129,11 @@ profile_search_groups = ProfileSearchGroupsView.as_view()
 class ProfileFriendsView(APIView):
 
 	def get(self, request, *args, **kwargs):
-		friends = request.user.friends.all()
-		friends = GolfUser.objects.filter(id__in = friends).order_by('first_name')
+		if request.user.friends_ids:
+			ids = [int(id) for id in request.user.friends_ids.split(',')]
+			friends = GolfUser.objects.filter(id__in = ids).order_by('first_name')
+		else:
+			friends = []
 		serializer = UserSerializer(friends, many=True)
 
 		return Response(serializer.data)
@@ -144,8 +147,11 @@ class ProfileSearchFriendsView(APIView):
 
 		q =(Q(first_name__icontains=keyword)|Q(last_name__icontains=keyword)|Q(email__icontains=keyword))
 		
-		friends = request.user.friends.filter(q)
-		friends = GolfUser.objects.filter(id__in = friends).order_by('first_name')
+		if request.user.friends_ids:
+			ids = [int(id) for id in request.user.friends_ids.split(',')]
+			friends = GolfUser.objects.filter(q,id__in = ids).order_by('first_name')
+		else:
+			friends = []
 		
 		serializer = UserSerializer(friends, many=True)
 

@@ -1,4 +1,5 @@
 import json
+import StringIO
 from datetime import datetime
 from PIL import Image
 from easy_thumbnails.files import get_thumbnailer
@@ -12,7 +13,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.views.generic import ListView, CreateView, UpdateView, View, DetailView
 from django.db.models import Q
-from django.conf import settings as mysettings 
+from django.conf import settings as mysettings
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from courses.models import Courses, CourseUserDetails, CourseImages
 from courses.serializers import CourseSerializer, CourseListSerializer, CourseUserDetailsSerializer, \
@@ -159,21 +161,28 @@ class UploadCourseCoverImage(APIView):
 
 			with Image.open(image_obj.image) as img:
 				width, height = img.size
+				image_obj.width,image_obj.height = width,height
+				if width < 680 or height < 180:
+					static_path = mysettings.STATICFILES_DIRS[0]
+					bgimage = Image.open(static_path+"/img/bg-course-grey.png")
+					bg_w, bg_h = bgimage.size
+					offset = ((bg_w - width) / 2, (bg_h - height) / 2)
+					bgimage.paste(img, offset)
+					bgimage.save('out.png')
+
+					tempfile = bgimage
+					tempfile_io =StringIO.StringIO()
+					tempfile.save(tempfile_io, format='PNG')
+
+					image_file = InMemoryUploadedFile(tempfile_io, None, 'gimage.png','image/png',tempfile_io.len, None)
+					image_obj.image = image_file
 			
-			image_obj.width = width
-			image_obj.height = height
+					image_obj.width,image_obj.height = bg_w,bg_h
+
 			image_obj.save()
 
 			course.cover_image = image_obj
 			course.save()
-
-			if width > 725 or height > 103:
-				options = {'size': (725, 103), 'crop': True}
-				thumbnail_url = get_thumbnailer(image_obj.image).get_thumbnail(options).url
-			else:
-				thumbnail_url = "/site_media/"+str(image_obj.image)
-
-			thumbnail_url = str(mysettings.SITE_URL)+thumbnail_url
 			
 			serializer = ImageSerializer(image_obj)
 			return Response(serializer.data, status=status.HTTP_200_OK)

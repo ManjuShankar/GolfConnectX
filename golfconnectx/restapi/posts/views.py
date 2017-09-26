@@ -41,21 +41,17 @@ class PostsHome(APIView):
     	today = datetime.today()
 
     	gq = (Q(created_by=self.request.user)|Q(admins = self.request.user))
-    	group_posts = Groups.objects.filter(gq).values('posts').exclude(posts=None).order_by('-id').distinct()
-    	gpost_ids = [post['posts'] for post in group_posts]
+    	gpost_ids = Groups.objects.filter(gq).values_list('posts',flat=True).exclude(posts=None).distinct()
 
     	event_access = EventsAccess.objects.filter(user = request.user,attending='Y').values_list('event', flat=True)
     	eq = (Q(created_by=request.user)|Q(id__in = event_access))
-    	event_posts = Events.objects.filter(eq,end_date__gte=today.date).values('posts').exclude(posts=None).order_by('start_date').distinct()
-    	epost_ids = [post['posts'] for post in event_posts]
+    	epost_ids = Events.objects.filter(eq,end_date__gte=today.date).values_list('posts',flat=True).exclude(posts=None).distinct()
 
     	cq = (Q(is_following=True)|Q(is_played=True))
-    	cuds = CourseUserDetails.objects.filter(cq,user=request.user).values_list('course')
-    	course_posts = Courses.objects.filter(id__in=cuds).values('posts').exclude(posts=None).distinct()
-    	cpost_ids = [post['posts'] for post in course_posts]
-
-    	fposts = Post.objects.filter(author=user.friends.all,object_is_private=False)
-    	fpost_ids = [post.id for post in fposts]
+    	cuds = CourseUserDetails.objects.filter(cq,user=request.user).values_list('course',flat=True)
+    	cpost_ids = Courses.objects.filter(id__in=cuds).values_list('posts',flat=True).exclude(posts=None).distinct()
+    	
+    	fpost_ids = Post.objects.filter(author=user.friends.all,object_is_private=False).values_list('id',flat=True)
 
     	q =(Q(id__in=fpost_ids)|Q(author=user)|Q(comments__author=user)|Q(id__in=gpost_ids)|Q(id__in=epost_ids)|Q(id__in=cpost_ids))
 
@@ -201,6 +197,10 @@ class LikePost(APIView):
 						message = request.user.first_name+" liked your post "+post.title
 					)
 					notification.save()
+
+					user = post.author
+					user.notifications_count += 1
+					user.save()
 		else:
 			post.liked_users.remove(user)
 			post.likes_count -= 1
@@ -282,6 +282,10 @@ class PostComments(APIView):
 					message = request.user.first_name+" commented on your post "+post.title
 				)
 				notification.save()
+				
+				user = post.author
+				user.notifications_count += 1
+				user.save()
 
 			serializer = CommentSerializer(comment)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)

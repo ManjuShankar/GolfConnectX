@@ -1,4 +1,5 @@
 import json
+import StringIO
 from PIL import Image
 from easy_thumbnails.files import get_thumbnailer
 from itertools import chain
@@ -18,11 +19,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.template.loader import get_template
 from django.template import Context
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from groups.models import Groups, GroupImages, GroupFiles, GroupsRequestInvitation
 from groups.adminforms import GroupForm
 from groups.serializers import GroupSerializer, GroupDetailSerializer, GroupCreateSerializer,\
-GroupAdminSerializer, ImageSerializer, GroupEditInfoSerializer, GroupMemberSerializer, FileSerializer
+GroupAdminSerializer, ImageSerializer, GroupEditInfoSerializer, GroupMemberSerializer, FileSerializer,\
+CoverImageSerializer
 from usermgmt.serializers import UserSerializer
 from usermgmt.models import GolfUser, Notification, Invite
 
@@ -110,20 +113,27 @@ class UploadGroupCoverImage(APIView):
 
 			with Image.open(image_obj.image) as img:
 				width, height = img.size
+				if width < 1200 or height < 280:
+					static_path = mysettings.STATICFILES_DIRS[0]
+					bgimage = Image.open(static_path+"/img/bg-grey.png")
+					bg_w, bg_h = bgimage.size
+					offset = ((bg_w - width) / 2, (bg_h - height) / 2)
+
+					bgimage.paste(img, offset)
+					bgimage.save('out.png')
+
+					tempfile = bgimage
+					tempfile_io =StringIO.StringIO()
+					tempfile.save(tempfile_io, format='PNG')
+
+					image_file = InMemoryUploadedFile(tempfile_io, None, 'gimage.png','image/png',tempfile_io.len, None)
+					image_obj.image = image_file
 
 			image_obj.width = width
 			image_obj.height = height
 			image_obj.save()
 
-			if width > 1152 or height > 240:
-				options = {'size': (1152, 240), 'crop': True}
-				thumbnail_url = get_thumbnailer(image_obj.image).get_thumbnail(options).url
-			else:
-				thumbnail_url = "/site_media/"+str(image_obj.image)
-
-			thumbnail_url = str(mysettings.SITE_URL)+thumbnail_url
-
-			serializer = ImageSerializer(image_obj)
+			serializer = CoverImageSerializer(image_obj)
 			return Response(serializer.data,status=status.HTTP_200_OK)
 		except:
 			from sys import exc_info
@@ -293,6 +303,8 @@ class EditGroupView(APIView):
 							message = request.user.first_name+' updated the group '+group.name
 						)
 					notification.save()
+					member.notifications_count += 1
+					member.save()
 
 			serializer = GroupDetailSerializer(group,context={'request': request,'group':obj})
 			return Response(serializer.data)
@@ -360,11 +372,11 @@ class GroupMembers(APIView):
 		q = (Q(id__in=group.members.all())|Q(id=group.created_by.id))
 
 		if user in group.admins.all():
-			users = GolfUser.objects.filter(q)
+			users = GolfUser.objects.filter(q).distinct()
 		else:
 			friends = user.friends.filter(q)
-			users = GolfUser.objects.filter(q,is_private=False)
-			users = list(chain(users, friends))
+			users = GolfUser.objects.filter(q,is_private=False).distinct()
+			users = set(list(chain(users, friends)))
 
 		serializer = GroupMemberSerializer(users,many=True,context={'request': request,'group':group})
 		return Response(serializer.data)
@@ -388,11 +400,11 @@ class GroupSearchMembers(APIView):
 		kq = (Q(first_name__icontains=keyword)|Q(last_name__icontains=keyword))
 
 		if user in group.admins.all():
-			users = GolfUser.objects.filter(q,kq)
+			users = GolfUser.objects.filter(q,kq).distinct()
 		else:
 			friends = user.friends.filter(q,kq)
-			users = GolfUser.objects.filter(q,kq,is_private=False)
-			users = list(chain(users, friends))
+			users = GolfUser.objects.filter(q,kq,is_private=False).distinct()
+			users = set(list(chain(users, friends)))
 
 		serializer = UserSerializer(users,many=True)
 		return Response(serializer.data)
@@ -543,9 +555,11 @@ class GroupAddMember(APIView):
 									object_id = groupRequest.id,
 									object_type = 'Group Invitation',
 									object_name = group.name,
-									message = ' You have been invited to the group  '+group.name
-								)
+									message = " You have been invited to the group '"+group.name+"'"
+							)
 							usernotification.save()
+							user.notifications_count += 1
+							user.save()
 
 			useremails = request.data['useremails']
 			try:
@@ -579,9 +593,12 @@ class GroupAddMember(APIView):
 									object_id = group.id,
 									object_type = 'Group Invitation',
 									object_name = group.name,
-									message = ' You have been invited to the group  '+group.name
+									message = " You have been invited to the group '"+group.name+"'"
 								)
 							usernotification.save()
+							user.notifications_count += 1
+							user.save()
+
 					mail_message = mail_message + str(email) +" -user is already part of the system.\n"
 				except:
 					if is_friend:
@@ -624,9 +641,7 @@ class GroupAddMember(APIView):
 			send_data = json.dumps(data)
 			send_json = json.loads(send_data)
 			return Response(send_json, status=status.HTTP_200_OK)
-		except:
-			from sys import exc_info
-			print "+++++++++++++++++",exc_info(),"++++++++++++++++++++"
+		except:			
 			data['message'] = "Error occurred while adding members."
 			send_data = json.dumps(data)
 			send_json = json.loads(send_data)
@@ -675,6 +690,7 @@ class GroupRemoveMember(APIView):
 
 		member_id = request.data.get('members')
 		members = GolfUser.objects.filter(id__in=member_id)
+		invitations = GroupsRequestInvitation.objects.filter(group=group,to=members)
 
 		for member in members:
 			group.members.remove(member)
@@ -682,6 +698,9 @@ class GroupRemoveMember(APIView):
 		for member in members:
 			group.admins.remove(member)
 
+		if invitations.exists():
+			invitations.delete()
+			
 		members = group.members.all()
 		admins = group.admins.all()
 
@@ -919,6 +938,14 @@ class LeaveGroup(APIView):
 		if user in group.members.all():
 			group.members.remove(user)
 
+		if group.created_by == user:
+			admin = group.admins.all()[0]
+			group.created_by = admin
+			group.save()
+
+		invitations = GroupsRequestInvitation.objects.filter(group=group,to=user)
+		invitations.delete()
+
 		data['message'] = "You have successfully left the group "+str(group.name)
 		send_data = json.dumps(data)
 		send_json = json.loads(send_data)
@@ -961,11 +988,14 @@ class GroupRequestAccess(APIView):
 						object_id = groupRequest.id,
 						object_type = 'Group Invitation',
 						object_name = group.name,
-						message = request.user.first_name+' requested membership to the group '+group.name
+						message = request.user.first_name+" requested membership to the group '"+group.name+"'"
 					)
 				ownernotification.save()
+				admin.notifications_count += 1
+				admin.save()
+
 			request_status = True
-			message = 'Successfully sent request group admin'
+			message = 'Successfully sent request to group admin'
 
 		data['response_message'] = message
 		data['request_status'] = request_status
@@ -1003,10 +1033,10 @@ class GroupGrantAccess(APIView):
 			else:
 				if access=='true':
 					groupRequest.accept = 'Y'
-					message = request.user.first_name + ' granted membership access the group '+group.name
+					message = request.user.first_name + " granted membership access to the group '"+group.name+"'"
 				else:
 					groupRequest.accept = 'N'
-					message = request.user.first_name + ' declined membership access the group '+group.name
+					message = request.user.first_name + " declined membership access to the group '"+group.name+"'"
 				groupRequest.save()
 				group.members.add(ruser)
 
@@ -1020,6 +1050,11 @@ class GroupGrantAccess(APIView):
 					message = message
 				)
 				usernotification.save()
+
+				user = groupRequest.created_by
+				user.notifications_count += 1
+				user.save()
+				
 				request_status = True
 
 		data['response_message'] = message
@@ -1087,9 +1122,11 @@ class SendInviteView(APIView):
 								object_id = group.id,
 								object_type = 'Group Invitation',
 								object_name = group.name,
-								message = ' You have been invited to the group  '+group.name
+								message = " You have been invited to the group '"+group.name+"'"
 							)
 						usernotification.save()
+						user.notifications_count += 1
+						user.save()
 
 			useremails = request.data['useremails']
 			try:
@@ -1121,9 +1158,12 @@ class SendInviteView(APIView):
 								object_id = group.id,
 								object_type = 'Group Invitation',
 								object_name = group.name,
-								message = ' You have been invited to the group  '+group.name
+								message = " You have been invited to the group  '"+group.name+"'"
 							)
 						usernotification.save()
+						user.notifications_count += 1
+						user.save()
+
 					mail_message = mail_message + str(email) +" -user is already part of the system.\n"
 				except:
 					try:
@@ -1198,12 +1238,12 @@ class AcceptInvitationView(APIView):
 			group.members.add(request.user)
 			data['response_message'] = 'You have successfully accepted the invitation.'
 			data['request_status'] = True
-			message = request.user.first_name+" have accepted your invitation for the group "+group.name
+			message = request.user.first_name+" have accepted your invitation for the group '"+group.name+"'"
 		else:
 			groupRequest.accept = 'N'
 			data['response_message'] = 'You have successfully declined the invitation.'
 			data['request_status'] = False
-			message = request.user.first_name+" have declined your invitation for the group "+group.name
+			message = request.user.first_name+" have declined your invitation for the group '"+group.name+"'"
 		groupRequest.save()
 
 		if groupRequest.created_by.notify_accept_invitation:
@@ -1217,6 +1257,10 @@ class AcceptInvitationView(APIView):
 				message = message
 			)
 			usernotification.save()
+			
+			user = groupRequest.created_by
+			user.notifications_count += 1
+			user.save()
 
 		send_data = json.dumps(data)
 		send_json = json.loads(send_data)

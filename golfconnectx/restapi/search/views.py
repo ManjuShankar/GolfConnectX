@@ -90,7 +90,7 @@ def IndexObject(otype,oid):
         si.title = group.name
         si.content = group.description
         si.private = group.is_private
-        si.object_image_url = group.get_api_crop_cover_image_url()
+        si.object_image_url = group.get_search_crop_cover_image_url()
         si.save()
     elif otype == 'post':
         post = Post.objects.get(id = oid)
@@ -123,10 +123,13 @@ def IndexObject(otype,oid):
             name = name.replace('***','')
             si.title = name
         si.content = course.address1+' , '+course.city+' , '+str(course.zip_code)
-        if course.cover_image and course.is_premium:
-            si.object_image_url = course.cover_image.get_thumbnail_url()
+        if course.is_premium:
+            if course.cover_image:
+                si.object_image_url = course.cover_image.get_thumbnail_url()
+            else:
+                si.object_image_url = str(mysettings.SITE_URL)+'/static/themes/img/search/premium.png'
         else:
-            si.object_image_url = str(mysettings.SITE_URL)+'/static/themes/img/default_profile_image_old.jpg'
+            si.object_image_url = str(mysettings.SITE_URL)+'/static/themes/img/search/basic.png'
         si.save()
         
     return True

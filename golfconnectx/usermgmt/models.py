@@ -146,6 +146,9 @@ class GolfUser(AbstractBaseUser,PermissionsMixin):
 
 	fb_id = models.CharField(max_length='20',null=True)
 
+	notifications_count = models.IntegerField(null=True,default=0)
+	friends_ids = models.TextField(null=True)
+
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name']
 	objects = GolfUserManager()
@@ -187,7 +190,10 @@ class GolfUser(AbstractBaseUser,PermissionsMixin):
 	def get_api_profile_image_url(self):
 		options = {'size': (144, 144), 'crop': True}
 		if self.profile_image:
-			image_url = get_thumbnailer(self.profile_image.image).get_thumbnail(options).url
+			try:
+				image_url = get_thumbnailer(self.profile_image.image).get_thumbnail(options).url
+			except:
+				image_url = "/site_media/"+str(self.profile_image.image)
 		else:
 			image_url = "/static/themes/img/default_profile_image.png"
 		return str(mysettings.SITE_URL)+image_url
@@ -205,7 +211,7 @@ class FriendRequest(models.Model):
 		return mysettings.SITE_URL+'/api/directory/'+str(self.from_user.id)+'/respond-friend-request/'
 
 class Notification(models.Model):
-	user = models.ForeignKey(GolfUser,related_name="notified_user",null=True)
+	user = models.ForeignKey(GolfUser,db_index=True,related_name="notified_user",null=True)
 	created_by = models.ForeignKey(GolfUser,related_name="notified_by",null=True)
 	created_on = models.DateTimeField(auto_now_add = True)
 	
@@ -220,15 +226,15 @@ class Notification(models.Model):
 
 class Messages(models.Model):
 	message = models.TextField()
-	created_on = models.DateTimeField(auto_now_add=True)
-	created_by = models.ForeignKey(GolfUser)
+	created_on = models.DateTimeField(auto_now_add = True)
+	created_by = models.ForeignKey(GolfUser,db_index=True)
 
 class Conversation(models.Model):
-	created_on = models.DateTimeField(auto_now_add=True)
-	modified_on = models.DateTimeField(auto_now=True)
-	participants = models.ManyToManyField(GolfUser)
+	created_on = models.DateTimeField(auto_now_add = True)
+	modified_on = models.DateTimeField(auto_now = True)
+	participants = models.ManyToManyField(GolfUser,db_index=True)
 	ctype = models.CharField(max_length=10,default='P',choices=CONVERSATION_TYPE)
-	messages = models.ManyToManyField(Messages)
+	messages = models.ManyToManyField(Messages,db_index=True)
 	name = models.CharField(max_length=100,null=True)
 
 	def get_participants(self,user):
@@ -259,6 +265,12 @@ class Conversation(models.Model):
 				return message.message
 		except:
 			return "No message"
+
+class ConversationStatus(models.Model):
+	user = models.ForeignKey(GolfUser)
+	status = models.CharField(max_length=10,default='A')
+	conversation = models.ForeignKey(Conversation)
+	modified_on = models.DateTimeField(auto_now = True)
 
 class Invite(models.Model):
 	token = models.CharField(max_length=20,unique=True)

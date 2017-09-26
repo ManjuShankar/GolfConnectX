@@ -56,6 +56,14 @@ class GroupImages(models.Model):
 	def get_ajax_image_url(self):
 		return '/site_media/'+str(self.image)
 
+	def get_cover_thumbnail_url(self):
+		options = {'size': (1200,280), 'crop': False}
+		try:
+			thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.image).get_thumbnail(options).url
+		except:
+			thumbnail_url = str(mysettings.SITE_URL)+'/site_media/'+str(self.image)
+		return thumbnail_url
+
 	def get_thumbnail_url(self):
 		options = {'size': (110,0), 'crop': False}
 		try:
@@ -128,6 +136,14 @@ class Groups(models.Model):
 			#thumbnail_url = mysettings.SITE_URL+'/site_media/'+str(self.cover_image.image)
 		else:
 			thumbnail_url = mysettings.SITE_URL+'/static/themes/img/golf_group_profile.png'
+		return thumbnail_url
+
+	def get_search_crop_cover_image_url(self):
+		options = {'size': (110, 110), 'crop': True}
+		if self.cover_image:
+			thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.cover_image.image).get_thumbnail(options).url
+		else:
+			thumbnail_url = mysettings.SITE_URL+'/static/themes/img/search/group.png'
 		return thumbnail_url
 
 	def get_cover_image_url(self):

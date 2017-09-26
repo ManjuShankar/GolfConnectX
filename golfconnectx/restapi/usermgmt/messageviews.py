@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 
@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from usermgmt.models import Conversation, Messages, GolfUser
+from usermgmt.models import Conversation, Messages, GolfUser, ConversationStatus
 from usermgmt.serializers import ConversationSerializer, AddConversationSerializer, \
 ConversationDetailsSerializer, AddMessageSerializer, MessageSerializer, UserListSerializer
 
@@ -16,7 +16,9 @@ class ConversationsView(APIView):
 
 	def get(self, request, *args, **kwargs):
 		user = request.user
-		conversations = Conversation.objects.filter(participants = user).order_by('-modified_on')
+
+		cids = ConversationStatus.objects.filter(user=user,status='A').values_list('conversation',flat=True)
+		conversations = Conversation.objects.filter(id__in = cids).order_by('-modified_on')
 		serializer = ConversationSerializer(conversations,many = True,context={'request': request})
 
 		return Response(serializer.data)
@@ -35,46 +37,46 @@ class NewConversationView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 	
 	def post(self, request, format=None):
-
-		conversation = Conversation()
-
-		'''
-		ctype = request.data['ctype']
-
-		if ctype == 'G':
-			name = request.data['name']
-			conversation.name = name
-		else:
-			conversation.name = request.user.first_name
-		conversation.ctype = ctype
-		'''
-		conversation.save()
-
-		participants = request.data.get('participants')
-		m = request.data.get('message')
-
-		participants = participants.split(',')
-		
-		for pemail in participants:
-			participant = GolfUser.objects.get(email = pemail)
-			conversation.participants.add(participant)
-
-		conversation.participants.add(request.user)
-
-		if conversation.participants.all().count() > 2:
-			conversation.ctype = 'G'
-			conversation.name = 'Group Message'
+		try:
+			conversation = Conversation()
 			conversation.save()
+
+			participants = request.data.get('participants')
+			m = request.data.get('message')
+
+			participants = participants.split(',')
 			
-		message = Messages()
-		message.message = m
-		message.created_by = request.user
-		message.save()
+			for pemail in participants:
+				participant = GolfUser.objects.get(email = pemail)
+				conversation.participants.add(participant)
+				cs = ConversationStatus(user=participant,
+					conversation=conversation
+					)
+				cs.save()
 
-		conversation.messages.add(message)
+			conversation.participants.add(request.user)
+			cs = ConversationStatus(user=request.user,
+				conversation=conversation
+				)
+			cs.save()
 
-		serializer = ConversationSerializer(conversation,context={'request': request})
-		return Response(serializer.data, status=status.HTTP_200_OK)
+			if conversation.participants.all().count() > 2:
+				conversation.ctype = 'G'
+				conversation.name = 'Group Message'
+				conversation.save()
+				
+			message = Messages()
+			message.message = m
+			message.created_by = request.user
+			message.save()
+
+			conversation.messages.add(message)
+
+			serializer = ConversationSerializer(conversation,context={'request': request})
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except:
+			from sys import exc_info
+			return Response(str(exc_info()), status=status.HTTP_400_BAD_REQUEST)
 
 new_conversation = NewConversationView.as_view()
 
@@ -84,7 +86,13 @@ class DeleteConversations(APIView):
 		message_ids = request.data.get('ids')
 
 		conversations = Conversation.objects.filter(id__in = message_ids)
-		conversations.delete()
+
+		for conversation in conversations:
+			cs = ConversationStatus.objects.get(user=request.user,conversation=conversation)
+			cs.status = 'D'
+			cs.save()
+			if conversation.ctype=='G':conversation.participants.remove(request.user)
+		
 		return Response(status=status.HTTP_200_OK)
 
 delete_conversations = DeleteConversations.as_view()
@@ -105,7 +113,12 @@ class ConversationDetails(APIView):
 
 	def delete(self, request, pk, format=None):
 		conversation = self.get_object(pk)
-		conversation.delete()
+
+		cs = ConversationStatus.objects.get(user=request.user,conversation=conversation)
+		cs.status = 'D'
+		cs.save()
+		if conversation.ctype=='G':conversation.participants.remove(request.user)
+
 		return Response(status=status.HTTP_200_OK)
 
 conversation_details = ConversationDetails.as_view()
@@ -126,15 +139,16 @@ class NewMessageView(APIView):
 
 		if serializer.is_valid():
 			m = request.data['message']
+			if conversation.ctype=='P':
+				cs = ConversationStatus.objects.filter(conversation=conversation)
+				cs.update(status='A')
+
 			message = Messages(
 					message = m,
-					created_by = request.user
+					created_by=request.user,
 				)
 			message.save()
 			conversation.messages.add(message)
-			today = datetime.today()
-
-			conversation.modified_on = today
 			conversation.save()
 
 			serializer = MessageSerializer(message)

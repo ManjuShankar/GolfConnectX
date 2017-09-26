@@ -1,4 +1,5 @@
 import json
+import StringIO
 import datetime
 from datetime import datetime, timedelta
 from time import strptime
@@ -18,6 +19,7 @@ from django.db.models import Q
 from django.conf import settings as mysettings 
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from events.models import Events, EventRequestInvitation, EventsAccess, EventImages, EventFiles
 from events.serializers import EventSerializer, EventListSerializer, EventAddSerializer, \
@@ -173,7 +175,7 @@ class EventsCreate(APIView):
 			user = request.user
 
 			obj.created_by = obj.modified_by = user
-			
+			obj.attending = 1
 			obj.save()
 
 			try:
@@ -218,7 +220,6 @@ class EventsCreate(APIView):
 			serializer = EventSerializer(obj,context={'request': request})
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		
-		print '+++++++++++++++',form.errors,"++++++++++++++++"
 		errors = json.dumps(form.errors)
 		return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 		
@@ -304,8 +305,7 @@ class EventDetailView(APIView):
 			searchindex = IndexObject('event',obj.id)
 
 			event_access = EventsAccess.objects.filter(event = event,attending='Y').values_list('user', flat=True)
-			q = (Q(id__in=event_access)|Q(id=event.created_by.id))
-			users = GolfUser.objects.filter(q).distinct()
+			users = GolfUser.objects.filter(id__in=event_access).distinct()
 
 			subject = 'GolfConnectx Event - '+str(obj.name)
 			message = 'Event details has been updated by '+str(request.user.first_name)
@@ -321,6 +321,8 @@ class EventDetailView(APIView):
 							message = request.user.first_name+' updated the event '+event.name
 						)
 					notification.save()
+					user.notifications_count += 1
+					user.save()
 
 			serializer = EventSerializer(obj,context={'request': request})
 			return Response(serializer.data, status=status.HTTP_200_OK)
@@ -429,8 +431,6 @@ class CalendarEventsView(APIView):
 		except:
 			evdate = datetime.today()
 			evdate = evdate.date()
-
-		nextdate = evdate + timedelta(days=1)
 		
 		event_access = EventsAccess.objects.filter(user = request.user).values_list('event', flat=True)
 		q = (Q(created_by=request.user)|Q(id__in = event_access))
@@ -487,9 +487,24 @@ class UploadEventCoverImage(APIView):
 
 			with Image.open(image_obj.image) as img:
 				width, height = img.size
+				image_obj.width,image_obj.height = width,height
+				if width < 725 or height < 150:
+					static_path = mysettings.STATICFILES_DIRS[0]
+					bgimage = Image.open(static_path+"/img/bg-event-grey.png")
+					bg_w, bg_h = bgimage.size
+					offset = ((bg_w - width) / 2, (bg_h - height) / 2)
+
+					bgimage.paste(img, offset)
+					bgimage.save('out.png')
+
+					tempfile = bgimage
+					tempfile_io =StringIO.StringIO()
+					tempfile.save(tempfile_io, format='PNG')
+
+					image_file = InMemoryUploadedFile(tempfile_io, None, 'gimage.png','image/png',tempfile_io.len, None)
+					image_obj.image = image_file
 			
-			image_obj.width = width
-			image_obj.height = height
+					image_obj.width,image_obj.height = bg_w,bg_h
 			image_obj.save()
 
 			serializer = EventImageSerializer(image_obj)
@@ -580,10 +595,16 @@ class AttendingEvent(APIView):
 			event_access = EventsAccess.objects.get(event=event,user=request.user)
 			if event_access.attending:
 				event_access.attending = True
+				event.attending += 1
+				event.notattending -= 1
 			else:
 				event_access.attending = False
+				event.attending -= 1
+				event.notattending += 1
 
 			event_access.save()
+			event.save()
+
 			serializer = EventAccessSerializer(event_access)
 			return Response(serializer.data,status=status.HTTP_200_OK)
 		except:
@@ -664,14 +685,10 @@ class EventAttendeesStats(APIView):
 
 		event_access = EventsAccess.objects.filter(event = event)
 
-		attending = event_access.filter(attending='Y').count()
-		notattending = event_access.filter(attending='N').count()
-		maybe = event_access.filter(attending='M').count()
-
 		data = {
-			'attending':attending,
-			'notattending':notattending,
-			'maybe':maybe,
+			'attending':event_access.filter(attending='Y').count(),
+			'notattending':event_access.filter(attending='N').count(),
+			'maybe':event_access.filter(attending='M').count(),
 		}
 		return Response(data)
 
@@ -844,8 +861,12 @@ class EventRequestAccess(APIView):
 					message = request.user.first_name+' Requested access to the event '+event.name
 				)
 			ownernotification.save()
+			user = event.created_by
+			user.notifications_count += 1
+			user.save()
+
 			request_status = True
-			message = 'Successfully sent request event owner'
+			message = 'Successfully sent request to the event owner'
 
 		data['response_message'] = message
 		data['request_status'] = request_status
@@ -919,13 +940,17 @@ class EventGrantAccess(APIView):
 							access = True
 						)
 						eventaccess.save()
-						message = event.created_by.first_name + ' granted access the event '+event.name
+						message = event.created_by.first_name + " granted access to the event '"+event.name+"'"
 						eventRequest.accept = 'Y'
+						event.attending += 1
 					else:
-						message = event.created_by.first_name + ' declined access the event '+event.name
+						message = event.created_by.first_name + " declined access to the event '"+event.name+"'"
 						eventRequest.accept = 'N'
 
 					eventRequest.save()
+					event.mayattend = EventRequestInvitation.objects.filter(event=event,type='I',accept='M').count()
+					event.save()
+
 					usernotification = Notification(
 							user = eventRequest.created_by,
 							created_by = request.user,
@@ -936,6 +961,10 @@ class EventGrantAccess(APIView):
 							message = message
 						)
 					usernotification.save()
+					
+					user = eventRequest.created_by
+					user.notifications_count += 1
+					user.save()
 
 					request_status = True
 		except:
@@ -968,7 +997,7 @@ class SendInviteView(APIView):
 		event = self.get_object(pk)
 		keyword = request.GET.get('kw')
 
-		userids = [er.to.id for er in EventRequestInvitation.objects.filter(event=event,type = 'I')]
+		userids = [er.to.id for er in EventRequestInvitation.objects.filter(event=event,type = 'I',accept='M')]
 		userids.append(event.created_by.id)
 
 		if keyword:
@@ -993,7 +1022,7 @@ class SendInviteView(APIView):
 					if is_friend:
 						req_stat = send_friend_request(request,user)
 					try:
-						eventRequest = EventRequestInvitation.objects.get(event=event,created_by=event.created_by,to=user,type = 'I')
+						eventRequest = EventRequestInvitation.objects.get(event=event,created_by=event.created_by,to=user,type = 'I',accept='M')
 					except:
 						eventRequest = EventRequestInvitation(
 								event = event,
@@ -1011,9 +1040,11 @@ class SendInviteView(APIView):
 									object_id = eventRequest.id,
 									object_type = 'Event Invitation',
 									object_name = event.name,
-									message = event.created_by.first_name + ' Sent Invite to attend the event '+event.name
+									message = event.created_by.first_name + " Sent Invite to attend the event '"+event.name+"'"
 								)
 							usernotification.save()
+							user.notifications_count += 1
+							user.save()
 
 			useremails = request.data.get('useremails')
 			try:
@@ -1029,7 +1060,7 @@ class SendInviteView(APIView):
 						if is_friend:
 							req_stat = send_friend_request(request,user)
 						try:
-							eventRequest = EventRequestInvitation.objects.get(event=event,created_by=event.created_by,to=user,type = 'I')
+							eventRequest = EventRequestInvitation.objects.get(event=event,created_by=event.created_by,to=user,type = 'I',accept='M')
 						except:
 							eventRequest = EventRequestInvitation(
 								event = event,
@@ -1047,9 +1078,11 @@ class SendInviteView(APIView):
 										object_id = eventRequest.id,
 										object_type = 'Event Invitation',
 										object_name = event.name,
-										message = event.created_by.first_name + ' Sent Invite to attend the event '+event.name
+										message = event.created_by.first_name + " Sent Invite to attend the event '"+event.name+"'"
 									)
 								usernotification.save()
+								user.notifications_count += 1
+								user.save()
 						mail_message = mail_message + str(email) +" -user is already part of the system.\n"
 					except:
 						if is_friend:
@@ -1084,6 +1117,9 @@ class SendInviteView(APIView):
 							mail_message = mail_message + str(email) +" -invite sent successfully.\n"
 						except:
 							mail_message = mail_message + str(email) +" -failed to send invite.\n"
+			
+			event.mayattend = EventRequestInvitation.objects.filter(event=event,type='I',accept='M').count()
+			event.save()
 
 			return Response('Invitation send successfully', status=status.HTTP_200_OK)
 		except:
@@ -1102,7 +1138,7 @@ class AcceptInviteView(APIView):
 	def get(self, request, pk, format=None):
 		data = {}
 		event = self.get_object(pk)
-		eventRequest = EventRequestInvitation.objects.get(event = event,to=request.user,type='I')
+		eventRequest = EventRequestInvitation.objects.get(event = event,to=request.user,type='I',accept='M')
 		accept = request.GET.get('accept')
 
 		if accept=='true':
@@ -1113,15 +1149,19 @@ class AcceptInviteView(APIView):
 				access = True
 			)
 			eventaccess.save()
+			event.attending += 1
 			data['response_message'] = 'You have successfully accepted the invitation.'
 			data['request_status'] = True
-			message = request.user.first_name+" have accepted your invitation to the event "+event.name
+			message = request.user.first_name+" has accepted your invitation to the event '"+event.name+"'"
 		else:
 			eventRequest.accept = 'N'
 			data['response_message'] = 'You have successfully declined the invitation.'
 			data['request_status'] = False
-			message = request.user.first_name+" have declined your invitation to the event "+event.name
+			message = request.user.first_name+" has declined your invitation to the event '"+event.name+"'"
 		eventRequest.save()
+
+		event.mayattend = EventRequestInvitation.objects.filter(event=event,type='I',accept='M').count()
+		event.save()
 		
 		if event.created_by.notify_accept_invitation:
 			usernotification = Notification(
@@ -1134,6 +1174,9 @@ class AcceptInviteView(APIView):
 				message = message
 			)
 			usernotification.save()
+			user = event.created_by
+			user.notifications_count += 1
+			user.save()
 
 		send_data = json.dumps(data)
 		send_json = json.loads(send_data)
@@ -1157,14 +1200,18 @@ class AttendingStatusView(APIView):
 		eventaccess.attending = astatus
 		eventaccess.save()
 
-		if status == 'Y':
+		if astatus == 'Y':
+			event.attending += 1
 			message = 'am attending.'
 		else:
+			event.notattending += 1
 			message = 'am not attending.'
+
+		event.save()
 
 		data['response_message'] = 'You have successfully changed the status to '+message
 		data['request_status'] = True
-		data['attendee_count'] = EventsAccess.objects.filter(event=event,attending='Y').count() + 1
+		data['attendee_count'] = event.attending
 
 		send_data = json.dumps(data)
 		send_json = json.loads(send_data)

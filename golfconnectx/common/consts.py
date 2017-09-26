@@ -45,3 +45,11 @@ TIMEZONE_PAIRS = (
     ('Pacific/Midway',          '-11 (FST)  Bering Standard Time'),
     ('Etc/GMT+12',              '-12 GMT+12')
 )
+
+from datetime import timedelta
+def convertDate(cdate):
+    cdate = cdate-timedelta(hours=4)
+    strdate = cdate.strftime('%b %d %Y - %I:%M %p')
+    return strdate
+
+

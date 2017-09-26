@@ -148,6 +148,8 @@ class ApiSignUp(generics.CreateAPIView):
 							message = invite.invited_by.first_name + ' Sent you a friend request'
 						)
 						usernotification.save()
+					user.notifications_count += 1
+					user.save()
 			except:
 				object_id = None
 				object_type = None
@@ -377,8 +379,20 @@ class FbApiLogin(APIView):
 		data = {}
 
 		fb_id = request.data['id']
+
 		try:
-			user = GolfUser.objects.get(fb_id=fb_id)
+			email = request.data['email']
+		except:
+			email = None
+
+		try:
+			if email:
+				try:
+					user = GolfUser.objects.get(email=email)
+				except:
+					user = GolfUser.objects.get(fb_id=fb_id)
+			else:
+				user = GolfUser.objects.get(fb_id=fb_id)
 
 			user.backend = 'django.contrib.auth.backends.ModelBackend'
 			
@@ -394,11 +408,6 @@ class FbApiLogin(APIView):
 				'exists':True,
 			}
 		except:
-			try:
-				email = request.data['email']
-			except:
-				email = None
-
 			name = request.data['name']
 
 			nlist = name.split(" ")

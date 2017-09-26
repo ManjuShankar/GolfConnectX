@@ -42,12 +42,8 @@ class EventImages(models.Model):
 
 	def get_thumbnail_url(self):
 		try:
-			if self.width > 725 or self.height > 103:
-				options = {'size': (725, 103), 'crop': True}
-				thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.image).get_thumbnail(options).url
-			else:
-				options = {'size': (725,103), 'crop': False}
-				thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.image).get_thumbnail(options).url
+			options = {'size': (725,103), 'crop': False}
+			thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.image).get_thumbnail(options).url
 		except:
 			thumbnail_url = str(mysettings.SITE_URL)+'/site_media/'+str(self.image)
 		return thumbnail_url
@@ -124,6 +120,10 @@ class Events(models.Model):
 	event_group_id = models.IntegerField(null=True)
 	
 	posts = models.ManyToManyField(Post)
+
+	attending = models.IntegerField(null=True)
+	notattending = models.IntegerField(null=True)
+	mayattend = models.IntegerField(null=True)
 	
 	def __unicode__(self):
 		return self.name
@@ -137,7 +137,7 @@ class Events(models.Model):
 			thumbnail_url = mysettings.SITE_URL+get_thumbnailer(self.cover_image.image).get_thumbnail(options).url
 			return thumbnail_url
 		else:
-			thumbnail_url = mysettings.SITE_URL+"/static/themes/img/4th_july_crop.jpg"
+			thumbnail_url = mysettings.SITE_URL+"/static/themes/img/search/event.png"
 			return thumbnail_url
 
 	def get_cover_image_url(self):

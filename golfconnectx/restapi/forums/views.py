@@ -41,17 +41,8 @@ class ForumDetails(APIView):
 
 	def get(self, request, slug, format=None):
 		topic = self.get_object(slug)
-
-		if topic.name == 'courses':
-			courses = Courses.objects.extra(select={'Premium': "is_premium = True", 'Basic': "is_premium = False"})
-			courses = courses.extra(order_by = ['Basic', 'Premium','name'])
-
-			courses = courses[:100]
-			serializer = CourseListSerializer(courses, many=True)
-		else:
-			categories = ForumCategory.objects.filter(topic=topic)
-			serializer = CategorySerializer(categories, many=True)
-
+		categories = ForumCategory.objects.filter(topic=topic)
+		serializer = CategorySerializer(categories, many=True)
 		return Response(serializer.data)
 
 forum_detail = ForumDetails.as_view()

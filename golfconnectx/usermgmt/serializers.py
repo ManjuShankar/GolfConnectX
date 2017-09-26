@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.serializers import (
 		ModelSerializer,
 		Serializer,
@@ -14,9 +15,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, login, logout
 
 from usermgmt.models import GolfUser, Notification, UserImage, Conversation,\
-CONVERSATION_TYPE, Messages, GOLFER_SKILLS
+CONVERSATION_TYPE, Messages, GOLFER_SKILLS, ConversationStatus
 
 from rest_framework.authtoken.models import Token
+from common.consts import convertDate
 
 class UserImageSerializer(ModelSerializer):
 	image = SerializerMethodField('get_thumbnail_url')
@@ -30,40 +32,26 @@ class UserImageSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
 	#profile_image = UserImageSerializer()
-	profile_image_url = SerializerMethodField('get_thumbnail_url')
+	profile_image_url = CharField(source='get_api_profile_image_url',read_only=True)
 	joined = SerializerMethodField('time_since')
-	initials = SerializerMethodField('get_user_initials')
 
 	def time_since(self,obj):
 		from django.utils.timesince import timesince
 		return timesince(obj.created_on)
-
-	def get_thumbnail_url(self, obj):
-		return obj.get_api_profile_image_url()
-
-	def get_user_initials(self, obj):
-		return obj.get_initials()
 		
 	class Meta:
 		model = GolfUser
-		fields = ('id','first_name','last_name','email','phone','is_private','zipcode','profile_image_url',
-			'joined','initials')
+		fields = ('id','first_name','last_name','email','phone','is_private','zipcode',
+			'profile_image_url','joined')
 
 class DirectoryUserSerializer(ModelSerializer):
-	profile_image_url = SerializerMethodField('get_thumbnail_url')
+	profile_image_url = CharField(source='get_api_profile_image_url',read_only=True)
 	joined = SerializerMethodField('time_since')
 	is_friend = SerializerMethodField('is_user_friend')
-	initials = SerializerMethodField('get_user_initials')
-
-	def get_thumbnail_url(self, obj):
-		return obj.get_api_profile_image_url()
 
 	def time_since(self,obj):
 		from django.utils.timesince import timesince
 		return timesince(obj.created_on)
-
-	def get_user_initials(self, obj):
-		return obj.get_initials()
 		
 	def is_user_friend(self,obj):
 		user = self.context['request'].user
@@ -77,14 +65,11 @@ class DirectoryUserSerializer(ModelSerializer):
 	class Meta:
 		model = GolfUser
 		fields = ('id','first_name','last_name','email','phone','is_private','zipcode','profile_image_url',
-			'joined','initials','is_friend')
+			'joined','is_friend')
 
 
 class UserListSerializer(ModelSerializer):
-	name = SerializerMethodField('get_user_name')
-
-	def get_user_name(self,obj):
-		return obj.get_full_name()
+	name = CharField(source='get_full_name',read_only=True)
 
 	class Meta:
 		model = GolfUser
@@ -165,10 +150,7 @@ class UserLoginSerializer(ModelSerializer):
 
 
 class UserProfileSettingsSerializer(ModelSerializer):
-	profile_image_url = SerializerMethodField('get_thumbnail_url')
-
-	def get_thumbnail_url(self, obj):
-		return obj.get_api_profile_image_url()
+	profile_image_url = CharField(source='get_api_profile_image_url',read_only=True)
 
 	class Meta:
 		model = GolfUser
@@ -203,8 +185,11 @@ class GolferSkillsSettingsSerializer(ModelSerializer):
 		fields = ('id','skill_level','handicap','golfer_type')
 
 class NotificationSerializer(ModelSerializer):
+	created_on = SerializerMethodField()
 
-	created_on = DateTimeField('%b %d - %I:%M %p')
+	def get_created_on(self,obj):
+		cdate = convertDate(obj.created_on)
+		return cdate
 	
 	class Meta:
 		model = Notification
@@ -213,9 +198,18 @@ class NotificationSerializer(ModelSerializer):
 class ConversationSerializer(ModelSerializer):
 	name = SerializerMethodField('get_conversation_title')
 	participants = SerializerMethodField('get_participants_list')
-	first_message = SerializerMethodField('get_conversation_message')
-	created_on = DateTimeField('%b %d - %I:%M %p')
-	modified_on = DateTimeField('%b %d - %I:%M %p')
+	first_message = CharField(source='get_first_message',read_only=True)
+	created_on = SerializerMethodField()
+	modified_on = SerializerMethodField()
+	message_icon = SerializerMethodField()
+
+	def get_created_on(self,obj):
+		cdate = convertDate(obj.created_on)
+		return cdate
+
+	def get_modified_on(self,obj):
+		cdate = convertDate(obj.modified_on)
+		return cdate
 
 	def get_conversation_title(self, obj):
 		user = self.context['request'].user
@@ -225,12 +219,20 @@ class ConversationSerializer(ModelSerializer):
 		user = self.context['request'].user
 		return obj.get_participants(user)
 
-	def get_conversation_message(self,obj):
-		return obj.get_first_message()
+	def get_message_icon(self, obj):
+		if obj.ctype=='G':
+			message = obj.messages.all().order_by('-id')[0]
+			url = message.created_by.get_api_profile_image_url()
+		else:
+			user = self.context['request'].user
+			participant = obj.participants.all().exclude(id=user.id)[0]
+			url = participant.get_api_profile_image_url()
+		return url
 
 	class Meta:
 		model = Conversation
-		fields = ('id','name','created_on','modified_on','participants','first_message')
+		fields = ('id','name','ctype','created_on','modified_on','participants',
+			'first_message','message_icon')
 
 class AddConversationSerializer(ModelSerializer):
 	message = CharField(label=_("Message"), style={'input_type': 'text'})
@@ -244,9 +246,13 @@ class AddConversationSerializer(ModelSerializer):
 						}
 
 class MessageSerializer(ModelSerializer):
-	created_on = DateTimeField('%b %d, %Y | %I:%M %p')
+	created_on = SerializerMethodField()
 	created_by = UserSerializer()
 	
+	def get_created_on(self,obj):
+		cdate = convertDate(obj.created_on)
+		return cdate
+		
 	class Meta:
 		model = Messages
 		fields = ('id','message','created_by','created_on')
@@ -259,11 +265,29 @@ class AddMessageSerializer(ModelSerializer):
 
 class ConversationDetailsSerializer(ModelSerializer):
 	participants = UserSerializer(many=True)
-	messages = MessageSerializer(many=True)
+	messages = SerializerMethodField()
+	created_on = SerializerMethodField()
+	modified_on = SerializerMethodField()
+
+
+	def get_messages(self,obj):
+		user = self.context['request'].user
+		cs = ConversationStatus.objects.get(user=user,conversation=obj)
+		messages = obj.messages.filter(created_on__gte=cs.modified_on)
+		serializer = MessageSerializer(messages,many=True)
+		return serializer.data
+
+	def get_created_on(self,obj):
+		cdate = convertDate(obj.created_on)
+		return cdate
+
+	def get_modified_on(self,obj):
+		cdate = convertDate(obj.modified_on)
+		return cdate
 
 	class Meta:
 		model = Conversation
-		fields = ('id','name','created_on','modified_on','participants','messages')
+		fields = ('id','name','ctype','created_on','modified_on','participants','messages')
 
 class ForgetPasswordSerializer(Serializer):
 	email = CharField(label=_("Enter your email"), style={'input_type': 'text'})

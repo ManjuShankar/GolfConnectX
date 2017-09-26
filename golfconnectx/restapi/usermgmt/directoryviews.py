@@ -65,18 +65,16 @@ search_profiles = SearchDirectory.as_view()
 
 class SendMultipleFriendRequest(APIView):
 	def get(self,request,*args,**kwargs):
-		frequests = FriendRequest.objects.filter(from_user = request.user,status='P').values('to_user')
-
-		ids = [fre['to_user'] for fre in frequests]
-		ids.append(request.user.id)
-
+		ids = FriendRequest.objects.filter(from_user = request.user,status='P').values_list('to_user',flat=True)
+		fids = request.user.friends.all().values_list('id',flat=True)
 		keyword = request.GET.get('kw')
+		eq = (Q(id__in=ids)|Q(id=request.user.id)|Q(id__in=fids))
+		
 		if keyword:
 			q = (Q(first_name__icontains=keyword)|Q(last_name__icontains=keyword))
-			users = GolfUser.objects.filter(q).exclude(id__in=ids).order_by('first_name')
+			users = GolfUser.objects.filter(q).exclude(eq).order_by('first_name')
 		else:
-			users = GolfUser.objects.all().exclude(id__in=ids).order_by('first_name')
-
+			users = GolfUser.objects.all().exclude(eq).order_by('first_name')
 
 		serializer = DirectoryUserSerializer(users, many=True,context={'request': request})
 		return Response(serializer.data)
@@ -97,17 +95,20 @@ class SendMultipleFriendRequest(APIView):
 							status = 'P'
 						)
 					friendrequest.save()
+					if user.notify_invite_event:
+						notification = Notification(
+							user = user,
+							notification_type = 'UFRS',
+							created_by=request.user,
+							object_id = friendrequest.id,
+							object_type = 'Friend Request',
+							object_name = request.user.first_name,
+							message = request.user.first_name + ' Sent you a friend request'
+						)
+						notification.save()
 
-					notification = Notification(
-						user = user,
-						notification_type = 'UFRS',
-						created_by=request.user,
-						object_id = friendrequest.id,
-						object_type = 'Friend Request',
-						object_name = request.user.first_name,
-						message = request.user.first_name + ' Sent you a friend request'
-					)
-					notification.save()
+						user.notifications_count += 1
+						user.save()
 			
 			try:
 				message = request.data['message']
@@ -128,17 +129,20 @@ class SendMultipleFriendRequest(APIView):
 								status = 'P'
 							)
 						friendrequest.save()
+						if user.notify_invite_event:
+							notification = Notification(
+								user = user,
+								notification_type = 'UFRS',
+								created_by=request.user,
+								object_id = friendrequest.id,
+								object_type = 'Friend Request',
+								object_name = request.user.first_name,
+								message = request.user.first_name + ' Sent you a friend request'
+							)
+							notification.save()
 
-						notification = Notification(
-							user = user,
-							notification_type = 'UFRS',
-							created_by=request.user,
-							object_id = friendrequest.id,
-							object_type = 'Friend Request',
-							object_name = request.user.first_name,
-							message = request.user.first_name + ' Sent you a friend request'
-						)
-						notification.save()
+							user.notifications_count += 1
+							user.save()
 					mail_message = mail_message + str(email) +" -user is already part of the system.\n"
 				except:
 					try:
@@ -173,7 +177,7 @@ class SendMultipleFriendRequest(APIView):
 						except:
 							mail_message = mail_message + str(email) +" -failed to send invite.\n"
 
-			response_message = 'Friend request sent successfully.'
+			response_message = mail_message
 			request_status = True
 		except:
 			response_message = 'Request failed with error.'
@@ -229,19 +233,11 @@ class UserPosts(APIView):
 		if user.is_private:
 			if user not in requser.friends.all():
 				if Groups.objects.filter(admins=requser,members=user,is_private=False).exists():
-					groups = Groups.objects.filter(admins=requser,members=user,is_private=False).distinct()
-					postlist = []
-					for group in groups:
-						posts = [post for post in group.posts.filter(author = user)]
-						postlist = postlist + posts
-					posts = postlist
+					postids = Groups.objects.filter(admins=requser,members=user,is_private=False).values_list('posts',flat=True).exclude(posts=None).distinct()
+					posts = Post.objects.filter(author=user,id__in=postids)
 				elif Groups.objects.filter(members__in=[user,requser],is_private=False).exists():
-					groups = Groups.objects.filter(members__in=[user,requser],is_private=False).distinct()
-					postlist = []
-					for group in groups:
-						posts = [post for post in group.posts.filter(author = user)]
-						postlist = postlist + posts
-					posts = postlist
+					postids = Groups.objects.filter(members__in=[user,requser],is_private=False).values_list('posts',flat=True).exclude(posts=None).distinct()
+					posts = Post.objects.filter(author=user,id__in=postids)
 				else:
 					posts = None
 			else:
@@ -249,19 +245,11 @@ class UserPosts(APIView):
 		else:
 			if user not in requser.friends.all():
 				if Groups.objects.filter(members=requser,admins=user,is_private=False).exists():
-					groups = Groups.objects.filter(members=requser,admins=user,is_private=False).distinct()
-					postlist = []
-					for group in groups:
-						posts = [post for post in group.posts.filter(author = user)]
-						postlist = postlist + posts
-					posts = postlist
+					postids = Groups.objects.filter(members=requser,admins=user,is_private=False).values_list('posts',flat=True).exclude(posts=None).distinct()
+					posts = Post.objects.filter(author=user,id__in=postids)
 				elif Groups.objects.filter(admins=requser,members=user,is_private=False).exists():
-					groups = Groups.objects.filter(admins=requser,members=user,is_private=False).distinct()
-					postlist = []
-					for group in groups:
-						posts = [post for post in group.posts.filter(author = user)]
-						postlist = postlist + posts
-					posts = postlist
+					postids = Groups.objects.filter(admins=requser,members=user,is_private=False).values_list('posts',flat=True).exclude(posts=None).distinct()
+					posts = Post.objects.filter(author=user,id__in=postids)
 				else:
 					posts = None
 			else:
@@ -308,8 +296,10 @@ class UserGroups(APIView):
 				q = (Q(created_by=user)|Q(members = user)|Q(admins = user))
 				groups = Groups.objects.filter(q,is_private=False).order_by('-id').distinct()
 
-
-
+		kw = request.GET.get('kw')
+		if kw:
+			groups = groups.filter(name__icontains=kw)
+			
 		serializer = GroupSerializer(groups, many=True)
 
 		serializedgroups = serializer.data
@@ -341,12 +331,15 @@ class UserFriends(APIView):
 
 		if user.is_private:
 			friends = None
-
 		else:
 			if user not in requser.friends.all():
 				friends = None
 			else:
+				kw = request.GET.get('kw')
 				friends = user.friends.filter(is_private=False)
+				if kw:
+					kq = (Q(first_name__icontains=kw)|Q(last_name__icontains = kw))
+					friends = friends.filter(kq,is_private=False)
 				
 		serializer = DirectoryUserSerializer(friends, many=True,context={'request': request})
 
@@ -392,11 +385,10 @@ class UserCourses(APIView):
 		requser = request.user
 
 		q = (Q(is_following=True)|Q(is_played=True))
-		cuds = CourseUserDetails.objects.filter(q,user=user).values_list('course')
 
 		if not user.is_private:
 			if user in requser.friends.all():
-				cuds = CourseUserDetails.objects.filter(q,user=request.user).values_list('course')
+				cuds = CourseUserDetails.objects.filter(q,user=user).values_list('course')
 				courses = Courses.objects.filter(id__in=cuds).distinct()
 			else:
 				courses = None
@@ -443,9 +435,12 @@ class SendFriendRequest(APIView):
 					object_id = friendrequest.id,
 					object_type = 'Friend Request',
 					object_name = request.user.first_name,
-					message = request.user.first_name + ' Sent you a friend request'
+					message = request.user.first_name + " sent you a friend request."
 				)
 				notification.save()
+
+				user.notifications_count += 1
+				user.save()
 
 				response_message = 'Friend request sent successfully.'
 				request_status = True
@@ -479,9 +474,19 @@ class RespondFriendRequest(APIView):
 				friendrequest.status = 'A'
 
 				loged_user = request.user
+				
 				loged_user.friends.add(user)
+				if loged_user.friends_ids:
+					loged_user.friends_ids = loged_user.friends_ids + ","+str(user.id)
+				else:
+					loged_user.friends_ids = str(user.id)
 				loged_user.save()
+
 				user.friends.add(loged_user)
+				if user.friends_ids:
+					user.friends_ids = user.friends_ids + ","+str(loged_user.id)
+				else:
+					user.friends_ids = str(loged_user.id)
 				user.save()
 				
 				message = 'Friend Request Accepted.'
@@ -499,16 +504,21 @@ class RespondFriendRequest(APIView):
 				object_name = request.user.first_name,
 				object_type = 'Friend Request',
 			)
+			user.notifications_count += 1
+			user.save()
+			
 			if accept=='true':
-				message = request.user.first_name + ' accepted your friend request'
+				message = request.user.first_name + " accepted your friend request."
 			else:
-				message = request.user.first_name + ' declined your friend request'
+				message = request.user.first_name + " declined your friend request."
 			notification.message = message
 			notification.save()
 			
 			request_status = True
 			data['friend_request_status'] = friendrequest.status
 		except:
+			from sys import exc_info
+			print "+++++++++++++++",exc_info(),"+++++++++++++++++"
 			request_status = False
 			message = 'You have already responded to the request'
 
@@ -570,9 +580,12 @@ def send_friend_request(request,user):
 				object_id = friendrequest.id,
 				object_type = 'Friend Request',
 				object_name = request.user.first_name,
-				message = request.user.first_name + ' Sent you a friend request'
+				message = request.user.first_name + " Sent you a friend request."
 			)
 			notification.save()
+			user.notifications_count += 1
+			user.save()
+			
 	return True
 
 def send_friend_request_via_mail(request,email):

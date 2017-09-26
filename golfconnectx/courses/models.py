@@ -48,7 +48,7 @@ class CourseImages(models.Model):
 		return thumbnail_url
 
 class Courses(models.Model):
-	name = models.CharField(max_length=300,null=False)
+	name = models.CharField(db_index=True,max_length=300,null=False)
 
 	address1 = models.CharField(max_length=250,null=False)
 	address2 = models.CharField(max_length=100,null=True)
@@ -87,7 +87,7 @@ class Courses(models.Model):
 
 	cover_image = models.ForeignKey(CourseImages,null=True,related_name='course_cover_image')
 
-	admin = models.ForeignKey(GolfUser,null=True,related_name='course_admin')
+	admin = models.ForeignKey(GolfUser,null=True,related_name='course_admin',db_index=True)
 
 	is_private = models.BooleanField(default=False)
 	
@@ -170,6 +170,3 @@ class CourseUserDetails(models.Model):
 	distance = models.FloatField(default=0.0)
 
 	images = models.ManyToManyField(CourseImages)
-
-	
-

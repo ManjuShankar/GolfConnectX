@@ -34,7 +34,8 @@ class NotificationsCountView(LoginRequiredMixin,View):
 
 	def get(self, request, *args, **kwargs):
 		user = request.user
-		notifications_count = Notification.objects.filter(user = user,read=False).count()
+
+		notifications_count = user.notifications_count
 		
 		data = {'notifications_count':notifications_count}
 		
@@ -55,10 +56,12 @@ class NotificationDetailsView(LoginRequiredMixin,View):
 		notification = self.get_object(pk)
 		
 		nobject = get_notification_object(notification.notification_type,notification.object_id)
-
+		user = request.user
 		if not notification.read:
 			notification.read = True
 			notification.save()
+			user.notifications_count -= 1
+			user.save()
 
 		data = {
 			'notification': notification,

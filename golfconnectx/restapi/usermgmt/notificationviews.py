@@ -29,7 +29,9 @@ class NotificationsCountView(APIView):
 
 	def get(self, request, *args, **kwargs):
 		user = request.user
-		notifications_count = Notification.objects.filter(user = user,read=False).count()
+		notifications_count = user.notifications_count
+		
+		#notifications_count = Notification.objects.filter(user = user,read=False).count()
 		
 		data = {'notifications_count':notifications_count}
 
@@ -57,6 +59,11 @@ class NotificationDetailsView(APIView):
 		if not notification.read:
 			notification.read = True
 			notification.save()
+
+			user = request.user
+			user.notifications_count -= 1
+			user.save()
+
 		serializer = NotificationSerializer(notification)
 
 		data = {

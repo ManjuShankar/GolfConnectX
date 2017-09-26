@@ -55,7 +55,7 @@ class EventSerializer(serializers.ModelSerializer):
 
 	attendee_stats = serializers.SerializerMethodField('get_attending_stats')
 
-	selected_group = serializers.SerializerMethodField('get_selected_group_details')
+	selected_group = serializers.CharField(source='get_selected_group_details',read_only=True)
 
 	has_access = serializers.SerializerMethodField()
 	request_status = serializers.SerializerMethodField()
@@ -71,9 +71,6 @@ class EventSerializer(serializers.ModelSerializer):
 	def get_end_date(self,obj):
 		end_date = obj.end_date.strftime('%m/%d/%Y')
 		return end_date
-
-	def get_selected_group_details(self,obj):
-		return obj.get_selected_group_details()
 
 	def get_has_access(self,obj):
 		request = self.context['request']

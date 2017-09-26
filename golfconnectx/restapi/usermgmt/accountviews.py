@@ -4,6 +4,7 @@ from usermgmt.models import GolfUser, UserImage
 from usermgmt.serializers import UserSerializer, UserProfileSettingsSerializer,\
 UserPrivateSettingsSerializer, UserNotificationSettingsSerializer,\
 UserEmailSettingsSerializer, UserImageSerializer, GolferSkillsSettingsSerializer
+from django.contrib.auth import authenticate, login, logout
 
 from rest_framework.views import APIView
 from rest_framework import status
