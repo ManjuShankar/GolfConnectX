@@ -26,7 +26,7 @@ let InviteModalAction = (token, users,useremails,flag,paramId,is_friend) =>{
 
   return(dispatch)=>{
     return apiaddOrRemoveMemebrsRequest.then(({data})=>{
-      toastr.success("Members Request Sent Successfully");
+      //toastr.success("Request sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);

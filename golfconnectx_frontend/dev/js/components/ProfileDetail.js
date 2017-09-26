@@ -15,7 +15,7 @@ import UpcomingEventDetails from './child-components/upcomingEventDetails';
 import GroupsList from './child-components/groupsList';
 
 import {getCurrentEvent} from '../actions/eventDetailsAction';
-import {getMyCourses, getDirectoryPosts, getDirectoryFriends, searchFriends,
+import {getProfileCourses, getDirectoryPosts, getDirectoryFriends, searchFriends,
   searchGroups, getDirectoryProfilegroupList, getNewScore, getDirectoryEventDetails} from '../actions/profileActions';
 import {getCourseObject} from '../actions/courseListAction';
 import {isExistObj} from '../utils/functions';
@@ -52,12 +52,21 @@ class profileDetail extends React.Component {
               this.setState({profileDetails: this.props.selectedProfileDetails});
               this.setState({ajaxCallInProgress:false});
         }).catch((error)=>{
-          console.log("Error", error);
+          
           if(error == "Error: Request failed with status code 401"){
           this.context.router.push('/');
           }
         });
-
+this.props.getProfileCourses(this.props.activeUser.token, paramId).then(()=>{
+                this.setState({profileCoursesList:this.props.myProfile.MyProfileCourseList, ajaxCallInProgress:false});
+    
+            }).catch((error)=>{
+              this.setState({ajaxCallInProgress:false});
+            });
+       if(_.size(this.state.courseDetails)==0 && _.size(this.props.myProfile.MyProfileCourseList)>0){
+           
+                   this.showCourseDetails(this.props.myProfile.MyProfileCourseList[0].id);
+             }
         if(_.toInteger(paramId)==4){
          this.props.getDirectoryEventDetails(this.props.activeUser.token, this.state.profileDetails.profile.id).then(()=>{
                 this.setState({currentEventList:this.props.eventList.CurrentEvents, ajaxCallInProgress:false});
@@ -74,9 +83,10 @@ class profileDetail extends React.Component {
    onSendClick(id){
      let  message=document.getElementById('txtArea');
      this.props.onSendRequest(this.props.activeUser.token, id, message).then(()=>{
+         //alert(id,message);
          $("#myModal").modal('hide');
      }).catch((error)=>{
-    console.log("Error", error);
+    
    });
    }
 
@@ -97,7 +107,7 @@ class profileDetail extends React.Component {
          this.context.router.push('/profileDetail_'+index);
          paramId = index;
          if(index==0){
-           this.props.getMyCourses(this.props.activeUser.token, this.state.profileDetails.profile.id).then(()=>{
+           this.props.getProfileCourses(this.props.activeUser.token, this.state.profileDetails.profile.id).then(()=>{
                 this.setState({profileCoursesList:this.props.myProfile.MyProfileCourseList, ajaxCallInProgress:false});
             }).catch((error)=>{
               this.setState({ajaxCallInProgress:false});
@@ -152,6 +162,11 @@ class profileDetail extends React.Component {
     }).catch((error)=>{
       this.setState({ajaxCallInProgress:false});
     });
+    if(screen.width<600)
+    {
+      $(".rightsideimgs").show();
+      $(".leftsideimgs").hide();
+    }
    }
 
    openViewAllDialog(id){
@@ -191,7 +206,7 @@ class profileDetail extends React.Component {
 
    onGroupsSearch(e){
       if(e.which==13){
-        this.props.searchGroups(this.props.activeUser.token, e.target.value).then(()=>{
+        this.props.searchGroups(this.props.activeUser.token, e.target.value,this.state.profileDetails.profile.id,"Others").then(()=>{
               this.setState({getGroupList:this.props.myProfile.MyGroups});
               this.context.router.push('/profileDetail_2');
         }).catch((error)=>{
@@ -205,7 +220,7 @@ class profileDetail extends React.Component {
 
   onFriendsSearch(e){
          if(e.which==13){
-           this.props.searchFriends(this.props.activeUser.token, e.target.value).then(()=>{
+           this.props.searchFriends(this.props.activeUser.token, e.target.value,this.state.profileDetails.profile.id,"Others").then(()=>{
                  this.setState({myFriendsList:this.props.myProfile.MyFriends});
                  this.context.router.push('/profileDetail_3');
            }).catch((error)=>{
@@ -234,14 +249,14 @@ class profileDetail extends React.Component {
     render() {
       if(_.size(this.state.profileDetails)>0){
       return (
-          <div className="Profile_Page col-sm-12">
+          <div className="Profile_Page ">
               <div className="prflBasicPage">
-                  <div className="imgPart col-sm-12">
+                  <div className="imgPart ">
 
                       <div className="profileImg pdng col-sm-12">
                           <img src="/assets/img/background.png" className="coverimg pdng col-sm-12" />
                       </div>
-                      <div className="ovrImg col-sm-12">
+                      <div className="ovrImg ">
                       <div className="modal fade" id="sendMessageModal" role="dialog" data-backdrop="static">
                       <div className="modal-dialog">
                          <div className="modal-content">
@@ -270,56 +285,57 @@ class profileDetail extends React.Component {
                           </div>
                       </div>
                       </div>
-                          <div className="col-sm-6"></div>
-                          <div className="btn-cntnt col-sm-6">
+                          <div className="col-sm-4"></div>
+                          <div className="btn-cntnt col-sm-8">
                               <div className="col-sm-12">
                                   <div className="col-sm-4"></div>
                                   <div className="col-sm-4">
-                                        {isExistObj(this.state.profileDetails.profile) &&  this.state.profileDetails.profile.is_friend?'':<button type="button" className="reqBtn snd col-sm-12"  data-toggle="modal" data-target="#myModal">Send Friend Request</button>}
+                                        {isExistObj(this.state.profileDetails.profile) &&  this.state.profileDetails.profile.is_friend?'':<button type="button" className="reqBtn col-sm-12"  data-toggle="modal" data-target="#myModal">Send Friend Request</button>}
                                   </div>
                                   <div className="col-sm-4">
-                                        <button type="button" className="msgBtn snd col-sm-12"  data-toggle="modal" data-target="#sendMessageModal">Send Message</button>
+                                        <input type="button" className="msgBtn snd col-sm-12"  data-toggle="modal" data-target="#sendMessageModal" value="Send Message" />
                                   </div>
                               </div>
                           </div>
                       </div>
                   </div>
-                  <div className="detailsPart col-sm-12">
+                  <div className="detailsPart">
 
                        <div className="namePart col-sm-12">
-                        <div className="col-sm-2 ">
-                          {isExistObj(this.state.profileDetails.profile) && <img src={'http://'+ this.state.profileDetails.profile.profile_image_url} className="nameImg" />}
+                        <div className="col-sm-2 col-xs-2 pdryt12px">
+ {isExistObj(this.state.profileDetails.profile) && <img src={'http://'+ this.state.profileDetails.profile.profile_image_url} className="nameImg" />}
                         </div>
-                        <div className="col-sm-3 pdng">
-                          {isExistObj(this.state.profileDetails.profile) && (<div className="personDetails pdng col-sm-12">
+                        <div className="col-sm-3 col-xs-3 pdng profileview">
+                           {isExistObj(this.state.profileDetails.profile) && (<div className="personDetails pdng col-sm-12">
                               <div className="personName">{this.state.profileDetails.profile.first_name}</div>
                               <div className="personJoined">Joined {this.state.profileDetails.profile.joined} ago</div>
                           </div>)}
                         </div>
-                         {isExistObj(this.state.profileDetails.skills) &&  (<div className="margtp col-sm-3">
-                             <div className="col-sm-12">
-                                 <div className="pdng fntbld col-sm-6">Skill Level</div>
-                                 <div className="pdng fntlyt col-sm-6">{this.state.profileDetails.skills.skill_level}</div>
+                         {isExistObj(this.state.profileDetails.skills) &&  (<div className="margtp col-sm-3 col-xs-3 skill_level ">
+                             <div className="col-sm-12 col-xs-12 padg0px">
+                                 <div className="pdng fntbld col-sm-6 col-xs-12">Skill Level</div>
+                                 <div className="pdng fntlyt col-sm-6 col-xs-6">{this.state.profileDetails.skills.skill_level}</div>
                              </div>
-                             <div className="col-sm-12">
-                                 <div className="pdng fntbld col-sm-6">Type of Golfer</div>
-                                 <div className="pdng fntlyt col-sm-6">{this.state.profileDetails.skills.golfer_type}</div>
+                             <div className="col-sm-12 col-xs-12 padg0px">
+                                 <div className="pdng fntbld col-sm-6 col-xs-12">Type of Golfer</div>
+                                 <div className="pdng fntlyt col-sm-6 col-xs-6">{this.state.profileDetails.skills.golfer_type}</div>
                              </div>
-                          </div>)}
-                          {isExistObj(this.state.profileDetails.profile) && isExistObj(this.state.profileDetails.skills) &&  (<div className="margtp col-sm-3">
-                             <div className="col-sm-12">
-                                 <div className="pdng fntbld col-sm-6">Profile Type</div>
-                                 <div className="pdng fntlyt col-sm-6">{this.state.profileDetails.profile.is_private?'Private':'Public'}</div>
+                          </div>
+                         )}
+                          {isExistObj(this.state.profileDetails.profile) && isExistObj(this.state.profileDetails.skills) &&  ( <div className="margtp col-sm-3 col-xs-3 profile_type">
+                             <div className="col-sm-12 col-xs-12 padg0px">
+                                 <div className="pdng fntbld col-sm-6 col-xs-12">Profile Type</div>
+                                 <div className="pdng fntlyt col-sm-6 col-xs-6">{this.state.profileDetails.profile.is_private?'Private':'Public'}</div>
                              </div>
-                             <div className="col-sm-12">
-                                 <div className="pdng fntbld col-sm-6">Handicap</div>
-                                 <div className="pdng fntlyt col-sm-6">{this.state.profileDetails.skills.handicap}</div>
+                             <div className="col-sm-12 col-xs-12 padg0px">
+                                 <div className="pdng fntbld col-sm-6 col-xs-12">Handicap</div>
+                                 <div className="pdng fntlyt col-sm-6 col-xs-6">{this.state.profileDetails.skills.handicap}</div>
                              </div>
                           </div>)}
                       </div>
                   </div>
                   <div className="tabsForEvents">
-                  <Tabs selectedIndex={(_.toInteger(paramId)<=4)?(_.toInteger(paramId)):(0)} className="col-sm-12">
+                  <Tabs selectedIndex={(_.toInteger(paramId)<=4)?(_.toInteger(paramId)):(0)} className="">
                     <TabList className="EventsTabHeader col-sm-12">
                       <Tab onClick={this.modifyParam.bind(this, 0)}>Courses</Tab>
                       <Tab onClick={this.modifyParam.bind(this, 1)}>Posts</Tab>
@@ -328,8 +344,8 @@ class profileDetail extends React.Component {
                       <Tab onClick={this.modifyParam.bind(this, 4)}>Events</Tab>
                     </TabList>
                     <TabPanel>
-                      {(this.state.ajaxCallInProgress)?(<div className="col-sm-12 bgwhite"><Spinner /></div>):((_.size(this.state.profileCoursesList)>0)?(<div className="images visitedDetails zeroPad col-sm-12">
-                      <div className="leftsideimgs col-sm-4 zeroPad profilescroll">
+                      {(this.state.ajaxCallInProgress)?(<div className="col-sm-12 bgwhite"><Spinner /></div>):(this.state.profileDetails.profile.is_private?<label>Courses are not displayed due to privacy settings.</label>:(_.size(this.state.profileCoursesList)>0)?(<div className="images visitedDetails zeroPad col-sm-12">
+                      <div className="leftsideimgs col-md-4 col-sm-12 zeroPad profilescroll">
                       {this.state.profileCoursesList.map((item, i) => {
                       return (<div key={i} className="col-sm-12 profileimg_bg"><div className="leftimg1" onClick={this.showCourseDetails.bind(this,item.id)}>
                       <div className="nameoverimg">
@@ -346,7 +362,7 @@ class profileDetail extends React.Component {
                       </div>
 
                       {(isExistObj(this.state.courseDetails) &&  isExistObj(this.state.courseDetails.course_user_details) && isExistObj(this.props.myProfile) && _.size(this.props.myProfile.MyProfileCourseList)>0)?(
-                        <div className="rightsideimgs col-sm-8">
+                        <div className="rightsideimgs  display col-md-8">
                           <div className="rytsideimg1">
                               <div className="nameoverimg"><img src="/assets/img/golf-shadow-creek-04.png" className="img4"></img>
                                {(this.state.courseDetails.course_user_details.is_following)?(<div className="following col-sm-10">
@@ -421,7 +437,7 @@ class profileDetail extends React.Component {
                        </div>
                      </div>
                      <div id="content" className="inlineAlign col-sm-12">
-                         {(_.size(item.images)>0 && item.images.map((childItem, index)=>{
+                         {isExistObj(item) && isExistObj(item.images) && (_.size(item.images)>0 && item.images.map((childItem, index)=>{
                            return(<img src={"http://" + childItem.thumbnail} alt="upload_one" className="inlnImgs" onClick={this.openDialog.bind(this, childItem.id, item.id)} />)
                          }))}
                      </div>
@@ -451,7 +467,7 @@ class profileDetail extends React.Component {
                          </div>
                       </div>)}):<label></label>}
              </div>):(<div></div>)}
-           </div>):(<div><label>Courses are not displayed due to privacy settings.</label></div>))}
+           </div>):(<div><label>No courses followed by user.</label></div>))}
            </TabPanel>
            <TabPanel>
                {(this.state.ajaxCallInProgress)?(<div className="col-sm-12 bgwhite "><Spinner /></div>):(<div className="col-sm-12 bgwhite hAuto">
@@ -476,7 +492,7 @@ class profileDetail extends React.Component {
                                         <div className="subpost-cntnt mt1pc col-sm-12">
                                           <span>{item.title}</span>
                                         </div>
-                                        {_.size(this.state.postsList.comments)>0  && this.state.postsList.comments.map((item, i) => {
+                                        {isExistObj(this.state.postsList) && isExistObj(this.state.postsList.comments) &&  _.size(this.state.postsList.comments)>0  && this.state.postsList.comments.map((item, i) => {
                                             return(<div key={i}><div className="cmnt">
                                                     <span className="like"><img src="/assets/img/icons/like.png"/>Like</span>
                                                     <span className="comment"><img src="/assets/img/icons/comment.png"/>Comment</span>
@@ -511,11 +527,11 @@ class profileDetail extends React.Component {
                                               <React_Boostrap_Carousel  className="carousel-fade" indicators={(_.size(this.state.getGroupList)>0 && _.size(this.state.getGroupList[0])>=7)?true:false}>
                                                 {_.size(this.state.getGroupList)>0 && this.state.getGroupList.map((parent, index)=>{
                                                     return(<div className="col-sm-12 pdpcgroups" key={index}>
-                                                           {_.size(parent)>0 && parent.map((groupListDetails, childIndex)=>{
+                                                           {isExistObj(parent) && _.size(parent)>0 && parent.map((groupListDetails, childIndex)=>{
                                                               return(
                                                                   <div key={childIndex}>
                                                                     <div onClick={this.onGroupClick.bind(this,groupListDetails.id)}>
-                                                                      <div className="col-md-3 cursor-pointer">
+                                                                      <div className="col-sm-4 col-xs-4 cursor-pointer">
                                                                         <div className="col-sm-12 txtcenter">
                                                                           <img src={'http://'+groupListDetails.cover_image} className="panelimg"/>
                                                                         </div>
@@ -602,7 +618,7 @@ function mapStateToProps(state, ownProps) {
 function matchDispatchToProps(dispatch){
     return bindActionCreators({getProfileDetails, onSendRequest, createNewMessage,
       getDirectoryEventDetails,
-      getMyCourses,
+      getProfileCourses,
       getDirectoryPosts,
       getCourseObject,
       getCurrentEvent,

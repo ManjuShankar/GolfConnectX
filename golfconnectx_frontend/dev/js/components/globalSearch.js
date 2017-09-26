@@ -5,7 +5,6 @@ import {Link} from 'react-router';
 import _ from 'lodash';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-
 import {IMG_CONSTANT} from '../constants/application.constants';
 let imgPath=IMG_CONSTANT.IMAGE_PATH;
 
@@ -22,6 +21,7 @@ class GlobalSearch extends React.Component {
 }
 componentDidMount() {
       $('.menu').parent().removeClass('active');
+
    }
 
     componentWillReceiveProps(nextProps){
@@ -33,11 +33,9 @@ componentDidMount() {
           this.setState({peopleList: nextProps.searchResults.users});
         }
     }
-
 componentWillUnmount(){
-   location.reload();
+  document.getElementById('searchCriteriaText').value='';
 }
-
 OnCourseSelect(){
   this.context.router.push('/selectedCoursePage');
 }
@@ -46,18 +44,20 @@ OnCourseSelect(){
 gotoEvents(id){
    this.context.router.push("/events_"+id);
 }
-
 seeAllClick(){
    $("#allTab").trigger("click");
 }
 
      render() {
+console.log('location', location.pathname)
     return (
                 <div className="globalSearch">
-                                <div className="row">
+                  <div className=" pdryt0px paddingRL">
+                  <div className="searchInGlobal col-sm-12">
+                    <div className="tabsGlobal">
                                                 <div className="globalSearchHeader mt4pc col-sm-12 pdng">
                                                    <div className="col-sm-12 padngpx">
-                                                                <div className="col-sm-7">
+                                                                <div className="col-sm-10">
                                                                                 <ul className="nav nav-tabs tabsPane col-sm-12 pdng">
                             <li className="allTab text-center col-sm-2 active" ><a data-toggle="tab" href="#all-tab" id="allTab">ALL</a></li>
                             <li className="groupsTab text-center col-sm-2"><a data-toggle="tab" href="#group-tab">GROUPS</a></li>
@@ -67,12 +67,12 @@ seeAllClick(){
                             <li className="peopleTab text-center col-sm-2"><a data-toggle="tab" href="#people-tab">PEOPLE</a></li>
                         </ul>
                     </div>
-
+                      </div>
                 </div>
               </div>
+          <div>
               <div className="col-sm-12 dvdrline"></div>
               <div className="col-sm-12 bgWhite">
-
               <h1> Showing Search Result for "{this.props.params.text}"</h1>
                               <div className="tab-content">
                     <div id="all-tab" className="searchAll tab-pane fade in active col-sm-12">
@@ -82,6 +82,7 @@ seeAllClick(){
 
                 <ul className="allList">
                   <li className="col-sm-1 txtupcase clrgray curPntr ">groups</li>
+                  {/*<li className="col-sm-1 txtupcase seeAll-btn curPntr ">see all</li>*/}
                 </ul>
               </div>
               {
@@ -103,6 +104,7 @@ seeAllClick(){
                 <div className="searchingOn col-sm-12">
                   <ul className="allList">
                     <li className="col-sm-1 txtupcase clrgray curPntr ">posts</li>
+                   {/* <li className="col-sm-1 txtupcase seeAll-btn curPntr ">see all</li>*/}
                   </ul>
                 </div>
                 {
@@ -144,8 +146,10 @@ seeAllClick(){
 
               {(_.size(this.state.coursesList)>0)?(<div className="coursesList margn1pc col-sm-12">
               <div className="searchingOn col-sm-12">
+
                 <ul className="allList">
                   <li className="col-sm-1 txtupcase clrgray curPntr ">courses</li>
+                 {/* <li className="col-sm-1 txtupcase seeAll-btn curPntr ">see all</li>*/}
                 </ul>
               </div>
               {
@@ -167,6 +171,7 @@ seeAllClick(){
               <div className="searchingOn col-sm-12">
                 <ul className="allList">
                   <li className="col-sm-1 txtupcase clrgray curPntr ">people</li>
+                  {/*<li className="col-sm-1 txtupcase seeAll-btn curPntr ">see all</li>*/}
                 </ul>
               </div>
               {
@@ -306,6 +311,8 @@ seeAllClick(){
                                                                     </div></div></div>
                                 </div>
                </div>
+      </div>
+    </div>
     );
   }
 }

@@ -10,6 +10,7 @@ let serialize = require('form-serialize');
 import _ from "lodash";
 const Captcha = require('react-captcha');
 import toastr from 'toastr';
+import Spinner from 'react-spinner'; 
 
 let imagePath= IMG_CONSTANT.BASE_PATH;
 class Registration extends Component
@@ -95,8 +96,9 @@ class Registration extends Component
 
     onSubmit(){
       if(this.state.isRobot){
-        toastr.error("Please select reCaptcha");
+        toastr.error("Please Validate ReCaptcha");
       }else{
+          this.setState({ajaxCallInProgress:true});
         let form = document.querySelector('#registration_page');
         let formData = serialize(form, {hash: true });
         if(!(_.has(formData, 'is_private'))){
@@ -105,17 +107,19 @@ class Registration extends Component
              _.set(formData, 'is_private', true);
         }
         this.props.registerUser(formData).then((data)=>{
+            this.setState({ajaxCallInProgress:false});
             this.context.router.push('/home');
         }).catch((error)=>{
-            console.log("Error", error);
+            this.setState({ajaxCallInProgress:false});
         });
        }
     }
 
     facebookRegister(){
       if(this.state.isRobot){
-        toastr.error("Please select reCaptcha");
+        toastr.error("Please Validate ReCaptcha");
       }else{
+          this.setState({ajaxCallInProgress:true});
         let form = document.querySelector('#registration_page');
         let formData = serialize(form, {hash: true });
         if(!(_.has(formData, 'is_private'))){
@@ -125,9 +129,10 @@ class Registration extends Component
         }
 
         this.props.facebookRegister(formData).then((data)=>{
+            this.setState({ajaxCallInProgress:false});
             this.context.router.push('/home');
         }).catch((error)=>{
-            console.log("Error", error);
+            this.setState({ajaxCallInProgress:false});
         });
        }
     }
@@ -169,7 +174,7 @@ onRequired(e) {
         }
         if(e.target.name == "zipcode"){
 
-                if(e.target.value == ""){
+                if(e.target.value == "" || e.target.value.length < 5){
 
                  this.setState({
                  c:(<span className="err-msg"> Please enter valid Zipcode</span> ),
@@ -278,7 +283,7 @@ $("#myModal").modal('hide');
                         <div className="menu-right">
                           <a data-toggle="modal" data-target="#myModal" className="txtwhite"> Contact Us</a>
                             <div className="modal fade addInvite" id="myModal" role="dialog" data-backdrop="static">
-                            <form action="" method="post" id="contactForm" name="contactForm" ref="contactForm">
+               {this.state.ajaxCallInProgress?(<div><Spinner /></div>):(<form action="" method="post" id="contactForm" name="contactForm" ref="contactForm">
                             <div className="modal-dialog modal-sm mt15pc">
                                <div className="modal-content">
                                    <div className="modal-header col-sm-12 modalHeader"><h4 className="m0px">CONTACT ADMIN</h4></div>
@@ -300,7 +305,7 @@ $("#myModal").modal('hide');
                                  </div>
                                 </div>
                             </div>
-                            </form>
+                            </form>)}
                           </div>
                         </div>
                     </div>
@@ -349,24 +354,24 @@ $("#myModal").modal('hide');
                         </div>
                         <div className=" mrgtopp10px" >
                <span   className="switchround mrgtop10px">Private Account:</span>
-               <label className="switch">
+               <label className="switch switch_resp ml23pc">
             <input type="checkbox" onChange={this.onfieldChange} name="is_private" key="is_private" id="is_private"/>
             <div className="slider round"></div>
                </label>
            </div>
-           <div className="ml40pc captcha">
-            <Captcha  sitekey = {APP_CONSTANT.SITE_KEY} lang = 'en' theme = 'light' type = 'image'
-                    callback={(value) => {this.setState({isRobot:false}) } }/>
+           <div className="ml40pc captchaAlign">
+            <Captcha className="recaptcha_Style" sitekey = {APP_CONSTANT.SITE_KEY} lang = 'en' theme = 'light' type = 'image'
+                     callback={(value) => {this.setState({isRobot:false}) } }/>
                     </div>
                         </form>
                     </div>
                     <div className="col-sm-12">
 
                    {this.props.userDetails!=null && this.props.userDetails!=undefined ?(<div className="col-sm-6">
-                    <input className="btn registsign"  disabled= {this.state.isRobot || !this.state.Fname || !this.state.Lname || !this.state.email || !this.state.zipCode || this.state.errEmail }  onClick={this.facebookRegister.bind(this)} value="Sign Up"/>
+                    <input type="button" className="btn registsign"  disabled= {this.state.isRobot || !this.state.Fname || !this.state.Lname || !this.state.email || !this.state.zipCode || this.state.errEmail }  onClick={this.facebookRegister.bind(this)} value="Sign Up"/>
                    {/*<button className="btn registsign"  disabled= { !this.state.Fname || !this.state.Lname || !this.state.email || !this.state.zipCode || this.state.errEmail }  onClick={this.facebookRegister.bind(this)}>Sign Up</button>*/}
                     </div> ):(<div className="col-sm-6">
-                    <input className="btn registsign" onClick={this.onSubmit} disabled= {this.state.isRobot || !this.state.Fname || !this.state.Lname || !this.state.newPass || !this.state.email || !this.state.rePass || !this.state.zipCode || this.state.errEmail || this.state.errPass2} value="Sign Up"/>
+                    <input type="button" className="btn registsign" onClick={this.onSubmit} disabled= {this.state.isRobot || !this.state.Fname || !this.state.Lname || !this.state.newPass || !this.state.email || !this.state.rePass || !this.state.zipCode || this.state.errEmail || this.state.errPass2} value="Sign Up"/>
                    {/*<button className="btn registsign" onClick={this.onSubmit} disabled= { !this.state.Fname || !this.state.Lname || !this.state.newPass || !this.state.email || !this.state.rePass || !this.state.zipCode || this.state.errEmail || this.state.errPass2} >Sign Up</button>*/}
                     </div>)}
                     <div className="col-sm-6">
@@ -381,7 +386,6 @@ $("#myModal").modal('hide');
             );
     }
 }
-
 Registration.contextTypes={
     router:React.PropTypes.object.isRequired
 };
@@ -396,3 +400,4 @@ function matchDispatchToProps(dispatch){
     return bindActionCreators({registerUser, contactUs,facebookRegister},dispatch);
 }
 export default connect(mapStateToProps,matchDispatchToProps) (Registration)
+ 

@@ -51,15 +51,14 @@ class Login extends Component {
                 if(this.props.userDetails!=undefined && this.props.userDetails!=null && this.props.userDetails.exists == false){
                     this.context.router.push(APP_URL.RREGISTER);
                 }
-
+         
             else{
                 this.context.router.push(APP_URL.HOME);
-                this.setState({ajaxCallInProgress:false});
+                this.setState({ajaxCallInProgress:false}); 
              }
 
             }).catch((error) => {
                 this.setState({ajaxCallInProgress:false});
-                console.log("error",error);
             });
 }
     onSubmit(e) {
@@ -68,13 +67,18 @@ class Login extends Component {
         let errors = isvalidLogin(formData)
         if (_.size(errors) == 0) {
             this.props.userSignIn(formData).then(() => {
+                this.setState({ajaxCallInProgress:false});
                 this.context.router.push(APP_URL.HOME);
             }).catch((error) => {
-                toastr.error("Not a valid EmailId/Password");
-                 this.setState({ajaxCallInProgress:false});
+                
+                this.setState({ajaxCallInProgress:false});
+                toastr.error("Please Enter Valid EmailId/Password");
+                 
             });
         } else {
-            toastr.error("Please enter UserName or Password", "Failure");
+            this.setState({ajaxCallInProgress:false});
+            
+            toastr.warning("Email id /password are required fields");
         }
     }
 
@@ -165,10 +169,10 @@ enterCapture(e){
     {
       return(
 
-             <div><div className="bgLoginReg">
+             <div><div className="bgLoginReg ">
                   <div className="BgadminDashboard"></div>
              </div>
-            <div className="login-page">
+            <div className="login-page ">
               <div className="navigation">
                 <div className="logo_login">
                     <img src={ImgPath+"Golf_CNX_Logo.png"} />
@@ -220,7 +224,7 @@ enterCapture(e){
                       type="email"
                       className="form-control"
                       id="userEmailId"
-                      placeholder="Email"/>
+                      placeholder="Email:"/>
                   </div>
                   <div className="form-group">
                     <input
@@ -229,15 +233,18 @@ enterCapture(e){
                       key="userPassword"
                       type="password"
                       className="form-control"
-                      placeholder="Password" onKeyDown={this.enterCapture.bind(this)}/>
+                      placeholder="Password:" onKeyDown={this.enterCapture.bind(this)}/>
                 </div>
                 <div className="LoginButton">
                   <button onClick={this.onSubmit} type="button">
                     <img src={ImgPath+"Login_button.png"}/>
                   </button>
                </div>
-                <div className="LoginButton">
-               <img src={ImgPath+"FB_Login_button.png"} className="ml39pc"/>
+          <div className="form-group">
+              <center className="txtwhite fnt20px">-or-</center>
+              </div>
+                <div className="LoginButton  text-align pdlftryt15pc">
+               <img src={ImgPath+"FB_Login_button.png"} className=" fbImg"/>
                                <div className="fbLoginbtn"><FacebookLogin appId="194085854431251" autoLoad={false} fields="name,email,picture" callback={this.responseFacebook.bind(this)} >
 
           </FacebookLogin>

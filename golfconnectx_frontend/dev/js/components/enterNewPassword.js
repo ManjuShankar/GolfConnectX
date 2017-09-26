@@ -15,7 +15,7 @@ class EnterNewPassword extends Component
         errPass1:"",errPass2:"",
         rePass:"",newPass:""
     };
-
+   
     }
     onPasswordChangeClick(){
       let form = document.querySelector('#PasswordForm');
@@ -26,7 +26,7 @@ class EnterNewPassword extends Component
             this.context.router.push("/");
          }).catch((error)=>{
          });
-
+    
     }
     validatePass(e){
         if(e.target.name == "password"){
@@ -45,15 +45,15 @@ class EnterNewPassword extends Component
       if((this.state.rePass != "") && (this.state.rePass != e.target.value)){
              this.setState({
                 errPass2 : (<span className="color-red">Password Doesnt Match</span>),
-
+                
             });
-      }
+      }    
       else{
             this.setState({
                 errPass2 : ""
             });
       }
-
+  
   }
         if(e.target.name == "confirmPassword"){
 
@@ -74,10 +74,10 @@ class EnterNewPassword extends Component
             }
         }
     onSubmit(e){
-   if((e.keyCode ==13)  && (this.refs.confirmPassword.value != "") && (!this.state.errPass2)){
-        $("#btnSubmit").trigger("click");
+   if((e.keyCode ==13)  && (this.refs.confirmPassword.value != "") && (!this.state.errPass2)){   
+        $("#btnSubmit").trigger("click");      
     }
-
+   
    }
 
     render()
@@ -99,7 +99,7 @@ class EnterNewPassword extends Component
                 <div className="col-sm-12 mt1pc">
                   <div className="col-sm-4"></div>
                   <div className="col-sm-4 txtcenter">
-
+                    
                   </div>
                   <div className="col-sm-4"></div>
                 </div>
@@ -114,15 +114,15 @@ class EnterNewPassword extends Component
                           {isExistObj(this.props.activeUser) && isExistObj(this.props.activeUser.email) && <input type="hidden" value={this.props.activeUser.email.email} name="email"/>}
                             <input type="password" placeholder="Enter new password" name="password" className="form-control" onChange={this.validatePass.bind(this)} />
                             {this.state.errPass1}
-                          </div>
-                        </div>
+                          </div>   
+                        </div>  
                         <div className="col-sm-12 mt10px">
                           <div className="txtwhite col-sm-4 zeroPad txtRyt fnt16px">Re-enter Password : </div>
                           <div className="col-sm-8">
-                            <input type="password" placeholder="re-enter password" ref="confirmPassword" name="confirmPassword" className="form-control" onChange={this.validatePass.bind(this)} onKeyDown={this.onSubmit.bind(this)}/>
+                            <input type="password" placeholder="re-enter password" ref="confirmPassword" name="confirmPassword" className="form-control" onChange={this.validatePass.bind(this)} onKeyDown={this.onSubmit.bind(this)}/> 
                              {this.state.errPass2}
-                          </div>
-                        </div>
+                          </div>   
+                        </div>                  
                       </div>
                     </div>
                     <div className="col-sm-3"></div>
@@ -130,7 +130,7 @@ class EnterNewPassword extends Component
                   <div className="col-sm-12 mb1pc mt10px">
                     <div className="col-sm-4"></div>
                     <div className="col-sm-4">
-                      <div className="col-sm-12">
+                      <div className="col-sm-12">        
                         <div className="pswrdSubmitDiv txtcenter"><input type="button" id="btnSubmit" value="Submit" className="PasswordSubmit-butn" onClick={this.onPasswordChangeClick.bind(this)}/></div>
                       </div>
                     </div>
@@ -151,7 +151,7 @@ EnterNewPassword.contextTypes = {
 function mapStateToProps(state) {
     return {
         activeUser: (state.activeUser!=null)?(state.activeUser):(JSON.parse(sessionStorage.getItem('userDetails')))
-
+        
     };
 }
 

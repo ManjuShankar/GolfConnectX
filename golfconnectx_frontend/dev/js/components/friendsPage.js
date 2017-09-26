@@ -15,8 +15,9 @@ class FriendsPage extends React.Component {
       members: [],
       emailList: "",
       isValidEmailReciepients: false,
-      modalView: false, msgEmail:''
+      modalView: false, msgEmail:'',msgNotEmpty: ""
     };
+
   }
 
   componentWillMount() {
@@ -29,7 +30,7 @@ class FriendsPage extends React.Component {
         this.setState({ajaxCallInProgress: false});
       })
       .catch((error) => {
-        console.log("Error", error);
+        
         if (error == "Error: Request failed with status code 401") {
           this
             .context
@@ -56,7 +57,7 @@ class FriendsPage extends React.Component {
         $('#myModal').modal('hide');
       })
       .catch((error) => {
-        console.log("Error", error);
+        
       });
   }
 
@@ -72,7 +73,7 @@ class FriendsPage extends React.Component {
           this.setState({members: this.props.friends.Members});
           this.setState({ajaxCallInProgress: false});
         }).catch((error) => {
-          console.log("Error", error);
+          
           if (error == "Error: Request failed with status code 401") {
             this.context.router.push('/');
           }
@@ -102,7 +103,7 @@ class FriendsPage extends React.Component {
         $('#friendsModal').modal('hide');
       })
       .catch((error) => {
-        console.log("Error", error);
+        
       });
   }
 
@@ -169,13 +170,18 @@ class FriendsPage extends React.Component {
     $("#sendMessageModal").modal('show');
 this.setState({msgEmail:email});
   }
+   msgNotEmpty(e){
+          this.setState({
+              msgNotEmpty : e.target.value
+          });
+      }
 
   render() {
     return (
       <div className="frndsGridPage">
         <div className="col-sm-12">
-          <h3 className="txt-center col-sm-6">Friends</h3>
-          <div className="col-sm-6 txtRyt">
+          <h3 className="txt-center col-xs-2">Friends</h3>
+          <div className="col-xs-10 txtRyt">
             <button
               className="btnAddFrnd"
               data-toggle="modal"
@@ -188,6 +194,7 @@ this.setState({msgEmail:email});
               <div>
                 <InviteModal
                  nameProp="Add Friends"
+              invite_type="Friend"
                   membersForFriends={this.state.members}
                   closeModal={this
                   .closeClick
@@ -215,7 +222,7 @@ this.setState({msgEmail:email});
                       .map((item, i) => {
                         return (
                           <div key={i}>
-                            <div className="col-md-3 mb3pc">
+                            <div className="col-md-3  col-lg-3 col-sm-4 col-xs-12 mb3pc">
                               <div className="r1c1 meo">
                                 <span
                                   onClick={this
@@ -238,9 +245,9 @@ this.setState({msgEmail:email});
                                            <button className="close" data-dismiss="modal">&times; </button>
                                            <h3 className="m0px">Message</h3>
                                          </div>
-                                        <div className="modal-body"><textarea id="messageTxtArea" maxLength="1000" className="txtarea form-control" placeholder="write something.." name="messageTxtArea"></textarea></div>
+                                        <div className="modal-body"><textarea onChange={this.msgNotEmpty.bind(this)} id="messageTxtArea" maxLength="1000" className="txtarea form-control" placeholder="write something.." name="messageTxtArea"></textarea></div>
                                         <div className="modal-footer">
-                                          <button onClick={this.onSendMessageClick.bind(this)} type="button" className="btnSend" id="btnSend">Send</button>
+                                          <button disabled={!this.state.msgNotEmpty} onClick={this.onSendMessageClick.bind(this)} type="button" className="btn btnSend" id="btnSend">Send</button>
                                           <button type="button" className="Cancel-butn" data-dismiss="modal">Cancel</button>
                                        </div>
                                       </div>
@@ -260,13 +267,14 @@ this.setState({msgEmail:email});
                                           name="txtArea"></textarea>
                                       </div>
                                       <div className="modal-footer">
-                                        <button
+                                        <input
                                           onClick={this
                                           .onSendClick
                                           .bind(this, item.id)}
                                           type="button"
                                           className="btn btn-primary"
-                                          id="btnSend">Send</button>
+                                          id="btnSend"
+                                          value="Send"/>
                                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                       </div>
                                     </div>

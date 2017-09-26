@@ -292,7 +292,7 @@ let addNewForumCategoryPost=(id, token, subject_line, forumType)=>{
    const apiCommentRequest = axios.post(url, { body: body}, config);
     return(dispatch)=>{
       return apiCommentRequest.then(({data})=>{
-          toastr.success("Comment Added Successfully");
+          toastr.success("Comment added successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -343,7 +343,7 @@ let deletePost=(categoryId, conversationId, token, forumType)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Conversation Deleted Successfully");
+            toastr.success("Conversation deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -363,7 +363,7 @@ let deleteComment=(categoryId, conversationId,commentId, token, forumType)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Comment Deleted Successfully");
+            toastr.success("Comment deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);

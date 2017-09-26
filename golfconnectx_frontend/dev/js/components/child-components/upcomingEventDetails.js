@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {isValidEmail,isValidImage} from '../../utils/Validation';
 import InviteModal from './InviteModal';
 
-
+import Spinner from 'react-spinner';
 import {getAttendeesList, getPostsByEventId, getGalleryByEventId, savePostsByEventId, addEventComment,
  getMayAttendList, getNotAttendList,getEventInvities,postInvitiesList,searchInvities, inviteViaEmail,
   deleteEventGallery, deletePost, deleteComment, deleteEventFile, getEventFile, CancelRequest, getCurrentEvent, onAttendingOrNotAttending} from '../../actions/eventDetailsAction';
@@ -15,6 +15,7 @@ import {RequestInvite} from '../../actions/createEventAction';
 import {deletePostPhoto, likePost} from '../../actions/groupListAction';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {isExistObj} from '../../utils/functions';
+import moment from 'moment';
 
 let paramId;
 
@@ -41,29 +42,34 @@ constructor(props){
         cimgArray:'',
         pimgId:'',
         cimgId:'',
-        modalView: false
+        modalView: false, postId:'',commentId:'', gImgId:''
        };
        this.uploadTeatTimes=this.uploadTeatTimes.bind(this);
        this.uploadFile=this.uploadFile.bind(this);
 }
-
+    componentWillMount(){
+        $(".cSpinner").hide();
+    }
+componentDidMount(){
+    $(".cSpinner").hide();
+}
 componentWillReceiveProps(nextProps){
   if(this.props.upComingeventDetail!=null && nextProps.upComingeventDetail!=null && this.props.upComingeventDetail.id!=nextProps.upComingeventDetail.id){
     this.props.getPostsByEventId(nextProps.upComingeventDetail.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
       this.setState({postsList: this.props.postsList});
       this.setState({selectedIndex:0});
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
       this.props.getGalleryByEventId(nextProps.upComingeventDetail.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
       this.setState({galleryList: this.props.gallery});
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
     this.props.getEventFile(nextProps.upComingeventDetail.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
       this.setState({teetime_file: this.props.selectedEvent.files});
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
   }
 }
@@ -71,9 +77,9 @@ componentWillReceiveProps(nextProps){
 getPosts(param=2){
  this.props.getPostsByEventId(this.props.selectedEvent.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
       this.setState({postsList: this.props.postsList, selectedIndex:param});
-
+ $(".cSpinner").hide();
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
 }
 
@@ -81,7 +87,7 @@ cancelRequest(){
  this.props.CancelRequest(this.props.selectedEvent.id, this.props.activeUser.token).then((data)=>{
       this.getEvent();
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
 }
 
@@ -89,18 +95,18 @@ getPeopleList(param=1){
       this.props.getAttendeesList(this.props.activeUser.token, this.props.selectedEvent.id, this.props.isFromAllEvents).then(()=>{
       this.setState({attendees: this.props.selectedEvent.attendeesList, selectedIndex:param});
     }).catch((error)=>{
-        console.log("Error", error);
+
 });
 
 this.props.getMayAttendList(this.props.activeUser.token, this.props.selectedEvent.id, this.props.isFromAllEvents).then(()=>{
       this.setState({mayAttend: this.props.selectedEvent.mayAttendList});
 }).catch((error)=>{
-        console.log("Error", error);
+
 });
 this.props.getNotAttendList(this.props.activeUser.token, this.props.selectedEvent.id, this.props.isFromAllEvents).then(()=>{
       this.setState({notAttend: this.props.selectedEvent.notAttendList});
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
     }
 
@@ -142,12 +148,12 @@ onButtonClick(val){
                  that.setState({galleryList:data});
                },
                error: function(){
-                  console.log("Error");
+
                }
            });
        }
        else{
-               toastr.error('Upload a valid Image');
+               toastr.error('Upload Valid Image');
         }
          e.preventDefault();
      }
@@ -165,6 +171,10 @@ onButtonClick(val){
               }
               else{
               let fileObj = document.getElementById('teatime').files[0];
+                  if(!fileObj){
+                          toastr.warning("Please select the file to Upload");
+                     }
+                   else {
               let fileExtention = this.getFileExtension(document.getElementById('teatime').files[0].name);
               let fd = new FormData();
               let that = this;
@@ -193,11 +203,13 @@ onButtonClick(val){
                     $('#teatime').val('');
                     $('#uploadFileModal').modal('hide');
                     $('#btnUploadFile').prop('disabled', false);
-                    console.log("Error");
+
                   }
               });
               }
-          }
+        }
+        }
+    
 
     addPost(){
         let eventId=this.props.selectedEvent.id;
@@ -209,7 +221,7 @@ imgArray=this.state.imgArray[i];
       imgId.push(imgArray.id);
       }
       if(title==""){
-          toastr.error("Post can't be empty");
+          toastr.error("Please Enter Post");
       }else{
         this.setState({
               postBtn : true
@@ -217,6 +229,7 @@ imgArray=this.state.imgArray[i];
           this.props.savePostsByEventId(eventId,this.props.activeUser.token, title, imgId).then(()=>{
             this.getPosts();
             document.getElementById('txtPostInput').value='';
+               $(".cSpinner").hide();
           }).catch((error)=>{
           });
       }
@@ -240,6 +253,8 @@ imgArray=this.state.cimgArray[i];
         this.getPosts();
         $('#'+postsId).prop('disabled', false);
         document.getElementById(commentTextBox).value='';
+          this.setState({cimgArray:''});
+          $(".cSpinner").hide();
       }).catch((error)=>{
       });
       }
@@ -284,7 +299,7 @@ sendInvitation(){
         $('#SendInvite').modal('hide');
           $("#searchInvites").val('');
       }).catch((error)=>{
-        console.log("Error", error);
+
       });
     }
 
@@ -293,7 +308,7 @@ sendInvitation(){
       this.props.getEventInvities(this.props.activeUser.token, eventId, this.props.isFromAllEvents).then(()=>{
       this.setState({invities: this.props.selectedEvent.invitiesList});
       }).catch((error)=>{
-        console.log("Error", error);
+
            });
         $("#deleteButton").prop({disabled:true});
         this.setState({modalView : !this.state.modalView});
@@ -337,17 +352,16 @@ sendInvitation(){
       let mails = e.target.value.split(',');
       let errors = isValidEmail(mails[0]);
       if(errors == false){
-        console.log("email is worng");
       }
       if(errors == true){
-        console.log("valid email");
       }
     }
-    deleteImage(id){
+    deleteImage(){
+        let id=this.state.gImgId;
           this.props.deleteEventGallery(id, this.props.activeUser.token).then(()=>{
           this.getGallery();
         }).catch((error)=>{
-         console.log("Error", error);
+
       });
     }
 
@@ -355,23 +369,32 @@ sendInvitation(){
           this.props.getGalleryByEventId(this.props.selectedEvent.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
           this.setState({galleryList: this.props.gallery, selectedIndex:param});
         }).catch((error)=>{
-         console.log("Error", error);
+
       });
     }
+    delPostModal(id){
+        this.setState({postId:id});
+        $("#postDelModal").modal('show');
 
-    deletePost(id){
+    }
+    deletePost(){
+        let id=this.state.postId;
       this.props.deletePost(id, this.props.activeUser.token).then(()=>{
       this.getPosts();
       }).catch((error)=>{
-         console.log("Error", error);
+
       });
     }
-
-     deleteComments(id, commentId){
+delCommModal(id){
+    this.setState({commentId:id});
+    $("#commentsDelModal").modal('show');
+}
+     deleteComments(id){
+         let commentId=this.state.commentId;
           this.props.deleteComment(id, commentId, this.props.activeUser.token).then(()=>{
           this.getPosts();
                 }).catch((error)=>{
-                console.log("Error", error);
+
               });
       }
 
@@ -379,14 +402,14 @@ sendInvitation(){
       this.props.getEventFile(this.props.selectedEvent.id, this.props.activeUser.token, this.props.isFromAllEvents).then(()=>{
       this.setState({teetime_file: this.props.selectedEvent.teeFiles});
     }).catch((error)=>{
-        console.log("Error", error);
+
     });
 }
     deleteFile(id){
        this.props.deleteEventFile(id, this.props.activeUser.token).then(()=>{
        this.getFiles();
         }).catch((error)=>{
-         console.log("Error", error);
+
         });
       }
 
@@ -415,8 +438,9 @@ onRequired(e){
          }
      }
  }
-openModal(){
+openModal(id){
    $('#testModal').modal('show');
+    this.setState({gImgId:id});
 }
 
 getEvent(){
@@ -449,12 +473,11 @@ postImage(){
                success: function(data){
                 that.setState({imgArray:data});
                //that.getPosts();
-                console.log("imgArray2",data);
-                /*console.log(data,data.id);
+                /*
                 let arr=data.id;
                 that.state.imgArray.push(arr);
 
-                console.log("imgArray",that.state.imgArray);*/
+                */
 
 
                },
@@ -465,11 +488,13 @@ postImage(){
           }
           else{
 
-              toastr.error('Upload a valid Image');
+              toastr.error('Upload Valid Image');
           }
           /// e.preventDefault();
     }
-commentImage(){
+commentImage(id){
+    $("#"+id+"_commentSpinnner").show();
+     $("#"+id+"_txtComment").hide();
  var that = this;
           var imagesArray = new FormData();
            $.each($('#commentFile')[0].files, function(i, file) {
@@ -491,23 +516,26 @@ commentImage(){
                success: function(data){
                 that.setState({cimgArray:data});
                //that.getPosts();
-                console.log("imgArray2",data);
                 /*console.log(data,data.id);
                 let arr=data.id;
                 that.state.imgArray.push(arr);
 
                 console.log("imgArray",that.state.imgArray);*/
-
+ $("#"+id+"_commentSpinnner").hide();
+     $("#"+id+"_txtComment").show();
 
                },
                error: function(){
                   //that.setState({selectedScoreId:null});
+                    $("#"+id+"_commentSpinnner").hide();
+     $("#"+id+"_txtComment").show();
                }
            });
           }
           else{
-
-              toastr.error('Upload a valid Image');
+$("#"+id+"_commentSpinnner").hide();
+     $("#"+id+"_txtComment").show();
+              toastr.error('Upload Valid Image');
           }
 }
 
@@ -543,13 +571,11 @@ setpImgId(id){
       }).catch((error)=>{
       });
     }).catch((error)=>{
-      console.log('Error', error);
     });
   }
 
   closeClick(status) {
     //  $('.membersList').attr('checked', false); $('#friendsModal').modal('hide');
-    console.log("cancel Status", status);
     this.setState({modalView: status});
   }
  onLikeClick(id){
@@ -573,11 +599,11 @@ setpImgId(id){
     render(){
     let {upComingeventDetail, onRequestInviteClick, activeUser, onButtonClick, teaTimesList,  getFiles, isFromProfileDetails}= this.props;
     return(
-      (upComingeventDetail!=undefined && upComingeventDetail!=null && _.size(this.props.upComingeventDetail)>0)?(<div className="col-sm-9 mt20px eventsRytSidePage"><center className="backgroundGray">
-      {(upComingeventDetail.cover_image!=undefined && upComingeventDetail.cover_image!=null)?<img src={'http://' + upComingeventDetail.cover_image.thumbnail} className={(upComingeventDetail.cover_image.width < 50)? "eventImgDynamicwd":upComingeventDetail.cover_image.width<725?"eventImgDynamic":"eventImgStatic"} />:(<img src="/assets/img/4th_july.jpg" className="eventImgStatic" />)}</center>
+      (upComingeventDetail!=undefined && upComingeventDetail!=null && _.size(this.props.upComingeventDetail)>0)?(<div className="col-sm-12 col-md-9 mt20px eventsRytSidePage"><center>
+      {(upComingeventDetail.cover_image!=undefined && upComingeventDetail.cover_image!=null)?(<img src={'http://' + upComingeventDetail.cover_image.thumbnail} className="eventImgStatic"/>):(<img src="/assets/img/GolfConnectx_EventPhoto_725x150.png" className="eventImgStatic" />)}</center>
 
 
-        {this.props.upComingeventDetail!=undefined && this.props.upComingeventDetail!=null && this.props.activeUser!=undefined && this.props.activeUser!=null && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.selectedEvent.has_access==false && this.props.selectedEvent.request_status==false && (<div>
+        {this.props.upComingeventDetail!=undefined && this.props.upComingeventDetail!=null && this.props.activeUser!=undefined && this.props.activeUser!=null && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.selectedEvent.has_access==false && this.props.selectedEvent.request_status==false && (this.props.upComingeventDetail.end_date_format >= moment().format('MM/DD/YYYY')) && (<div>
           <input type="button"  onClick={this.onRequestInviteClick.bind(this)} className="requestinvite" value="Request an Invite" />
          </div>)}
          {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.selectedEvent.has_access==false && this.props.selectedEvent.request_status==true ?<button onClick={this.cancelRequest.bind(this)} className="requestinvite">Cancel Request</button>:''}
@@ -587,8 +613,8 @@ setpImgId(id){
           <input type="button" onClick={this.disableButn.bind(this)} className="btn-SendInvite" value="Send Invite" />
           </div>)}
 
-            {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.upComingeventDetail) && isExistObj(this.props.upComingeventDetail.created_by) && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.upComingeventDetail.has_access==true && this.props.selectedEvent.request_status==false && this.props.activeUser.id!=this.props.upComingeventDetail.created_by.id && this.props.selectedEvent.attendee_status=='Y' && (<input type="button" value="I'm Not Attending" onClick={this.onAttendingOrNotAttendingClick.bind(this, 'N', this.props.selectedEvent.id)} className="requestinvite" />)}
-            {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.upComingeventDetail) && isExistObj(this.props.upComingeventDetail.created_by) && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.upComingeventDetail.has_access==true && this.props.selectedEvent.request_status==false && this.props.activeUser.id!=this.props.upComingeventDetail.created_by.id && this.props.selectedEvent.attendee_status=='N' && (<input type="button" value="I'm Attending" onClick={this.onAttendingOrNotAttendingClick.bind(this, 'Y', this.props.selectedEvent.id)} className="requestinvite" />)}
+            {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.upComingeventDetail) && isExistObj(this.props.upComingeventDetail.created_by) && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.upComingeventDetail.has_access==true && this.props.selectedEvent.request_status==false && this.props.activeUser.id!=this.props.upComingeventDetail.created_by.id && this.props.selectedEvent.attendee_status=='Y' && (<input type="button" value="I am Not Attending" onClick={this.onAttendingOrNotAttendingClick.bind(this, 'N', this.props.selectedEvent.id)} className="requestinvite" />)}
+            {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.upComingeventDetail) && isExistObj(this.props.upComingeventDetail.created_by) && this.props.activeUser.id!=this.props.selectedEvent.created_by.id && this.props.upComingeventDetail.has_access==true && this.props.selectedEvent.request_status==false && this.props.activeUser.id!=this.props.upComingeventDetail.created_by.id && this.props.selectedEvent.attendee_status=='N' && (<input type="button" value="I am Attending" onClick={this.onAttendingOrNotAttendingClick.bind(this, 'Y', this.props.selectedEvent.id)} className="requestinvite" />)}
             {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) &&  this.props.activeUser.id==this.props.selectedEvent.created_by.id && this.props.isPastEvent==false && (<input type="button" onClick={this.onButtonClick.bind(this, "Edit")} className="btn-EditEvent" value="Edit Event" />)}
 
 
@@ -597,6 +623,7 @@ setpImgId(id){
               <div>
                 <InviteModal
                 nameProp="Add Members"
+        invite_type="Event"
                   membersForFriends={this.state.invities}
                   closeModal={this
                   .closeClick
@@ -665,7 +692,7 @@ setpImgId(id){
                   </TabList>
               <TabPanel>
               <div className="eventPost">
-                <div className="col-sm-6">
+                <div className="col-sm-6 col-xs-6">
                   <div className="inlinedisplay">
                     <div className="eventbody">
                       <span className="fnt20px">{upComingeventDetail.name}</span>
@@ -713,14 +740,14 @@ setpImgId(id){
                   </span>
                 </div>)}
                 <div className="detailsheader">Details
-                <div className="eventDetails">
+                <div className="eventDetails word-break">
                   <div className="col-sm-12 mt1pc zeroPad">
                     <p dangerouslySetInnerHTML={{__html: this.props.upComingeventDetail.description}}></p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 mt10px">
+            <div className="col-sm-6 col-xs-6 mt10px">
               <div className="col-sm-10">
                 <div className="modal fade addPost" id="uploadFileModal" role="dialog" data-backdrop="static">
                   <div className="modal-dialog tp25pc">
@@ -748,11 +775,12 @@ setpImgId(id){
                               <i className={(extension[1]=="pdf")?("fa fa-lg fa-file-pdf-o color-red pad-5px"):((extension[1]=="xls" || extension[1]=="xlsx")?("fa fa-lg fa-file-excel-o color-green pad-5px"):((extension[1]=="doc" || extension[1]=="docx")?("fa fa-lg fa-file-word-o color-blue pad-5px"):("fa fa-lg fa-file-text pad-5px")))} aria-hidden="true"></i>
                             </div>
                             <div className="col-sm-12 zeroPad">
-                              <div className="col-sm-7 padd_cls ">
+                              <div className="col-sm-4 col-xs-4 padd_cls ">
                               {isExistObj(this.props.upComingeventDetail.created_by) && item.uploaded_by==this.props.upComingeventDetail.created_by.first_name && (<span className="glyphicon glyphicon-trash fr cursor-pointer" data-toggle="modal" data-target="#modalFileDlt"></span>)}
                                   <div className="modal fade" id="modalFileDlt" role="dialog" data-dropback="static">
                                     <div className="modal-dialog">
                                          <div className="modal-content">
+                                         
                                            <div className="modal-body">Are you sure you want to delete?</div>
                                              <div className="modal-footer">
                                                   <input type="button" className="cnfrmbtn checkng" data-dismiss="modal" value="Yes" onClick={this.deleteFile.bind(this,item.id)} />
@@ -764,7 +792,10 @@ setpImgId(id){
                               <label>{item.name.substr(0, item.name.lastIndexOf('.'))}</label>
                               <br/>
                             </div>
-                              {isExistObj(this.props.selectedEvent) && this.props.selectedEvent.has_access && (<a className="btn-dnloadFile pad-5px cursor-pointer color-white" target="_blank" href={'http://' + item.file} >Download File</a>)}
+                              {isExistObj(this.props.selectedEvent) && this.props.selectedEvent.has_access && (<div className="col-sm-8 col-xs-8"><a className="btn-dnloadFile pad-5px cursor-pointer color-white display" target="_blank" href={'http://' + item.file} >Download File</a>
+
+                                <a className="glyphicon glyphicon-save min-display" target="_blank" href={'http://' + item.file} ></a>
+                                </div>)}
                           </div>
                             <span className="fnt14px col-sm-12 zeroPad mb5px">{item.uploaded_on} by {item.uploaded_by}</span>
                                 <div className="dividerLineforDoc col-sm-12"></div>
@@ -773,7 +804,7 @@ setpImgId(id){
             </div>
         </div>
               <div className="dividerLine1Event"></div>
-              <div className="col-sm-10">
+              <div className="col-sm-12 inline-flex ">
                 <div  className="modaldiv">
                  <div onClick={this.navigateToPeopleTab.bind(this)}  className="eventFriends col-sm-4 cursor-pointer" >
                     {isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.attendee_stats) && <span className="fr atndfrnd mt3px mr15px">{this.props.selectedEvent.attendee_stats.attending} Attending</span>}
@@ -793,7 +824,7 @@ setpImgId(id){
                         <span>Attending</span>
                     </div>
                     <div className="col-sm-12 mb10px">
-                        {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && _.size(this.props.selectedEvent.attendeesList)>0 && this.props.selectedEvent.attendeesList.map((item, index)=>{
+                        {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.attendeesList) && _.size(this.props.selectedEvent.attendeesList)>0 && this.props.selectedEvent.attendeesList.map((item, index)=>{
                           return(<div className="col-sm-4 mb10px"><Link to={this.props.activeUser.id==item.id?"profile_0":"/profileDetail_"+item.id}><img key={index} src={'http://'+ item.profile_image_url} className="col-sm-3 zeroPad brdrRad50pc wd10pc" /><span className="col-sm-9">{item.first_name} {item.last_name}</span></Link></div>);
                         })}
                     </div>
@@ -805,14 +836,14 @@ setpImgId(id){
                           </div>
                           <div className="col-sm-6 ntAtdngDiv">
                             <div className="col-sm-12 zeroPad">
-                              {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && _.size(this.props.selectedEvent.notAttendList)>0 && this.props.selectedEvent.notAttendList.map((item, index)=>{
+                              {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent.notAttendList) && _.size(this.props.selectedEvent.notAttendList)>0 && this.props.selectedEvent.notAttendList.map((item, index)=>{
                                 return(<div className="col-sm-6"><Link to={this.props.activeUser.id==item.id?"profile_0":"/profileDetail_"+item.id}><img key={index} src={'http://'+ item.profile_image_url} className="ntAttendImg zeroPad mt10px brdrRad50pc" /><span className="col-sm-9 zeroPad ntAttendDiv">{item.first_name} {item.last_name}</span></Link></div>);
                               })}
                             </div>
                           </div>
                           <div className="col-sm-6">
                             <div className="col-sm-12 zeroPad">
-                            {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && _.size(this.props.selectedEvent.mayAttendList)>0 && this.props.selectedEvent.mayAttendList.map((item, index)=>{
+                            {isExistObj(this.props.selectedEvent) && isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent.mayAttendList) && _.size(this.props.selectedEvent.mayAttendList)>0 && this.props.selectedEvent.mayAttendList.map((item, index)=>{
                               return(<div className="col-sm-6"><Link to={this.props.activeUser.id==item.id?"profile_0":"/profileDetail_"+item.id}><img key={index} src={'http://'+ item.profile_image_url} className="awaitingImg zeroPad mt10px" /><span className="col-sm-9 zeroPad awaitingDiv">{item.first_name} {item.last_name}</span></Link></div>);
                             })}
                             </div>
@@ -822,32 +853,33 @@ setpImgId(id){
                 <TabPanel>
                     <div className="eventPostDiv">
                           <div className="">
-                             {isExistObj(this.props.activeUser) && this.props.isFromProfileDetails == false || this.props.isFromAllEvents == true || this.props.isPastEvent==true?(<span></span>):(<div>
+                             {isExistObj(this.props.activeUser) && this.props.isFromProfileDetails == false || this.props.isFromAllEvents == true || this.props.isPastEvent==true && this.props.selectedEvent.has_access==true?(<span></span>):(<div>
                                 <div className="col-sm-12">
                                   <img src={"http://"+this.props.activeUser.profile_image_url} className="brdrRad50pc wd8pc"/>
                                   <input placeholder="Write something..."  name = "post_msg" ref="postValue" className="eventPostInput" id="txtPostInput" onChange={this.onRequired.bind(this)} onKeyDown={this.enterCapture.bind(this)}/>
                                 </div>
-                                <div className="col-sm-12 divLinePost"></div>
-                                <div className="col-sm-12">
+                                <div className="col-sm-12 col-xs-12 divLinePost"></div>
+                                <div className="col-sm-12 col-xs-12">
                                      {isExistObj(this.props.activeUser) && isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && this.props.selectedEvent.created_by.id==this.props.activeUser.id?<div><img src="/assets/img/Camera Icon.png"/>
-                                    <input type="file" name="file" id="file" className="eventPostImg" onChange={this.postImage.bind(this)} multiple/></div>:''}
+                                    <input type="file" name="file" id="file" className="eventPostImg" onChange={this.postImage.bind(this)} /></div>:''}
                                     <input type="button" id="postBtn" className="btn btnPostEvent" onClick={this.addPost.bind(this)} disabled={!this.state.postMsg || this.state.postBtn} value="Post" />
                                 </div>
                               </div>)}
                               <div>
-                                {this.state.postsList!=undefined && this.state.postsList!=null ?this.state.postsList.map((item,index)=>{
-                                    return(<div className="col-sm-12"  key={index}>
-                                              <span className="col-sm-1 zeroPad">
+                                {isExistObj(this.state.postsList)?this.state.postsList.map((item,index)=>{
+                                    return(<div className="col-sm-12 col-xs-12"  key={index}>
+                                              <span className="col-sm-1  col-xs-2 zeroPad">
                                                   <img src={"http://"+item.author.profile_image_url} className="brdrRad50pc wd90pc"/>
                                               </span>
-                                              {isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.activeUser) && this.props.isFromAllEvents == false || this.props.isPastEvent==false && this.props.activeUser.id==this.props.selectedEvent.created_by.id || this.props.activeUser.id==item.author.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" data-target="#postDelModal"></span>:null}
+                                              {isExistObj(this.props.selectedEvent) && isExistObj(this.props.selectedEvent.created_by) && isExistObj(this.props.activeUser) && this.props.isFromAllEvents == false || this.props.isPastEvent==false && this.props.activeUser.id==this.props.selectedEvent.created_by.id || this.props.activeUser.id==item.author.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" onClick={this.delPostModal.bind(this,item.id)}></span>:null}
                                                 <div className="modal fade" id="postDelModal" role="dialog" data-dropback="static">
                                                   <div className="modal-dialog">
                                                     <div className="modal-content">
+                                                        <div className=" modal-header modalHder"><h4>Delete Post</h4></div>
                                                       <div className="modal-body">Are you sure you want to delete?</div>
                                                       <div className="modal-footer">
-                                                        <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="Done" onClick={this.deletePost.bind(this,item.id)} />
-                                                        <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="Close" />
+                                                        <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="Yes" onClick={this.deletePost.bind(this)} />
+                                                        <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="No" />
                                                       </div>
                                                   </div>
                                                 </div>
@@ -856,14 +888,14 @@ setpImgId(id){
                                                 <span className="postLine col-sm-12 zeroPad">{item.author.first_name} {item.author.last_name}</span>
                                                 <span className="col-sm-12 zeroPad color-ddd">{item.created}</span>
                                               </span>
-                                              <span className="dispBlock col-sm-12 mb1pc">{item.title}
+                                              <span className="dispBlock col-sm-12 col-xs-12  mb1pc">{item.title}
                                                   {this.props.isFromAllEvents == false || this.props.isPastEvent==false?(<span></span>):(null)}
                                               </span>
-                                                <div className="col-sm-12">
-                      {_.size(item.images)>0? item.images.map((imgItem,i)=>{
+                                                <div className="col-sm-12 col-xs-12">
+                      {isExistObj(item) && isExistObj(item.images)  && _.size(item.images)>0? item.images.map((imgItem,i)=>{
                         return(
 
-                      <div className="col-sm-2 postImgDiv">
+                      <div className="col-sm-2  postImgDiv">
                         <img src={"http://"+imgItem.image} className="img-thumbnail wd120px hgt120px"/>
                     {isExistObj(this.props.activeUser) && item.author.id==this.props.activeUser.id?<i className="glyphicon glyphicon-remove top-55px cursor-pointer positionAbs"  onClick={this.setpImgId.bind(this,imgItem.id)}></i>:''}
 
@@ -888,7 +920,7 @@ setpImgId(id){
                         );
                       }):''}
                     </div>
-                                              <div className="col-sm-12 likeCommentDiv">
+                                              <div className="col-sm-12 col-xs-12 likeCommentDiv">
                                                 {this.props.isFromAllEvents == false || this.props.isPastEvent==false && (<span className="glyphicon glyphicon-comment fr ml10px color-ddd">
                                                     <span className="ml10px cursor-pointer" onClick={this.focusOnCommentBox.bind(this, item.id)}>Comment</span>
                                                 </span>)}
@@ -896,20 +928,23 @@ setpImgId(id){
                                                     <span className={(item.has_like)?"like color-green cursor-pointer ml10px":"like cursor-pointer ml10px"} onClick={this.onLikeClick.bind(this, item.id)}>Like</span>
                                                 </span>
                                               </div>
-                                              {_.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
+                                              {isExistObj(item) && isExistObj(item.comments) && _.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
                                                     return(<div key={childIndex}>
                                                             <div className="mt10px col-sm-12 zeroPad">
-                                                              <span className="col-sm-1 zeroPad">
+                                                              <span className="col-sm-1  col-xs-2 zeroPad">
                                                                 <img src={"http://"+childItem.author.profile_image_url} className="brdrRad50pc wd90pc"/>
                                                               </span>
-                                                              {isExistObj(this.props.activeUser) && this.props.isFromAllEvents == false || this.props.isPastEvent==false && this.props.activeUser.id==item.author.id || this.props.activeUser.id==childItem.author.id?<div><span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" data-target="#commentsDelModal"></span>
+                                                              {isExistObj(this.props.activeUser) && this.props.isFromAllEvents == false || this.props.isPastEvent==false && this.props.activeUser.id==item.author.id || this.props.activeUser.id==childItem.author.id?<div><span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" onClick={this.delCommModal.bind(this,childItem.id)}></span>
 
                                                                   <div className="modal fade" id="commentsDelModal" role="dialog" data-dropback="static">
                                                                     <div className="modal-dialog">
                                                                       <div className="modal-content">
+                                                                          <div className=" modal-header modalHder"><h4>Delete Comment</h4>
+                            <button type="button" className="close" data-dismiss="modal">&times;</button>
+                                                                                                </div>
                                                                         <div className="modal-body">Are you sure you want to delete?</div>
                                                                         <div className="modal-footer">
-                                                                          <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="Yes" onClick={this.deleteComments.bind(this,item.id, childItem.id)} />
+                                                                          <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="Yes" onClick={this.deleteComments.bind(this,item.id)} />
                                                                           <input type="button" className="cancelbtn checkng" data-dismiss="modal" value="No" />
                                                                         </div>
                                                                     </div>
@@ -922,7 +957,7 @@ setpImgId(id){
                                                               </span>
                                                               <span className="col-sm-12 color-ddd">{childItem.created}</span>
                                                               <div className="col-sm-12">
-                                                                {_.size(childItem.images)>0? childItem.images.map((cimgItem,i)=>{
+                                                                { isExistObj(childItem) && isExistObj(childItem.images) && _.size(childItem.images)>0? childItem.images.map((cimgItem,i)=>{
                         return(
 
                      <div className="col-sm-2 postImgDiv">
@@ -953,13 +988,14 @@ setpImgId(id){
                                                 </div>)
                                               })}
                                               {this.props.isFromAllEvents == false || this.props.isPastEvent==false?(<div><div className="mt10px col-sm-12 zeroPad">
-                                                <span className="col-sm-1 zeroPad">
+                                                <span className="col-sm-1 col-xs-2 zeroPad">
                                                   <img src={"http://"+item.author.profile_image_url} className="brdrRad50pc wd90pc"/>
                                                 </span>
-                                                <span className="col-sm-11">
+                                                     <div id={item.id+"_commentSpinnner"} className="cSpinner"><Spinner />  </div>                                                                 
+                                                <span className="col-sm-11 col-xs-10">
                                                   <input className="CommentInput" id={item.id+ "_txtComment"}/>
                                                  {isExistObj(this.props.activeUser) && this.props.activeUser.id==item.author.id?<div className="fr"> <img src="/assets/img/Camera Icon.png" className="fr cameraImgComment"/>
-                                                <input type="file" id="commentFile" name="commentFile" className="commentCamera" onChange={this.commentImage.bind(this)} multiple/></div>:''}
+                                                <input type="file" id="commentFile" name="commentFile" className="commentCamera" onChange={this.commentImage.bind(this,item.id)}/></div>:''}
                                                 </span>
                                               </div>
                                               <div className="col-sm-12">
@@ -982,17 +1018,21 @@ setpImgId(id){
                             </div>):(null)}
                         <div className="col-sm-12 dividerForPhotos"></div>
                         <div className="col-sm-12">
-                            {this.state.galleryList!=undefined && this.state.galleryList!=null && this.state.galleryList.map((item,index)=>{
+                            {isExistObj(this.state.galleryList) && this.state.galleryList.map((item,index)=>{
                              return(<div className="col-sm-2 mt10px  pdng galleryImg" key={index}>
                                        <img src={"http://"+item.image} className="img-thumbnail wd120px hgt120px" onClick={this.clickImage.bind(this,item.id,item.image)}/>
-                                   <div className="edit"><a onClick={this.openModal.bind(this)} className="cursor-pointer"><i className="glyphicon glyphicon-remove top-15px"></i></a></div>
+                                   <div className="edit"><a onClick={this.openModal.bind(this,item.id)} className="cursor-pointer"><i className="glyphicon glyphicon-remove top-15px"></i></a></div>
 
                                      <div className="modal fade" id="testModal" role="dialog" >
                                           <div className="modal-dialog">
                                               <div className="modal-content">
+                              <div className="modal-header modalHder">
+                              <h4>Delete Photo</h4>
+                               <button className="close" data-dismiss="modal">&times; </button>
+                          </div>
                                                    <div className="modal-body">Are you sure you want to delete?</div>
                                                    <div className="modal-footer">
-                                                       <button type="button" className="cnfrmbtn checkng" data-dismiss="modal" onClick={this.deleteImage.bind(this,item.id)} >Yes</button>
+                                                       <button type="button" className="cnfrmbtn checkng" data-dismiss="modal" onClick={this.deleteImage.bind(this)} >Yes</button>
                                                        <button type="button" className="cancelbtn checkng" data-dismiss="modal">No</button>
                                                   </div>
                                               </div>
@@ -1003,9 +1043,13 @@ setpImgId(id){
                               <div className="modal fade" id="viewAllImages" role="dialog">
                                 <div className="modal-dialog tp13pc">
                                   <div className="modal-content brdrRad0px">
+                                    <div className="modal-header modalGder">
+                                        <button className="close" data-dismiss="modal">Close </button>
+                                    </div>
                                     <div className="modal-body">
                                       <div className="round_close">
-                                        <button className="close" data-dismiss="modal">&times; </button>
+                                        
+                                        
                                         <div className="opened_Image txtcenter">
                                           <span className="thumbnail m0px">
                                             <img src={this.state.showimg} alt="selectedImage" className="sliderImges" />
@@ -1015,7 +1059,7 @@ setpImgId(id){
                                     </div>
                                     <div className="modal-footer">
                                       <div id="content" className="modalinlineAlign col-sm-12">
-                           {this.state.galleryList!=undefined && this.state.galleryList!=null && this.state.galleryList.map((item,index)=>{
+                           {isExistObj(this.state.galleryList) && this.state.galleryList.map((item,index)=>{
                              return(<img src={"http://"+ item.image} alt={"http://"+ item.image} className=" modalinlnImgs" onClick={this.openImage.bind(this,item.id,item.image)} />)})}
                             </div>
                       </div>

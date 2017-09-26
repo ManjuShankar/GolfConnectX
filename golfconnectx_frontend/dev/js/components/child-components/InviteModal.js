@@ -78,9 +78,11 @@ class InviteModal extends React.Component {
       .InviteModalAction(this.props.activeUser.token, users, emailsSplit,this.props.isFrom,this.props.paramId,is_friend)
       .then(() => {
         $('.membersList').attr('checked', false);
+      
+      toastr.success(this.props.invite_type+" invitation sent successfully");
       })
       .catch((error) => {
-        console.log("Error", error);
+
       });
        this.props.closeModal(!this.state.modalView);
 
@@ -118,7 +120,6 @@ if (e.which == 13) {
         return 'threshold'
       }
       else if(_.some(errors, ['valid', false])){
-        console.log('errors', errors);
         return 'true';
       }
       else{
@@ -164,12 +165,20 @@ toggle(){
 }
 
 onlocalSearchMembers(e){
-  let _searchTerm = _.trim(e.target.value);
-  let _filteredMembersList = _.filter(this.props.membersForFriends, function(member){
-    return ((member.first_name.indexOf(_searchTerm) !== -1) || (member.last_name.indexOf(_searchTerm) !== -1))
-  });
-  this.setState({members: _filteredMembersList});
+  
+   $.extend($.expr[":"], {
+	"containsIN": function(elem, i, match, array) {
+	return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+	}
+});	
+	var searchval = e.target.value;
+    //console.log($(".memberName:containsIN("+searchval+")").parents('.memList').attr("id"));
+	$(".memberName:containsIN("+searchval+")").parents('.memList').show();
+	$(".memberName:not(:containsIN("+searchval+"))").parents('.memList').hide();
+    //this.setState({members:search_result});
 }
+    
+
 
 disableCopyPaste(e){
   if(this.state.preventCopyPaste){
@@ -183,7 +192,7 @@ disableCopyPaste(e){
       <div className="inviteModal">
         <div
             id="membersModal"
-            className="modal fade"
+            className="modal fade modalSizeAdjust"
             role="dialog"
             data-backdrop="static">
             <div className="modal-dialog">
@@ -197,7 +206,7 @@ disableCopyPaste(e){
                     .bind(this,!this.state.modalView)}>&times;</button>
                   <h4 className="modal-title">{this.props.nameProp}</h4>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body paddingZero">
                   <div className="col-sm-12 rightAlign">
                     <div>
                       <span className="glyphicon glyphicon-search memSearchIcon"></span>
@@ -217,7 +226,7 @@ disableCopyPaste(e){
                           .members
                           .map((item, i) => {
                             return (
-                              <div key={i}>
+                              <div key={i} className="memList" id="abc">
                                 <div className="col-sm-2 mt1pc">
                                   <label className="switch">
                                     <input id={item.id} type="checkbox" onChange={this.toggle.bind(this)} className="membersList" ref="user" />
@@ -253,9 +262,9 @@ disableCopyPaste(e){
                     name="useremails"
                     className="mulEmails"></textarea>
                   </div>
-                  <div className="col-sm-12">
-                    <div className="col-sm-8"><input type="checkbox"   ref="is_friend" disabled={(this.props.isFrom == "1")?true:false} className="fleft" defaultChecked={(this.props.isFrom == "1")?true:false}/>
-                      <label className="fleft">
+                  <div>
+                    <div className="col-sm-12"><input type="checkbox"   ref="is_friend" disabled={(this.props.isFrom == "1")?true:false} className="fleft" defaultChecked={(this.props.isFrom == "1")?true:false}/>
+                      <label className="fleft col-sm-5 whiteSpace">
                         Add Members to your Friends list</label>
                     </div>
                     {_.size(this.state.isValidEmailReciepients)>0 && (

@@ -70,7 +70,7 @@ let FriendRequest = (token, users,useremails) =>{
   const apiaddOrRemoveMemebrsRequest =  axios.post(url, { users,useremails}, config);
   return(dispatch)=>{
     return apiaddOrRemoveMemebrsRequest.then(({data})=>{
-      toastr.success("Members Request Sent Successfully");
+      toastr.success("Request sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);

@@ -32,7 +32,11 @@ class InviteRegistration extends Component
             isRobot:true
         }
     }
-
+    /*Page Events*/
+    onCaptchaClick(value){
+        console.log("onCaptchaClick", value);
+        ///this.state.isRobot = false;
+    }
 
     onfieldChange(e){
         if(e.target.name == "email"){
@@ -61,7 +65,7 @@ class InviteRegistration extends Component
     onSubmit()
     {
       if(this.state.isRobot){
-        toastr.error("Please select reCaptcha");
+        toastr.error("Please Validate ReCaptcha");
       }else{
         let form = document.querySelector('#registration_page');
         let formData = serialize(form, {hash: true });
@@ -77,7 +81,7 @@ class InviteRegistration extends Component
              this.context.router.push('/home');
            }
         }).catch((error)=>{
-            console.log("Error", error);
+            
         });
        }
     }
@@ -233,6 +237,7 @@ $("#myModal").modal('hide');
 }
     render()
     {
+
         return( <div  className="invite_regis">
                 <div className="bgLoginReg">
                     <div className="BgadminDashboard"></div>
@@ -314,7 +319,7 @@ $("#myModal").modal('hide');
             <div className="slider round"></div>
                </label>
            </div>
-           <div className="ml40pc captcha">
+           <div className="ml40pc captchalign">
             <Captcha  sitekey = {APP_CONSTANT.SITE_KEY} lang = 'en' theme = 'light' type = 'image'
                     callback ={(value) => {this.setState({isRobot:false});  } }/>
                     </div>
@@ -326,13 +331,12 @@ $("#myModal").modal('hide');
                     </div>
                     <div className="col-sm-12">
                          <div className="col-sm-6">
-                                 <button className="btn registsign" onClick={this.onSubmit} disabled= {this.state.isRobot ||!this.state.Fname || !this.state.Lname || !this.state.newPass || !this.state.email || !this.state.rePass || !this.state.zipCode || this.state.errEmail || this.state.errPass2} >Sign Up</button>
+                                 <button className="btn invitesign" onClick={this.onSubmit} disabled= {this.state.isRobot ||!this.state.Fname || !this.state.Lname || !this.state.newPass || !this.state.email || !this.state.rePass || !this.state.zipCode || this.state.errEmail || this.state.errPass2} >Sign Up</button>
                          </div>
                          <div className="col-sm-6">
 
-                                <button onClick={this.onCancelClick.bind(this)} className="btn registcancel" > Cancel</button>
-                         </div>
-
+                   <button onClick={this.onCancelClick.bind(this)} className="btn registcancel" > Cancel</button>
+                    </div>
                     </div>
                     </div>
 

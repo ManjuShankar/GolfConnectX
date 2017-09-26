@@ -16,7 +16,13 @@ let likePost = (token, id) =>{
     return apiLikeOrDislikeRequest.then(({data})=>{
 
       }).catch((error)=>{
-        toastr.error(error);
+        if(error.response.status == 404){
+            toastr.error("Post Doesn't Exist");
+           }
+           else 
+            {
+                toastr.error(error);
+            }
           throw(error);
       });
   }
@@ -46,7 +52,7 @@ let addOrRemoveGroupMemebrs = (token, id, members,useremails) =>{
   const apiaddOrRemoveMemebrsRequest =  axios.post(url, { members,useremails }, config);
   return(dispatch)=>{
     return apiaddOrRemoveMemebrsRequest.then(({data})=>{
-      toastr.success("Members Request Sent Successfully");
+      toastr.success("Request sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -141,10 +147,15 @@ let addNewPost = (id, token, title,images)=>{
 
   return(dispatch)=>{
       return apigroupPostRequest.then(({data})=>{
-        toastr.success("Post Added Successfully");
+        toastr.success("Post added successfully");
         //dispatch({type:types.GET_GROUP_POSTS_LIST,apiResult:data});
       }).catch((error)=>{
-        toastr.error(error);
+        if(error.response.status == 404){
+            toastr.error('Group Doesn\'t Exist');
+        }
+        else{
+          toastr.error(error);
+        }
           throw(error);
       });
   }
@@ -160,9 +171,15 @@ let addComment=(id,token,body, images)=>{
     return(dispatch)=>{
       return apigroupCommentRequest.then(({data})=>{
        
-        toastr.success("Comment Added Successfully");
+        toastr.success("Comment added successfully");
       }).catch((error)=>{
-        toastr.error(error);
+        if(error.response.status == 404){
+             ///toastr.error("Feed Doesn't Exist");
+           }
+           else 
+            {
+                toastr.error(error);
+            }
           throw(error);
       });
   }
@@ -284,10 +301,13 @@ let groupDetails=(groupId,token)=>{
         return apigroupSelectedRequest.then(({data})=>{
             dispatch({type:types.GET_GROUP_DETAILS,apiResult:data});
         }).catch((error)=>{
-            if(error != "Error: Request failed with status code 401"){
-            toastr.error(error);
-          }   
-           throw(error); 
+            if(error.response.status == 404){
+                toastr.error('Group Doesn\'t Exist');
+            }
+            else if(error != "Error: Request failed with status code 401"){
+                toastr.error(error);
+            }
+            throw(error);
         });
     }
 };
@@ -301,7 +321,7 @@ let deleteGroup=(groupId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Group Deleted Successfully");
+            toastr.success("Group deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -416,8 +436,8 @@ let createEvents=(formData, token, id)=>{
     const apiCreateEventRequest = axios.post(url, formData, config);
     return(dispatch)=>{
       return apiCreateEventRequest.then(({data})=>{
-       
-        toastr.success("Event Created Succefully");
+
+        toastr.success("Event created successfully");
         }).catch((error)=>{
           toastr.error(error);
             throw(error);
@@ -433,7 +453,7 @@ let inviteViaEmail = (token, groupId, useremails) =>{
   const apieventInvitiesRequest =  axios.post(url, { useremails: useremails }, config);
   return(dispatch)=>{
     return apieventInvitiesRequest.then(({data})=>{
-      toastr.success("Invitation Sent Successfully");
+      toastr.success("Invitation sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -449,7 +469,7 @@ let deleteGroupGallery=(imageId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Image Deleted Successfully");
+            toastr.success("Image deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -466,7 +486,7 @@ let deleteGroupFile=(fileId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("File Deleted Successfully");
+            toastr.success("File deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -484,10 +504,16 @@ let deletePostPhoto=(token, imageId)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Image Deleted Successfully");
+            toastr.success("Image deleted successfully");
             return;
         }).catch((error)=>{
-          toastr.error(error);
+            if(error.response.status == 404){
+                toastr.error("Post Doesn't Exist");
+               }
+               else 
+                {
+                    toastr.error(error);
+                }
             throw(error);
         });
     }

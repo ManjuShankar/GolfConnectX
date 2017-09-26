@@ -13,7 +13,7 @@ let savePostDetails = (formData, token) =>{
   const savePostDetails = axios.post(url, formData, config);
   return(dispatch)=>{
     return savePostDetails.then(({data})=>{
-        toastr.success("Post Details Saved Successfully");
+        toastr.success("Post saved Successfully");
         dispatch({type:types.CREATE_POST,apiResult: data});
       }).catch((error)=>{
         toastr.error(error);

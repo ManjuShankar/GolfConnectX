@@ -63,7 +63,7 @@ class NewMessage extends React.Component {
       this.context.router.push('/messages');
 
     }).catch((error)=>{
-      console.log("Error", error);
+      
     });
   }
   /*****/
@@ -89,6 +89,9 @@ class NewMessage extends React.Component {
   render() {
     return (
         <div className="newMessage">
+        <div className="headerMsg min-display">
+        <span className="glyphicon glyphicon-remove col-sm-1 txtwhite" onClick={this.navigateToMessages.bind(this)}></span>New Message
+        </div>
         <form action="/" className="card" id="addMessageForm" method="post">
             <div className="msgcontainer">
                 <div className="msgHeading">
@@ -99,7 +102,9 @@ class NewMessage extends React.Component {
 
                 <div className="sendto">
                 <span className="col-xs-1 txtRyt">
-                  TO:</span><span className="col-sm-10 zindex1"> <ReactTags
+                  To:</span>
+                  <span className="col-sm-10 zindex1">
+                   <ReactTags
                     tags={this.state.tags}
                     suggestions={this.state.suggestions}
                     handleDelete={this.handleDelete.bind(this)}
@@ -107,21 +112,40 @@ class NewMessage extends React.Component {
                     placeholder="Add Recipients" /></span>
                 </div><div className="divLine col-sm-12"></div>
                 <div className="msg col-sm-12">
-                    <textarea name="message" maxLength="1000" id="message" ref="message" className="txtarea" onChange={this.onRequired.bind(this)}></textarea>
+                    <textarea name="message" maxLength="1000" id="message" ref="message" className="txtarea" onChange={this.onRequired.bind(this)} placeholder="Type here"></textarea>
                 </div>
                 {this.state.errM}
                 <div className="brdrline col-sm-12"></div>
                 <div className="col-sm-12">
 
                     <span className="rytside">
-                        <button onClick={this.navigateToMessages.bind(this)} className="btn btnCncl">Cancel</button>
+                        <input type="button" onClick={this.navigateToMessages.bind(this)} className="btn btnCncl" value="Cancel"/>
                         <input type="button" value="Send" id="newMsg" onClick={this.sendNewMessage.bind(this)} className="btn btnSnd btnSend" disabled={(!(_.size(this.state.tags)>0)) || !this.state.msgTxt } />
                     </span>
                 </div>
             </div>
           </form>
-        </div>
-         );
+
+
+        {/*<div className="mobileMsgRspnsv">
+             <div className="send_to">
+            <ReactTags
+                    tags={this.state.tags}
+                    suggestions={this.state.suggestions}
+                    handleDelete={this.handleDelete.bind(this)}
+                    handleAddition={this.handleAddition.bind(this)}
+                    className="email_ID" placeholder="To"/>
+          </div>
+          <div className="recent_rply">Recent</div>
+          <div className="sendingMsg">
+            <div className="bgType">
+              <input type="text" placeholder="Type message here.." className="msg_Typing" name="message" maxLength="1000" id="message" ref="message" onChange={this.onRequired.bind(this)} />
+              <button className="btn msg_send" value="Send" id="newMsg" onClick={this.sendNewMessage.bind(this)} disabled={(!(_.size(this.state.tags)>0)) || !this.state.msgTxt } >Send</button>
+            </div>
+          </div>
+        </div>*/}
+      
+        </div> );
    }
 }
 

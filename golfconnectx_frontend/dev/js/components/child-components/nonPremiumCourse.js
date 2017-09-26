@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import GoogleMap from 'google-map-react';
 import Marker from '../marker';
 import {isExistObj} from '../../utils/functions';
-
+let c = 0;
 class NonPremiumCourse extends Component{
     constructor(props,context){
         super(props,context);
-
+        this.state={classname:""
+                   }
 
     }
 
@@ -15,23 +16,51 @@ class NonPremiumCourse extends Component{
         this.props.OnUnfollow();
       }
     }
+    componentDidMount(){
+         $('#nonPremium').show();     
+    }
+    
+    
+  //   leftViewToggle(){
+  //     alert("from nonPremium");
+  //     let width = window.innerWidth;
+  //     if(width<992){   
+  //     $('.lftPart').fadeIn();
+  //     $('#nonPremium').hide();
+  //       this.state.classname="nonPremium";
+  //       if(this.props.append){
+  //           //alert(this.state.classname);
+  //           this.props.append(this.state.classname);
+  //            //$('.nonPremium').show();
+  //       }
+
+  //   }
+  // }
 
 render(){
     return(
       <div>{
-       ((_.size(this.props.courseDetails)>0)?(<div className="col-sm-8 nonPremium">
+       ((_.size(this.props.courseDetails)>0)?(<div id="nonPremium"><div  className="col-sm-12 col-md-8 nonPremium bgfff  pdlftryt0px col-xs-12">
+          { /* <span className="glyphicon glyphicon-chevron-left float-left"  ></span>
+          <div className="col-sm-12 pdlftryt0px col-xs-12 courseSelRspns">
+          </div>*/ }
         <div className="col-sm-12 zeroPad">
         <div className="col-sm-12 zeroPad hgt180px">
         <div className="imgGolf col-sm-12 zeroPad"><img src="/assets/img/nonPremBanner.jpg" className="col-sm-12"/></div>
-          <div className="col-sm-6"><div className="following nonPrefollowing">{((_.size(this.props.courseDetails)>0 && isExistObj(this.props.courseDetails.course_user_details) && this.props.courseDetails.course_user_details.is_following)?(<span><span className="OrangeDot"><img src="/assets/img/icons/eclipse.png"/></span>Following</span>):(<span className="clrTrnsparnt">following</span>))}</div></div>
+          <div className="col-sm-12">
+                <div className="following nonPrefollowing">
+        {((_.size(this.props.courseDetails)>0 && isExistObj(this.props.courseDetails.course_user_details) && this.props.courseDetails.course_user_details.is_following)?(<span><span className="OrangeDot"><img src="/assets/img/icons/eclipse.png"/></span>Following</span>):(<span className="clrTrnsparnt">following</span>))}</div>
+                  <div className="NonPremiumPlayed">{((_.size(this.props.courseDetails)>0 && isExistObj(this.props.courseDetails.course_user_details) && this.props.courseDetails.course_user_details.is_played)?(<span>Played</span>):(<span className="clrTrnsparnt">following</span>))}
+                  </div>
+          </div>
           {isExistObj(this.props.courseDetails.course) && <div className="col-sm-12 top35pc"><div className="coursesTitle">{this.props.courseDetails.course.name}</div></div>}
            {isExistObj(this.props.courseDetails.course) && <div className="courseAdd">{this.props.courseDetails.course.address1}</div>}
 
             <div className="col-sm-6 mt5pc txtcenter mt1pc">
 
             </div>
-            <div className="col-sm-6 mt1pc zeroPad">
-                {isExistObj(this.props.courseDetails.course) && <span className="coursePhone col-sm-12 txtRyt">{this.props.courseDetails.course.phone}</span>}
+            <div className="col-sm-6 mt1pc zeroPad courseMobileNum">
+                {isExistObj(this.props.courseDetails.course) && <span className="coursePhone  col-sm-12 txtRyt">{this.props.courseDetails.course.phone}</span>}
             </div>
             </div>
             <div className="col-sm-12">
@@ -75,8 +104,8 @@ render(){
     </div>
   </div></div>
   </div>
-        </div>):(<div></div>))}</div>
-
+        </div> </div>):(<div></div>))}</div>
+    
     );
     }
 }

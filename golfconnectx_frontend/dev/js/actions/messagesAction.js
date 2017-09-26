@@ -51,7 +51,7 @@ let removeMessage = (token, messageId) =>{
   const apiGetMessageDetailsRequest = axios.delete(url, config);
   return(dispatch) => {
        return apiGetMessageDetailsRequest.then(({data})=>{
-          toastr.success("Message Removed Succefully");
+          toastr.success("Message removed successfully");
        }).catch((error)=>{
          toastr.error(error);
            throw(error);
@@ -70,7 +70,7 @@ let createNewMessage = (token, formData) => {
   const apiPostMessageDetailsRequest = axios.post(url, formData, config);
   return(dispatch) => {
        return apiPostMessageDetailsRequest.then(({data})=>{
-         toastr.success("Message Created Successfully");
+         toastr.success("Conversation initiated successfully");
        }).catch((error)=>{
          toastr.error(error);
            throw(error);
@@ -88,7 +88,7 @@ let sendNewMessageDetails = (token, messageId, message) =>{
   const apiPostMessageDetailsRequest = axios.post(url, {message:message}, config);
   return(dispatch) => {
        return apiPostMessageDetailsRequest.then(({data})=>{
-          toastr.success("Message Sent Successfully");
+          toastr.success("Message sent successfully");
           dispatch({type:types.POST_MESSAGE_DETAILS,apiResult:data});
        }).catch((error)=>{
          toastr.error(error);
@@ -105,8 +105,8 @@ let deleteConversation = (token, ids, deleteMessage) =>{
   const apiRemoveConversation = axios.post(url, {ids:ids}, config);
   return(dispatch) => {
        return apiRemoveConversation.then(({data})=>{
-       
-          toastr.success("Messages deleted Successfully");
+
+          toastr.success("Conversation deleted successfully");
          dispatch({type:types.DELETE_CONVERSATION,apiResult:data});
        }).catch((error)=>{
          toastr.error(error);

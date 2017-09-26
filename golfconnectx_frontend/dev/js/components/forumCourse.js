@@ -8,8 +8,10 @@ import {getcourseList, getconversation, addComment, addNewPost, searchPosts} fro
 import {searchCourses, getCourseObject} from '../actions/courseListAction';
 import Spinner from 'react-spinner';
 import {deletePost, deleteComment} from '../actions/eventDetailsAction';
+import {isExistObj} from '../utils/functions';
 let next=null;
 let paramId=0;
+let imagePath=IMG_CONSTANT.IMAGE_PATH;
 class ForumsCourse extends React.Component{
   constructor(props) {
     super(props);
@@ -19,7 +21,8 @@ class ForumsCourse extends React.Component{
            pageNumber:1,
            lastScrollPos:0,
            prevSearchCriteria: "",
-           firstTimeLoad:true
+           firstTimeLoad:true,
+               cId:''
           };
           this.handleScroll = this.handleScroll.bind(this);
     }
@@ -33,10 +36,11 @@ deletePost(id){
 
         });
   }).catch((error)=>{
-    console.log("Error", error);
+
   });
     }
-     deleteComments(id, commentId){
+     deleteComments(id){
+         let commentId=this.state.cId;
       this.props.deleteComment(id, commentId, this.props.activeUser.token).then(()=>{
     this.props.getconversation(this.props.selectedCourse.course.id, this.props.activeUser.token ).then(()=>{
 
@@ -45,10 +49,16 @@ deletePost(id){
 
         });
   }).catch((error)=>{
-    console.log("Error", error);
+
   });
     }
+    delModal(id){
+        this.setState({cId:id});
+        $("#"+id+"_commentsDelModal").modal('show');
+    }
+        
     getCourseListData(pageNumber=0){
+        this.setState({ajaxCallInProgress:true});
     if(next!=null){
               let keyword =(document.getElementById('keyword')!=undefined && document.getElementById('keyword')!=null)?(_.trim(document.getElementById('keyword').value)):('');
                 this.props.getcourseList(this.props.activeUser.token, pageNumber, keyword).then((data)=>{
@@ -170,7 +180,7 @@ deletePost(id){
                next = data;
                this.setState({Courseslist:this.props.getCourses});
          }).catch((error)=>{
-             console.log("Error", error);
+
          });
        }
        else{
@@ -184,7 +194,7 @@ deletePost(id){
             this.props.searchCourses(this.props.activeUser.token, e.target.value).then(()=>{
                   this.setState({Courseslist:this.props.getCourses});
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }*/
       }
@@ -193,13 +203,18 @@ deletePost(id){
             this.props.searchPosts(this.props.activeUser.token, this.props.selectedCourse.course.id, e.target.value).then(()=>{
                   this.setState({forumCourseDetails:this.props.forumCourse.SearchList});
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
 
       onforumclick(){
         this.context.router.push('/forumsPage');
+        if(screen.width<769)
+      {
+        $(".MobileNav").show();
+      
+       }
       }
        addPost(){
        if(!this.state.courseDetails.course){
@@ -245,6 +260,13 @@ deletePost(id){
       });
     }
   }
+    cancelReply(id){
+       
+        let commentTextBox=(id + "rplyTopstPerson_one");
+         document.getElementById(id + "text").value='';
+     $("#"+commentTextBox).collapse('hide');
+        
+    }
     onRequired(e) {
         if(e.target.name == "post_msg"){
             if(e.target.value == ""){
@@ -266,24 +288,43 @@ enterCapture(e){
  }
 gotoCourse(){
   this.context.router.push("/courses_"+this.props.selectedCourse.course.id);
-  //location.reload();
 }
+
+  rightViewToggle(){
+    let width = window.innerWidth;
+    if(width<992){
+      $('.right-column').fadeIn();
+      $('.left-column').hide();
+    }
+  }
+  leftViewToggle(){
+    let width = window.innerWidth;
+    if(width<992){
+      $('.left-column').fadeIn();
+      $('.right-column').hide();
+    }
+  }
+
 render() {
 
 
-    let imagePath=IMG_CONSTANT.IMAGE_PATH;
-    return (<div className="forumCourse">
-          <div className=" col-sm-12 frumCrse">
-            {(this.state.ajaxCallInProgress)?(<div className="mt25pc"><Spinner /></div>):( <div className="row">
-              <div className="headerContent col-sm-12">
-                <div className="courseHeader">
-                  <h3 className="header"><span className="glyphicon glyphicon-chevron-left arrowChevron cursor-pointer" onClick={this.onforumclick.bind(this)}/>COURSES</h3>
+
+    return (<div>{(this.state.ajaxCallInProgress)?(<div className="mt20perc ml18pc"><Spinner /></div>):(<div className="forumCourse">
+          <div className=" col-sm-12 pdryt0px pdlftryt0px">
+            <div className="frumCrse forumCousreAlign col-sm-12 pdlftryt0px">
+
+              <div className="headerContent col-sm-12 pdlftryt0px">
+                <div className="courseHeader col-sm-12 pdlftryt0px">
+                  <h3 className="header"><span className="glyphicon glyphicon-chevron-left arrowChevron cursor-pointer display" onClick={this.onforumclick.bind(this)}/>COURSES</h3>
                 </div>
               </div>
-              <div className="col-sm-12 coursesCntnt pdng">
-                <div className="bgwhite forumCntnt col-sm-12" className="" id="scroll">
+               <div className="col-sm-12 pdlftryt0px coursesCntnt zeroPad">
+                <div className="forumCntnt col-sm-12 pdlftryt0px" id="scroll">
                 <div>
-                  <div className="col-sm-3 brdrRyt pdng left-column">
+                  <div className="col-md-3 brdrRyt pdng left-column">
+                    <div className="col-sm-12 pdlftryt0px courseSelRspns">
+                      <span className="glyphicon glyphicon-remove float-left" onClick={this.onforumclick.bind(this)} /><span className="txtcenter">select course</span>
+                    </div>
                     <div className="col-sm-12 pdng7pc">
                       <div className="searchBar col-sm-12">
                         <span className="glyphicon glyphicon-search searchIcon" /><input type="text" id="keyword" name="keyword" onKeyPress={this.onCourseSearch.bind(this)} className="searchInput" placeholder=" Search"/>
@@ -292,21 +333,26 @@ render() {
                         <ul className="crsesLst" >
                           {_.size(this.state.Courseslist)>0 && this.state.Courseslist.map((item, index)=>{
                               return(<div key={index} onClick={this.showCourseDetails.bind(this,item.id)}>
-                               <li id="catList" className={(this.props.selectedCourse!=undefined && this.props.selectedCourse!=null && this.props.selectedCourse.course.id==item.id)?("selected_element fieldName"):("fieldName")}>{(item.is_premium)?(<span className="glyphicon glyphicon-star starImg"></span>):(<span className="glyphicon glyphicon-star txtTrans float-left"></span>)}<a>{item.name}</a></li>
+                               <li id="catList" className={(isExistObj(this.props.selectedCourse) && isExistObj(this.props.selectedCourse.course) && this.props.selectedCourse.course.id==item.id)?("selected_element fieldName"):("fieldName")}>
+                               <div onClick={this.rightViewToggle.bind(this)}>{(item.is_premium)?(<span className="glyphicon glyphicon-star starImg"></span>):(<span className="glyphicon glyphicon-star txtTrans float-left"></span>)}<a>{item.name}</a>
+                               </div>
+                               </li>
                              </div> );
                               })}
-
                         </ul>
                       </div>
                     </div>
                   </div>
                   </div>
-                  <div className="col-sm-9 right-column">
+                  <div className="col-md-9 right-column pdlftryt0px">
+                    <div className="col-sm-12 pdlftryt0px courseSelRspns">
+                      <span className="glyphicon glyphicon-chevron-left float-left" onClick={this.leftViewToggle.bind(this)} /><span className="txtcenter">{(_.size(this.state.courseDetails)>0)?(<div onClick={this.gotoCourse.bind(this)}>{this.state.courseDetails.course.name}</div>):''}</span>
+                    </div>
                     <div className="col-sm-12 pdng3pc">
                       <div className="coursesListing col-sm-12">
                         <div className="col-sm-12 listName pdng">
-                          <div className="col-sm-6 pdng corseListName">
-                            {(_.size(this.state.courseDetails)>0)?(<div className="txtUnderline cursor-pointer" onClick={this.gotoCourse.bind(this)}>{this.state.courseDetails.course.name}</div>):''}
+                          <div className="col-sm-6 pdng corseListName dsplyNoneResp">
+                            {(_.size(this.state.courseDetails)>0) && isExistObj(this.state.courseDetails.course) && (<div className="txtUnderline cursor-pointer" onClick={this.gotoCourse.bind(this)}>{this.state.courseDetails.course.name}</div>)}
 
                           </div>
                           <div className="col-sm-6 pdng">
@@ -320,7 +366,6 @@ render() {
                           <div className="col-sm-12"><input type="text" className="txtarea" maxLength="1000" ref="post_msg"  name="post_msg" onKeyDown={this.enterCapture.bind(this)} onChange={this.onRequired.bind(this)} id="txtPostInput" placeholder="write something.."/>
                             {this.state.catErr}
                           </div>
-
                           <div className="col-sm-12 hrzntLine"></div>
                           <div className="col-sm-12 txtRyt pdryt23px"><input id="postBtn" type="button" value="Post" className="btn postCourse-butn" onClick={this.addPost.bind(this)} disabled={!this.state.postMsg} /></div>
                         </div>
@@ -329,17 +374,16 @@ render() {
                                   return (<div key={i}>
                                     <div className="courseDetail pdng col-sm-12">
                             <div className="postingCourse col-sm-12 pdng">
-                              <div className=" col-sm-12 brdrbtm pdng pdbtm1pc">
-                                <div className=" col-sm-12 pdng">
+                              <div className=" col-sm-12 brdrbtm pdng pdbtm1pc col-xs-12">
+                                <div className=" col-sm-12 pdng col-xs-12">
                                   <div className="col-sm-4 personName">{item.author.first_name} {item.author.last_name}</div>
                                   <div className="col-sm-6 personSeen">{item.created}</div>
-                                  <div className="col-sm-2 rspns"data-toggle="collapse" data-target={"#"+item.id+"rplyTopstPerson_one"}>reply</div>
+                                  <div className="col-sm-2 col-xs-1 rspns"data-toggle="collapse" data-target={"#"+item.id+"rplyTopstPerson_one"}>reply</div>
                                 </div>
-                                <div className=" col-sm-12 personMsg mt1pc pdng">
-                                {this.props.activeUser.id==item.author.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt-7px mr1pc" data-toggle="modal" data-target="#postDelModal"></span>:''}
+                                <div className=" col-sm-12 col-xs-12 personMsg mt1pc pdng">
+                                {isExistObj(this.props.activeUser) && this.props.activeUser.id==item.author.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt-7px mr1pc" data-toggle="modal" data-target="#postDelModal"></span>:''}
                                   {item.title}
                                 </div>
-
                                 {/* Delete Post PopUp*/}
                                  <div className="modal fade" id="postDelModal" role="dialog" data-dropback="static">
                                       <div className="modal-dialog">
@@ -353,50 +397,42 @@ render() {
                                        </div>
                                   </div>
                              {/*PopupOver*/}
-
-
-
-
-
-
                                 <div id={item.id+"rplyTopstPerson_one"} className="collapse fade closeThis">
-                              <div className="col-sm-12 pdlft0px">
-                                  <p className="col-sm-12 pdlft0px"><textarea id={item.id+"text"} maxLength="1000" name="reply_msg" className="col-sm-12 txtaria" placeholder="write something..." onChange={this.onRequired.bind(this)}></textarea></p>
+                              <div className="col-sm-12 col-xs-12 pdlft0px pdlftryt0px">
+                                  <p className="col-sm-12 col-xs-12 pdlft0px pdlftryt0px"><textarea id={item.id+"text"} maxLength="1000" name="reply_msg" className="col-sm-12 txtaria" placeholder="write something..." onChange={this.onRequired.bind(this)}></textarea></p>
                               </div>
-                              <div className="col-sm-12 pdlft0px">
-                                <div className="col-sm-12 pdlft0px">
+                              <div className="col-sm-12 col-xs-12 pdlft0px pdlftryt0px">
+                                <div className="col-sm-12 pdlft0px col-xs-12 pdlftryt0px">
                                   <button type="button" className="btn sbmtButn" onClick={this.Comment.bind(this, item.id)}>Reply</button>
-                                  <button type="button" className="cnclButn">Cancel</button>
+                                  <button type="button" className="cnclButn" onClick={this.cancelReply.bind(this, item.id)}>Cancel</button>
                                 </div>
                               </div>
                             </div>
                               </div>
-                              <div className="coursesRspns col-sm-12 pdng">
-                                {_.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
-                                      return(<div className="rplyMember col-sm-12 pdng pdbtm1pc" key={childIndex}>
+                              <div className="coursesRspns col-xs-12 col-sm-12 pdng">
+                                {isExistObj(item) && isExistObj(item.comments) && _.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
+                                      return(<div className="rplyMember col-xs-12 col-sm-12 pdng pdbtm1pc" key={childIndex}>
                                   <div className="col-sm-12 pdng">
                                     <div className="col-sm-4 personName">{childItem.author.first_name} {childItem.author.last_name}</div>
                                     <div className="col-sm-6 personSeen">{childItem.created}</div>
                                   </div>
                                   <div className="col-sm-12 personMsg mt1pc pdng">
-                                  <span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" data-target="#commentsDelModal"></span>
+                                  {isExistObj(this.props.activeUser) && isExistObj(childItem.author) && childItem.author.id==this.props.activeUser.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc mr4pc" data-toggle="modal" onClick={this.delModal.bind(this,childItem.id)}></span>:''}
                                     {childItem.body}
                                   </div>
-
                                   {/* Delete Comments PopUp*/}
-                               <div className="modal fade" id="commentsDelModal" role="dialog" data-dropback="static">
+                               <div className="modal fade" id={childItem.id+"_commentsDelModal"} role="dialog" data-dropback="static">
                                      <div className="modal-dialog">
                                          <div className="modal-content">
                                            <div className="modal-body">Are you sure you want to delete?</div>
                                              <div className="modal-footer">
-                                                   <button type="button" className="cnfrmbtn checkng" data-dismiss="modal"  onClick={this.deleteComments.bind(this,item.id, childItem.id)} >Yes</button>
+                                                   <button type="button" className="cnfrmbtn checkng" data-dismiss="modal"  onClick={this.deleteComments.bind(this,item.id)} >Yes</button>
                                                    <button type="button" className="cancelbtn checkng" data-dismiss="modal">No</button>
                                               </div>
                                           </div>
                                        </div>
                                   </div>
                                   {/*PopupOver*/}
-
                                 </div>)
                               })}
 
@@ -404,22 +440,22 @@ render() {
                             </div>
                           </div>
 
-
-                        </div>)
+                      </div>)
                   }):<div>No posts yet</div>}
                       </div>
-</div>
+                      </div>
                         </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-sm-12 txtCntr">
-                <img src="/assets/img/ads.png" className="adImg" />
+                <img src="/assets/img/golfconnectx_ad.png" className="adImg" />
               </div>
-            </div>)}
+            </div>
           </div>
-        </div>
+        </div>)}
+                </div>
          );
    }
 }

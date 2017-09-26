@@ -55,7 +55,10 @@ let getPostsByEventId = (eventId, token, isAllevent=false) =>{
          dispatch({type:types.EVENT_POSTS, apiResult:data});
         }
        }).catch((error)=>{
-          if(error != "Error: Request failed with status code 401"){
+         if(error.response.status == 404){
+          toastr.error("Event Doesn\'t Exist");
+         }
+         else if(error != "Error: Request failed with status code 401"){
          toastr.error(error);
          }
           throw(error);
@@ -75,7 +78,10 @@ let savePostsByEventId = (eventId, token, title,images) =>{
          ///return data;
          dispatch({type:types.EVENT_POSTS, apiResult:data});
        }).catch((error)=>{
-          if(error != "Error: Request failed with status code 401"){
+        if(error.response.status == 404){
+          toastr.error("Event Doesn\'t Exist");
+         }
+         else if(error != "Error: Request failed with status code 401"){
          toastr.error(error);
          }
           throw(error);
@@ -84,7 +90,7 @@ let savePostsByEventId = (eventId, token, title,images) =>{
    }
 }
 let addEventComment=(id,token,body,images)=>{
-
+  
   const url=SERVICE_URLS.ADD_NEW_COMMENT + id + '/comments/';
 
    var config = {
@@ -94,9 +100,14 @@ let addEventComment=(id,token,body,images)=>{
     return(dispatch)=>{
       return apigroupCommentRequest.then(({data})=>{
 
-        toastr.success("Comment Added Successfully");
+        toastr.success("Comment added successfully");
       }).catch((error)=>{
-        toastr.error(error);
+        if(error.response.status == 404){
+          toastr.error("Event Doesn't Exist");
+         }
+         else {
+          toastr.error(error);
+         }
           throw(error);
       });
   }
@@ -114,7 +125,10 @@ let getGalleryByEventId = (eventId, token, isAllevent=false) =>{
          else
          {dispatch({type:types.EVENT_GALLERY, apiResult:data});}
        }).catch((error)=>{
-          if(error != "Error: Request failed with status code 401"){
+        if(error.response.status == 404){
+          toastr.error("Event Doesn\'t Exist");
+         }
+         else if(error != "Error: Request failed with status code 401"){
          toastr.error(error);
          }
           throw(error);
@@ -134,7 +148,10 @@ return(dispatch) => {
         return apiEventRequest.then(({data})=>{
           return data;
         }).catch((error)=>{
-           if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
           }
            throw(error);
@@ -158,7 +175,10 @@ return(dispatch) => {
           dispatch({type:types.GET_SELECTED_EVENT,apiResult:data});
          }
         }).catch((error)=>{
-           if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
           }
            throw(error);
@@ -200,7 +220,10 @@ return(dispatch) => {
         return apiEventRequest.then(({data})=>{
           return data;
         }).catch((error)=>{
-          if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
           }
            throw(error);
@@ -283,7 +306,10 @@ let getAttendeesList = (token, eventId, isAllevent=false) =>{
           }
 
         }).catch((error)=>{
-            if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
               toastr.error(error);
                 }
            throw(error);
@@ -307,7 +333,10 @@ let getMayAttendList = (token, eventId, isAllevent=false) =>{
             dispatch({type:types.GET_MAY_ATTEND,apiResult:data});
           }
         }).catch((error)=>{
-            if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
               toastr.error(error);
                 }
            throw(error);
@@ -331,7 +360,10 @@ let getNotAttendList = (token, eventId, isAllevent=false) =>{
             dispatch({type:types.GET_NOT_ATTEND,apiResult:data});
           }
         }).catch((error)=>{
-            if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn\'t Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
               toastr.error(error);
                 }
            throw(error);
@@ -482,7 +514,7 @@ let postInvitiesList = (token, eventId, userids) =>{
   const apieventInvitiesRequest =  axios.post(url, { userids: userids }, config);
   return(dispatch)=>{
     return apieventInvitiesRequest.then(({data})=>{
-      toastr.success("Invitation Sent Successfully");
+      toastr.success("Invitation sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -521,7 +553,7 @@ let inviteViaEmail = (token, eventId, useremails) =>{
   const apieventInvitiesRequest =  axios.post(url, { useremails: useremails }, config);
   return(dispatch)=>{
     return apieventInvitiesRequest.then(({data})=>{
-      toastr.success("Invitation Sent Successfully");
+      toastr.success("Invitation sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -537,7 +569,7 @@ let deleteEventGallery=(imageId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Image Deleted Successfully");
+            toastr.success("Image deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -555,10 +587,14 @@ let deletePost=(postId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Post Deleted Successfully");
+            toastr.success("Post deleted successfully");
             return;
         }).catch((error)=>{
-          toastr.error(error);
+          if(error.response.status == 404){
+            toastr.error("Post Doesn\'t Exist");
+           }
+           else {
+            toastr.error(error);}
             throw(error);
         });
     }
@@ -572,10 +608,16 @@ let deleteComment=(postId, commentId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("Comment Deleted Successfully");
+            toastr.success("Comment deleted successfully");
             return;
         }).catch((error)=>{
-          toastr.error(error);
+          if(error.response.status == 404){
+            toastr.error("Post Doesn\'t Exist");
+           }
+           else 
+            {
+              toastr.error(error);
+            }
             throw(error);
         });
     }
@@ -589,7 +631,7 @@ let deleteEventFile=(fileId,token)=>{
 
     return(dispatch)=>{
         return apigroupDeleteRequest.then(()=>{
-            toastr.success("File Deleted Successfully");
+            toastr.success("File deleted successfully");
             return;
         }).catch((error)=>{
           toastr.error(error);
@@ -614,7 +656,11 @@ return(dispatch) => {
          }
 
        }).catch((error)=>{
-         toastr.error(error);
+        if(error.response.status == 404){
+          toastr.error("Event Doesn't Exist");
+         }
+         else 
+          {toastr.error(error);}
            throw(error);
        });
    }
@@ -631,7 +677,10 @@ return(dispatch) => {
          toastr.success(data.response_message);
           return data;
         }).catch((error)=>{
-           if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn't Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
           }
            throw(error);
@@ -653,7 +702,10 @@ let onAttendingOrNotAttending = (status, eventId, token) =>{
          toastr.success(data.response_message);
           return data;
         }).catch((error)=>{
-           if(error != "Error: Request failed with status code 401"){
+          if(error.response.status == 404){
+            toastr.error("Event Doesn't Exist");
+           }
+           else if(error != "Error: Request failed with status code 401"){
               toastr.error(error);
           }
            throw(error);

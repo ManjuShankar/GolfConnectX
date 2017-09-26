@@ -22,8 +22,11 @@ class EditCourses extends React.Component {
             lastScrollPos:0,
             ajaxCallInProgress:false,  courseImage:'', ImageObject:'',
             isShowCropper : false,
+            isCropper : false,
             cropImageSrc : "",
-            present_Id : {}
+            present_Id : {},
+            courseName : ""
+            
       };
       let _paramId = _.toInteger(this.props.params.id);
       $('#course_'+_paramId).addClass(" in");
@@ -100,18 +103,20 @@ getCourseListData(pageNumber=0){
         let formId=document.querySelector('#editCourseForm_'+id);
         let form = formId;
         let formData = serialize(form, { hash: true });
-         let innerDescValue = document.getElementById(cinfo).value.replace(new RegExp('\r?\n','g'), '<br />');
+         let innerDescValue = document.getElementById(cinfo).innerHTML.replace(new RegExp('\r?\n','g'), '<br />');
           _.set(formData, 'description', innerDescValue);
         this.props.updateCourseDetails(this.props.activeUser.token, formData, id).then(()=>{
           toastr.success("Course Details Updated Successfully");
         }).catch((error)=>{
-          console.log("Error", error);
+
         });
         }
       }
 
-  onCancelForm(){
-     $('#editCourseForm').trigger("reset");
+  onCancelForm(id){
+      let c_id =  "#accordian" + id;
+     $(c_id).trigger("click");
+     console.log(c_id);
   }
 
 
@@ -138,11 +143,10 @@ getCourseListData(pageNumber=0){
             },
              success: function(data){
                that.setState({ImageObject: data});
-               that.setState({courseImage: ('http://' +  data.image),isShowCropper:false});
+               that.setState({courseImage: ('http://' +  data.image),isShowCropper:false,isCropper:false});
                    that.getCourseListData();
              },
              error: function(error){
-                console.log("Error",error);
              }
          });
 
@@ -170,24 +174,88 @@ onRequired(id){
        return (parseInt(found) > 0 ? name.substr(found) : "");
      }
 
-onImageChange(e){
-      let files;
-      if (e.dataTransfer) {
-        files = e.dataTransfer.files;
-      } else if (e.target) {
-        files = e.target.files;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
-          this.setState({cropImageSrc: reader.result});
-      };
-      reader.readAsDataURL(files[0]);
-      this.setState({isShowCropper:true});
-    }
+onImageChange(c_name,e){
 
+      // let files;
+      // if (e.dataTransfer) {
+      //   files = e.dataTransfer.files[0];
+      // } else if (e.target) {
+      //   files = e.target.files[0];
+      // }
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //     this.setState({cropImageSrc: reader.result});
+      // };
+      // reader.readAsDataURL(files);
+      // this.setState({isShowCropper:true});
+       console.log("Name",c_name);
+       var that=this;
+       let _URL = window.URL || window.webkitURL;
+       var file, img;
+       let id = this.state.present_Id;
+     
+        if(e.target.files.length>0){
+        if((file = e.target.files[0])) {
+            img = new Image();
+            img.onload = function () {
+           
+            if((this.height>180 && this.width>680)){
+              that.setState({cropImageSrc: img.src, isShowCropper:true,courseName : c_name});
+            }
+      
+           else if(this.height>180 && this.width<680){
+            that.setState({cropImageSrc:img, isCropper:true,courseName : c_name});    
+          }
+          
+           else{
+              that.uploadFileAsRealImage(SERVICE_URLS.URL_USED + 'api/courses/'+id+'/upload-course-cover-image/',1,file);
+              }
+         };
+         img.src = _URL.createObjectURL(file);
+        }
+      }
+
+    }
+uploadFileAsRealImage(urlImage,imgtype,file){
+      
+		          let typeNmbr = imgtype;
+              // let file = document.getElementById('file').files[0];
+              var fd = new FormData();
+              var that = this;
+              let fileObj = file;
+              let token = that.props.activeUser.token;
+              let fileExtention = this.getFileExtension(fileObj.name);
+                 if(isValidImage(fileExtention)){
+                  fd.append('image', fileObj);
+                  $.ajax({
+                      url: urlImage,
+                      data: fd,
+                      processData: false,
+                      contentType: false,
+                      type: 'POST',
+                      headers:{
+                        'Authorization':'Token '+ token
+                      },
+                      success: function(data){
+                            //that.setState({eventsImage: data, eventsImageObj:(typeNmbr != null && typeNmbr == 1?data.image:data.thumbnail), editeventImg:(typeNmbr != null && typeNmbr == 1?data.image:data.thumbnail), cropImageSrc: 'http://' + data.image, isShowCropper:false, isImageCropped:false});
+					              	  // that.setState({groupImageObject: data });
+                            // that.setState({groupsImage: data.cover_image_thumbnail});
+                            that.setState({ImageObject: data});
+                            that.setState({courseImage: ('http://' +  data.image),isShowCropper:false,isCropper:false});
+                            that.getCourseListData();
+					               },
+                        error: function(){
+                        that.setState({isShowCropper:false,isCropper:false});
+
+                      }
+              });
+         }else{
+           toastr.error('Upload a valid Image');
+         }
+    }
   onCacelCrop(){
     let _img = 'http://' + this.state.profileImage;
-    this.setState({cropImageSrc: _img, isShowCropper: false});
+    this.setState({cropImageSrc: _img, isShowCropper: false,isCropper:false});
 }
 handleCropChange(values){
     if(values.width>=945){
@@ -220,18 +288,33 @@ srcToFile(src, fileName, mimeType){
             <div className="container-fluid">
               <div className="row">
                 <div className="col-sm-12">
-                   {(this.state.isShowCropper) && (<div className="col-sm-12">
-                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={735} height={180} fixedRatio={false} allowNewSelection={false}
-                                      onChange={values => this.handleCropChange(values)} />
-                                    <br/>
-                                    <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this,this.state.pres_id)}/>
-                                    <input type="button" className=" btn btnSecondary" value="Cancel" onClick={this.onCacelCrop.bind(this)}/>
-                      </div>)}
-
-                  <div className={this.state.isShowCropper?'display-none':''}>
                   <div className="editHeader col-sm-12 zeroPad">
                     <h3>Edit Courses</h3>
                   </div>
+                  {(this.state.isShowCropper || this.state.isCropper)?<div>{this.state.courseName}</div>:""}
+                   {(this.state.isShowCropper) && (<div><div className="col-sm-12 overflowCropper">
+                                   <div className="cropperImg">
+                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={680} height={180} fixedRatio={false} allowNewSelection={false}
+                                      onChange={values => this.handleCropChange(values)} />
+                                    </div>
+                                    </div>
+                                    <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this,this.state.pres_id)}/>
+                                    <input type="button" className=" btn btnSecondary" value="Cancel" onClick={this.onCacelCrop.bind(this)}/>
+                      </div>)}
+                    {(this.state.isCropper) && ( <div className="overflowCropper"> <div className="col-sm-12">
+                                    <div className="cropperImgVertical">
+                                    <Cropper  src={this.state.cropImageSrc.src} ref="cropper" width={this.state.cropImageSrc.width} height={180}   fixedRatio={false} allowNewSelection={false}
+                                      onChange={values => this.handleCropChange(values)} />
+                                    <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this,event)}/>
+                                    <input type="button" className=" btn btnSecondary" value="Cancel"  onClick={this.onCacelCrop.bind(this)}/>
+                                    </div>
+                                    </div>
+                                    
+                                    
+                      </div>)} 
+                  
+                  
+                  <div className={(this.state.isShowCropper || this.state.isCropper)?'display-none':''}>
                   <div className="toggle_classes mt2pc col-sm-12 zeroPad">
 
 
@@ -241,7 +324,7 @@ srcToFile(src, fileName, mimeType){
                           <form id={"editCourseForm_"+course.id} name="editCourseForm" ref="editCourseForm" action=""   method="post" encType="multipart/form-data">
                           <div className="panel-group">
                          <div className="toggle_one panel">
-                           <div className="courseName"  id="accordion" onClick={this.plusminusToggle.bind(this, course.id)}>
+                           <div className="courseName"  id={'accordian'+course.id} onClick={this.plusminusToggle.bind(this, course.id)}>
 
                             <h4 className="panel-title m0px ">
                                 <a>{course.name}</a>
@@ -306,27 +389,28 @@ srcToFile(src, fileName, mimeType){
                                       <label htmlFor="course_name">Course Info</label>
                                     </div>
                                     <div className="col-sm-9">
-                                        <textarea id={course.id+"_cinfo"} defaultValue={course.description} placeholder="enter course information" className="form-control hgt90px" name="description"></textarea>
+                                       <p id={course.id+"_cinfo"} dangerouslySetInnerHTML={{__html: course.description}} placeholder="enter course information" className="form-control hgtauto" contentEditable={true} name="description"></p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="col-sm-6">
                                 <div className="col-sm-12 zeroPad">
-                                  <div className="col-sm-12">
-                        <img src={course.cover_image!=null?('http://'+course.cover_image.image):"/assets/img/nonPremBanner.jpg"} className={course.cover_image!=null?'hgt180px wd100pc':"edit_courseImg"} />
+                                  <div className="col-sm-12 zeroPad">
+                        <img src={course.cover_image!=null?('http://'+course.cover_image.image):"/assets/img/nonPremBanner.jpg"} className={course.cover_image!=null?'hgt180px col-sm-12 zeroPad':"edit_courseImg"} />
 
                                   </div>
                                   <div className="col-sm-12 mt2pc">
                                       <button className="changeImg-butn"><span className="glyphicon glyphicon-pencil" />Edit Course Image</button>
-                                      <input ref={"file_"+ course.id} id={"file_"+ course.id} type="file" name={"file_"+ course.id}  onClick={this.clickFun.bind(this,course.id)} onChange={this.onImageChange.bind(this)} className="cursor-pointer form-control btnUploadPhoto mt-4pc" accept="image/*" />
+                                      <input ref={"file_"+ course.id} id={"file_"+ course.id} type="file" name={"file_"+ course.id}  onClick={this.clickFun.bind(this,course.id)}  onChange={this.onImageChange.bind(this,course.name)} className="cursor-pointer form-control btnUploadPhoto mt-4pc" accept="image/*" />
+                                      {/*<input ref={"file_"+ course.id} id={"file_"+ course.id} type="file" name={"file_"+ course.id}  onClick={this.clickFun.bind(this,course.id)}  onChange={this.testF.bind(this,course.name)} className="cursor-pointer form-control btnUploadPhoto mt-4pc" accept="image/*" />                                  */}
                                   </div>
                                 </div>
                               </div>
                           </div>
                           <div className="buttons">
                             <input type="button" id={course.id} value="Save Changes" onClick={this.onSubmitForm.bind(this,course.id)} className="save_edit-course course_butn" />
-                            <input type="button" value="Cancel" onClick={this.onCancelForm.bind(this)} className="cancel_edit-course course_butn" />
+                            <input type="button" value="Cancel" onClick={this.onCancelForm.bind(this,course.id)} className="cancel_edit-course course_butn" />
                           </div>
                         </div>
                       </div>

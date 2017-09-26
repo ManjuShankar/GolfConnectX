@@ -1,18 +1,35 @@
 import React, {Component} from 'react';
-
+let tempEventId ="";
 class EventListDetail extends Component{
     onEventClick(id){
+       
         if(this.props.onEventClick){
             this.props.onEventClick(this.props.eventsList, id);
+            //  console.log("eventiD",id);
         }
-
+        if(screen.width<769)
+        {
+          $(".eventsPage .eventsRytSidePage").css("display","block !important");
+        }
     }
-
+    componentWillReceiveProps(){
+      tempEventId = this.props.eventId;
+      
+    }
 
 render(){
     const {eventDetail, onEventClick, eventsList, selectedEventId, eventId}=this.props;
+    let tempSelectedEventId = selectedEventId;
+    if(eventId){
+       tempEventId = eventId;
+       tempSelectedEventId = "";
+    }
+    else{
+      tempEventId = tempSelectedEventId;
+    }
+  
     const is_private=this.props.eventDetail.is_private;
-    return(<div className={(_.toInteger(selectedEventId)!=undefined && _.toInteger(selectedEventId)==eventDetail.id) || (_.toInteger(eventId) == eventDetail.id) ?("selected_element"):("EventsLink cursor-pointer")} >
+    return(<div className={(_.toInteger(tempEventId)!=undefined &&  (_.toInteger(tempEventId) == eventDetail.id)) ?("selected_element"):("EventsLink cursor-pointer")} >
                   <li onClick={this.onEventClick.bind(this, eventDetail.id)} className="noListStyle">
                       <div className="eventListTop">
                     <div className="eventDate">{eventDetail.start_date}</div>

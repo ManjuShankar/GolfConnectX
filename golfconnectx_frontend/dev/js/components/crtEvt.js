@@ -72,7 +72,7 @@ class CreateEvent extends React.Component {
            fd.append('file', fileObj, (fileName + "." + fileExtention));
            let eventId = that.state.upComingeventDetail.id;
            $.ajax({
-               url: 'http://52.45.249.118:8080/api/events/'+  eventId +'/tee-time-files/',
+               url: SERVICE_URLS+'api/events/'+  eventId +'/tee-time-files/',
                data: fd,
                processData: false,
                contentType: false,
@@ -91,7 +91,7 @@ class CreateEvent extends React.Component {
                  document.getElementById('uploadFileName').value='';
                  $('#teatime').val('');
                  $('#uploadFileModal').modal('hide');
-                 console.log("Error");
+                 
                }
            });
 
@@ -152,7 +152,7 @@ componentWillReceiveProps(nextProps){
            if(isValidImage(fileExtention)){
            fd.append('image', document.getElementById('file').files[0]);
            $.ajax({
-               url: 'http://52.45.249.118:8080/api/events/upload-cover-image/',
+               url: SERVICE_URLS+'api/events/upload-cover-image/',
                data: fd,
                processData: false,
                contentType: false,
@@ -165,7 +165,7 @@ componentWillReceiveProps(nextProps){
 
                },
                error: function(){
-                  console.log("Error");
+                  
                }
            });
          }else{

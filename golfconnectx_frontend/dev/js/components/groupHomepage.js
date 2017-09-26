@@ -9,7 +9,7 @@ import _ from 'lodash';
 import {Link} from 'react-router';
 import {React_Boostrap_Carousel} from 'react-boostrap-carousel';
 import Spinner from 'react-spinner';
-
+import {isExistObj} from '../utils/functions';
 
 let imagePath=IMG_CONSTANT.IMAGE_PATH;
 class GroupHomepage extends Component{
@@ -27,7 +27,7 @@ class GroupHomepage extends Component{
         }).catch((error)=>{
                  if(error == "Error: Request failed with status code 401"){
                  this.context.router.push('/');
-            }
+            }  
         });
 
     }
@@ -42,48 +42,57 @@ class GroupHomepage extends Component{
             if(this.props.getGroupList!=nextProps.getGroupList)
             {
                 this.setState({getGroupList:nextProps.getGroupList.getgroups});
-            }
-    }
 
+            }
+
+    }
     onGroupClick(groupId){
           this.context.router.push('/groupMembers_'+groupId);
     }
 
     render(){
         return(<div className="groupHomepage">
+               {/* <div className="header_group col-sm-12 zeroPad">                 
+                  <h3 className="col-sm-11 grpbg">GROUPS</h3>
+                </div>*/}
              <div className="bgPic col-sm-12"><img src={imagePath+"bg_image.png"} className="bgimage"></img></div>
-            <div className="col-sm-12">
-            <div className="col-sm-4 paneltab">
+              <div className="col-sm-12 pdlftryt0px">
+            <div className="col-md-4 paneltab">
                     <div className="panel panel-default col-sm-12">
                         <ul className="nav nav-pills panel-body col-sm-12">
-                            <li className="active grptab text-center col-sm-6"><a className="pb1px">GROUPS</a></li>
-                            <li className=" forumtab text-center col-sm-6" onClick={this.onForumClick.bind(this)}><a className="pb1px">FORUMS</a></li>
+                            <li className="active grptab text-center col-sm-6"><a >GROUPS</a></li>
+                            <li className=" forumtab text-center col-sm-6" onClick={this.onForumClick.bind(this)}><a >FORUMS</a></li>
                         </ul>
                     </div>
                 </div>
-                </div>
+              </div>
+              <div className="groupLft_Ryt">
+                <span className="glyphicon glyphicon-chevron-left" />
+                <span className="group_Name">GROUPS PAGE(1 of 1)</span>
+                <span className="glyphicon glyphicon-chevron-right" />             
+              </div>
 
             {(_.size(this.state.getGroupList)>0)?(<div className="row">
           <div>
-          {(this.state.ajaxCallInProgress)?(<div className="mt25pc"><Spinner /></div>):(<div className="row">
+         <div className="row">
           <div className="col-md-12">
           <React_Boostrap_Carousel indicators={(_.size(this.state.getGroupList)>0 && _.size(this.state.getGroupList[0])>=11)?true:false} animation={true} className="carousel-fade brdrs txtcenter">
           {this.state.getGroupList.map((parent, index)=>{
               return(<div key={index}>
-                <div>{(index==0)?(
-                   <Link to="/addgroup" className="col-md-3 txtdecNon">
+                <div className="inln_dspl">{(index==0)?(
+                   <Link to="/addgroup" className="col-md-3 col-xs-4 col-sm-4 col-lg-3 txtdecNon">
                                 <img src={"/assets/img/plus_icon-01.png"} alt="" className="panelimg  "/>
-                                <br/><span className=" txtcenter m0px txtdecNon">Add Group</span>
+                                <br/><span className="adgroupTxt txtcenter m0px txtdecNon">Add Group</span>
                  </Link>):('')}</div>
-                {parent.map((groupListDetails, childIndex)=>{
+                {isExistObj(parent) && parent.map((groupListDetails, childIndex)=>{
                 return(
-
-                   <div className="col-md-3" key={childIndex}>
+                
+                   <div className="col-md-3 col-xs-4 col-sm-4 col-lg-3" key={childIndex}>
                    <div onClick={this.onGroupClick.bind(this,groupListDetails.id)}>
                     <div className="cursor-pointer">
                       <img src={'http://'+groupListDetails.cover_image} className="panelimg"/>
-                      <br/><span className="txtwhite txtcenter">{_.truncate(_.trim(groupListDetails.name), {
-                        'length': 24,
+                      <br/><span className="txtwhite txtcenter ">{_.truncate(_.trim(groupListDetails.name), {
+                        'length': 8,
                         'separator': ' '
                       })}</span>
                     </div>
@@ -93,21 +102,22 @@ class GroupHomepage extends Component{
             })}
 
             </React_Boostrap_Carousel>
-            </div></div>)}
+            </div></div>
           </div>
           </div>):(
             <div className="row">
             <div>
             <div className="row">
-            <div className="col-md-12">
+            <div className="col-md-12 adGrpCre">
             <div><Link to="/addgroup" className="col-md-3 txtdecNon">
                                 <img src={"/assets/img/plus_icon-01.png"} alt="" className="panelimg bgccc "/>
-                                <br/><span className=" txtcenter ml13pc txtdecNon">Add Group</span>
+                                <br/><span className=" txtcenter ml13pc adgroupTxt txtdecNon">Add Group</span>
                  </Link></div></div></div></div></div>)}
+
 </div>);
+
     }
 }
-
 GroupHomepage.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
@@ -118,11 +128,14 @@ function mapStateToProps(state) {
         getGroupList: (state.getgroupList!=undefined && state.getgroupList!=null)?state.getgroupList:[],
         activeUser: (state.activeUser!=null)?(state.activeUser):(JSON.parse(sessionStorage.getItem('userDetails'))),
         selectedGroup:state.selectedGroup
+
     };
 }
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators({groupList}, dispatch);
+
+
 }
 
 export default  connect(mapStateToProps, matchDispatchToProps)(GroupHomepage);

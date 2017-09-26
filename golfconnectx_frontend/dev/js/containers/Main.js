@@ -9,11 +9,18 @@ import Sidebar from '../components/sidebar';
 class Main extends Component{
     constructor(props, context){
         super(props, context);
+        this.state={
+          toggleSearch:false
+        }
     }
-
+   
    render(){
           let userLocalStorage = JSON.parse(sessionStorage.getItem('userDetails'));
-          return(<div>{((location.pathname!="/" && location.pathname!='/register' && location.pathname!="/enterEmail" && location.pathname!='/enterOTP' && location.pathname!='/enterNewPassword' && location.pathname!='/invite') && (this.props.activeUser!=null || userLocalStorage!=null))?(<div><Sidebar/><Header /></div>):(<div></div>)}
+          return(
+            <div>{((location.pathname!="/" && location.pathname!='/register' && location.pathname!="/enterEmail" && location.pathname!='/enterOTP' && location.pathname!='/enterNewPassword' && location.pathname!='/invite') && (this.props.activeUser!=null || userLocalStorage!=null))?
+            (<div><Sidebar />
+              <Header />
+              </div>):(<div></div>)}
           <div>{this.props.children}</div></div>);
    }
 }

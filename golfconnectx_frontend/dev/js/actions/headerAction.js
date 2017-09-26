@@ -16,8 +16,11 @@ let getNotificationsCount = (token) =>{
          return data.notifications_count;
          //  dispatch({type:types.NOTIFICATION_COUNT,apiResult:data.notifications_count});
        }).catch((error)=>{
+         console.log('err', error.response.status);
+         /*console.log('error', error.response.status);
+         console.log('token', token)
          toastr.error(error);
-           throw(error);
+         throw(error);*/
        });
    }
 }
@@ -58,5 +61,10 @@ return(dispatch) => {
    }
 }
 
+let showHideSearchCriteria = (flag) => {
+  return (dispatch) => {
+    return dispatch({type: types.SEARCH_CRTERIA_VISIBILITY, payload: flag});
+  }
+}
 
-export {getNotificationsCount, invite, searchAll};
+export {getNotificationsCount, invite, searchAll, showHideSearchCriteria};

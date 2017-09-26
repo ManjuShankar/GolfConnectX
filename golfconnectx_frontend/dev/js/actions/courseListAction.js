@@ -30,7 +30,7 @@ let unFollowCourse = (token, courseId) =>{
 let searchCourses = (token, keyword, pageNumber) =>{
  let url, dispatchType;
  if(keyword){
-          url= 'http://52.45.249.118:8080/api/courses/old?format=json&page=' +  _.toNumber(pageNumber) + '&kw='+keyword;
+          url= SERVICE_URLS.URL_USED+'/api/courses/old?format=json&page=' +  _.toNumber(pageNumber) + '&kw='+keyword;
          dispatchType = types.GET_COURSELIST_APPEND;
       }
   var config = {
@@ -62,7 +62,7 @@ let courseList=(token, pageNumber=0,  keyword="")=>{
          dispatchType = types.GET_COURSELIST;
       }
       else{
-         url= 'http://52.45.249.118:8080/api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
+         url= SERVICE_URLS.URL_USED+'api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
           dispatchType = types.GET_COURSELIST_APPEND;
       }
     const apicourseListRequest=axios.get(url,config);

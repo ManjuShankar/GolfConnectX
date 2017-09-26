@@ -1,6 +1,4 @@
-let devUrl = 'http://52.45.249.118:8080/';   ///'http://192.168.0.120:8000/'52.45.249.118:8080;
-///let devUrl = 'http://192.168.0.129:8000/';
-
+let devUrl = 'http://52.45.249.118:8080/';//34.212.50.89:8080
 
 export const SERVICE_URLS ={
     URL_USED : devUrl,

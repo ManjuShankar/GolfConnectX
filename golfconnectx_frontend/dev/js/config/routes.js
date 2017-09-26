@@ -57,10 +57,10 @@ export default(
     <Route path="/editGroup_(:id)" component={EditGroup} />
     <Route path="/forumsPage" component={ForumsPage}/>
     <Route path="/newMessage" component={NewMessage}/>
-    <Route path="/viewMessage_(:id)" component={ViewMessage}/>
+    <Route path="/viewMessage_(:id)_(:name)" component={ViewMessage}/>
     <Route path="/feed" component={FeedPage}/>
     <Route path="/forumCourse_(:id)" component={ForumCourse}/>
-    {/*<Route path="/globalSearch" component={GlobalSearch}/>*/}
+    
     <Route path="/selectedCoursePage" component={SelectedCoursePage} />
     <Route path="/enterEmail" component={EnterValidEmail} />
     <Route path="/enterOTP" component={EnterCorrectOTP} />

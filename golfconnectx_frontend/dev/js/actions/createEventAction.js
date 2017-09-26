@@ -12,7 +12,7 @@ let createEvents=(formData, token)=>{
     const apiCreateEventRequest = axios.post(url, formData, config);
     return(dispatch)=>{
       return apiCreateEventRequest.then(({data})=>{
-        toastr.success("Event Created Succefully");
+        toastr.success("Event created successfully");
         }).catch((error)=>{
           toastr.error(error);
             throw(error);
@@ -48,7 +48,7 @@ let editEvents=(formData, id, token)=>{
     const apiCreateEventRequest = axios.put(url, formData, config);
     return(dispatch)=>{
       return apiCreateEventRequest.then(({data})=>{
-        toastr.success("Event Updated Succefully");
+        toastr.success("Event updated successfully");
         }).catch((error)=>{
           toastr.error(error);
           if (error.response) {

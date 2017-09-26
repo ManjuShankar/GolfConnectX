@@ -29,18 +29,34 @@ class ViewNotification extends Component {
     }
 
     onAcceptOrDeclineClick(submiturl, flag){
+      $('#acceptordecline').attr('disabled','disabled');
       this.props.onAcceptOrDeclineClick(this.props.activeUser.token, submiturl, flag).then(()=>{
           this.context.router.push('/notifications');
         }).catch((error)=>{
 
       });
+        if(screen.width<600)
+      {
+        $(".sidebar").show();
+      }
     }
 
     onRemoveNotificationClick(id){
+      $('#notificationDelete').attr('disabled','disabled');        
       this.props.removeNotification(this.props.activeUser.token, id).then(()=>{
         this.context.router.push('/notifications');
       }).catch((error)=>{
       });
+      if(screen.width<600)
+      {
+        $(".sidebar").show();
+      }
+    }
+    showSideMenu(){
+      if(screen.width<600)
+      {
+       $(".sidebar").show();
+     } 
     }
 
     render() {
@@ -53,10 +69,9 @@ class ViewNotification extends Component {
                   <div className="notifyhead">NOTIFICATIONS</div>
                   <div className="btns">
                        <div className="alglft"><Link to="/notifications"><button className="btnback">Back</button></Link></div>
-                       <div className="algrgt"><button onClick={this.onRemoveNotificationClick.bind(this, this.state.notificationDetails.notification.id)} className="btnDel">Delete</button></div>
+                       <div className="algrgt"><button id="notificationDelete" onClick={this.onRemoveNotificationClick.bind(this, this.state.notificationDetails.notification.id)} className="btnDel">Delete</button></div>
                   </div>
               </div>
-
               <div className="notifmsg col-sm-12">
                   <div className="notifheader">
                       <div className="img-heading">
@@ -72,15 +87,42 @@ class ViewNotification extends Component {
                       <div className="col-sm-4"></div>
                       <div className="col-sm-4">
                           {(_.size(this.state.notificationDetails.nobject)>0  && this.state.notificationDetails.nobject.status=="P" && this.state.notificationDetails.nobject.submiturl!=undefined)?(<div className="col-sm-12">
-                                <button onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, true)} className="acptBtn rspnd col-sm-5">Accept</button>
+                                <button id ="acceptordecline" onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, true)} className="acptBtn rspnd col-sm-5">Accept</button>
                                 <div className="col-sm-2"></div>
-                                <button onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, false)} className="dclnBtn rspnd col-sm-5">Decline</button>
+                                <button id="acceptordecline" onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, false)} className="dclnBtn rspnd col-sm-5">Decline</button>
                           </div>):(<div></div>)}
                       </div>
                       <div className="col-sm-4"></div>
                   </div>
+              </div>
+            </div>
+            <div className="mobileRspnsNotif col-sm-12 zeroPad">
+              <div className="headerNotif col-sm-12 zeroPad">
+                <Link to="/notifications"><span className="glyphicon glyphicon-remove col-sm-1 txtwhite" onClick={this.showSideMenu.bind(this)}></span></Link>
+                <h3 className="col-sm-11 notbg">NOTIFICATIONS</h3>
+              </div>
+              <div>
+                <div className="img-heading col-sm-12">
+                  <span className="col-sm-2 pdryt3pc">
+                    <img src="/assets/img/GolfHome.png" className="golf-img"/>
+                  </span><span className="col-sm-8 notifObjectname">                
+                  <h3 className="col-sm-12 m0px zeroPad">{this.state.notificationDetails.notification.object_type}</h3> </span>                                
+                  <span className="col-sm-2 fr notifTym">{this.state.notificationDetails.notification.created_on}</span>
                 </div>
               </div>
+              <div className="viewMsg col-sm-12">
+                {this.state.notificationDetails.notification.message}
+              </div>
+              <div className="notifRspns col-sm-12">
+                {(_.size(this.state.notificationDetails.nobject)>0  && this.state.notificationDetails.nobject.status=="P" && this.state.notificationDetails.nobject.submiturl!=undefined)?(<div className="col-sm-12 txtcenter zeroPad">
+                      <button onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, true)} className="acptBtn col-sm-5">Accept</button>
+                      <button onClick={this.onAcceptOrDeclineClick.bind(this, this.state.notificationDetails.nobject.submiturl, false)} className="dclnBtn col-sm-5">Decline</button>
+                </div>):(<div></div>)}
+              </div>
+              <div className="Del_footer col-sm-12">
+                <input type="button" value="Delete Notification" onClick={this.onRemoveNotificationClick.bind(this, this.state.notificationDetails.notification.id)} className="deleteNotif col-sm-12" />
+              </div>
+            </div>
           </div>
               );
             }else {

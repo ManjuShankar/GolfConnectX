@@ -15,8 +15,8 @@ export default function(state=null,action){
         case types.GET_EVENTLIST:
             return Object.assign({}, state, {CurrentEvents: action.apiResult});
             break;
-
-
+            
+            
 
         case types.GET_EVENTLISTPAST:
             return Object.assign({}, state, {PastEvents: action.apiResult});
@@ -39,7 +39,7 @@ export default function(state=null,action){
              case types.GET_PUBLIC_EVENTLIST:
             return Object.assign({}, state, {PublicEvents: action.apiResult});
             break;
-
+            
              case types.EVENT_STATES:
             return Object.assign({}, state, {stateList: action.apiResult});
             break;

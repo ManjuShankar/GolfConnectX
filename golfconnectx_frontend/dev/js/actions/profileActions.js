@@ -134,7 +134,27 @@ let getDirectoryPosts = (token, pId=-1) =>{
          });
      }
 };
+let getProfileCourses = (token, pId) =>{
+  var config = {
+          headers: {'Authorization':'Token '+token}
+      };
 
+  const url = SERVICE_URLS.DIRECTORY+pId+'/courses';
+
+  const apiProfileCourseRequest = axios.get(url,config);
+    
+  return(dispatch) => {
+         return apiProfileCourseRequest.then(({data})=>{
+           dispatch({type:types.GET_PROFILE_COURSES ,apiResult:data});
+             
+         }).catch((error)=>{
+            if(error != "Error: Request failed with status code 401"){
+          toastr.error(error);
+          }
+           throw(error);
+         });
+     }
+};
 let getFriends = (token, pId=-1) =>{
   var config = {
           headers: {'Authorization':'Token '+token}
@@ -171,8 +191,14 @@ let getDirectoryFriends = (token, pId=-1) =>{
 }
 
 
-let searchFriends = (token, keyword) =>{
-  const url = SERVICE_URLS.SEARCH_FRIENDS + '?format=json' + '&kw=' + keyword ;
+let searchFriends = (token, keyword,uid,flag) =>{
+  let url  = "";
+  if(flag == "Others"){
+      url = SERVICE_URLS.SEARCH_FRIENDS_OTHERS +uid+'/friends/?format=json' + '&kw=' + keyword ;
+  }
+  else{
+      url = SERVICE_URLS.SEARCH_FRIENDS + '?format=json' + '&kw=' + keyword ;
+  }
   var config = {
        headers: {'Authorization':'Token '+token}
   };
@@ -210,9 +236,15 @@ let getProfileDetails = (token, id) =>{
 }
 
 
-let searchGroups = (token, keyword) =>{
+let searchGroups = (token, keyword,uid,flag) =>{
 
-  const url = SERVICE_URLS.SEARCH_GROUPS + '?format=json' + '&kw=' + keyword ;
+  let url  = "";
+  if(flag == "Others"){
+      url = SERVICE_URLS.SEARCH_GROUPS_OTHERS +uid+'/groups/?format=json' + '&kw=' + keyword ;
+  }
+  else{
+      url = SERVICE_URLS.SEARCH_GROUPS + '?format=json' + '&kw=' + keyword ;
+  }
   var config = {
        headers: {'Authorization':'Token '+token}
   };
@@ -326,7 +358,7 @@ let deleteScores=(token,courseId, scoreId)=>{
     return(dispatch)=>{
         return apigroupDetailsRequest.then(({data})=>{
             //dispatch({type:types.GET_GROUPS_PROFILE,apiResult:data});
-            toastr.success("Score deleted successfully!");
+            toastr.success("Score deleted successfully");
         }).catch((error)=>{
          if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
@@ -345,7 +377,7 @@ let deleteScoresImage=(token,courseId, scoreId, imageId)=>{
     return(dispatch)=>{
         return apigroupDetailsRequest.then(({data})=>{
             //dispatch({type:types.GET_GROUPS_PROFILE,apiResult:data});
-            toastr.success("Score Image deleted successfully!");
+            toastr.success("Image deleted successfully");
         }).catch((error)=>{
          if(error != "Error: Request failed with status code 401"){
           toastr.error(error);
@@ -357,4 +389,4 @@ let deleteScoresImage=(token,courseId, scoreId, imageId)=>{
 export {getMyCourses, getMyPosts, userProfileDetails, getFriends, searchFriends, getProfileDetails,
  searchGroups, getMyGroups, editCourseNotes, addNewScore, profilegroupList, getNewScore, 
  eventDetails, getDirectoryEventDetails, getDirectoryPosts, getDirectoryFriends, 
- getDirectoryProfilegroupList, deleteScores, deleteScoresImage};
+ getDirectoryProfilegroupList, deleteScores, deleteScoresImage, getProfileCourses};

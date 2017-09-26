@@ -16,7 +16,7 @@ import toastr from 'toastr';
          dispatchType = types.GET_COURSELIST;
       }
       else{
-         url= 'http://52.45.249.118:8080/api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
+         url= SERVICE_URLS.URL_USED+'api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
           dispatchType = types.GET_COURSELIST_APPEND;
       }
     const apicourseListRequest=axios.get(url,config);
@@ -43,7 +43,7 @@ let getcourseList=(token, pageNumber=0,  keyword="")=>{
        dispatchType = types.GET_FORUM_COURSES;
     }
     else{
-       url= 'http://52.45.249.118:8080/api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
+       url= SERVICE_URLS.URL_USED+'api/courses/old?format=json&page=' +  _.toNumber(pageNumber)+'&kw='+keyword;
         dispatchType = types.GET_FORUM_COURSES_APPEND;
     }
 
@@ -107,10 +107,16 @@ let addNewPost = (id, token, title)=>{
 
   return(dispatch)=>{
       return apigroupPostRequest.then(({data})=>{
-        toastr.success("Post Added Successfully");
+        toastr.success("Post added successfully");
         dispatch({type:types.GET_FORUM_POSTS_LIST,apiResult:data});
       }).catch((error)=>{
-        toastr.error(error);
+        if(error.response.status == 404){
+            toastr.error("Post Doesn't Exist");
+           }
+           else 
+            {
+                toastr.error(error);
+            }
           throw(error);
       });
   }
@@ -128,7 +134,7 @@ let addComment=( id,token,body)=>{
     return(dispatch)=>{
       return apiCommentRequest.then(({data})=>{
        
-        toastr.success("Comment Added Successfully");
+        toastr.success("Comment added successfully");
      
       }).catch((error)=>{
         toastr.error(error);
@@ -251,7 +257,7 @@ let addCategoryComment=(categoryId, id,token,body)=>{
   const apiCommentRequest = axios.post(url, { body: body}, config);
   return(dispatch)=>{
     return apiCommentRequest.then(({data})=>{
-      toastr.success("Comment Added Successfully");
+      toastr.success("Comment added successfully");
     }).catch((error)=>{
       toastr.error(error);
         throw(error);
@@ -391,7 +397,7 @@ let addLocalCategoryComment=(categoryId, id,token,body)=>{
     return(dispatch)=>{
       return apiCommentRequest.then(({data})=>{
         
-        toastr.success("Comment Added Successfully");
+        toastr.success("Comment added successfully");
      
       }).catch((error)=>{
         toastr.error(error);

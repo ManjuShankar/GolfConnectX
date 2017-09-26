@@ -54,7 +54,7 @@ let contactUs = (formData) =>{
 
     return apiInviteRequest.then(({data})=>{
 
-      toastr.success("Request Sent Successfully!");
+      toastr.success("Request sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -74,11 +74,11 @@ let EnterEmail = (formData) =>{
               
       
        dispatch({type:types.ENTER_EMAIL_REQUEST, apiResult:data});
-      toastr.success("Request Sent Successfully!");
+      toastr.success("Reset code has been sent to your mail.");
       }).catch((error)=>{
        
         if(error=="Error: Request failed with status code 400"){
-           toastr.error("Email address does not exist!");
+           toastr.error("Email Address Doesn\'t Exist");
 
         }else{
 
@@ -101,7 +101,7 @@ let EnterOTP = (formData) =>{
 
     return apiForgotPassword.then(({data})=>{
        dispatch({type:types.ENTER_OTP_REQUEST, apiResult:data});
-      toastr.success("Request Sent Successfully!");
+      //toastr.success("Request sent successfully");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -118,7 +118,7 @@ let ChangePassword = (formData) =>{
 
     return apiForgotPassword.then(({data})=>{
        dispatch({type:types.CHANGE_PASSWORD_REQUEST, apiResult:data});
-      toastr.success("Request Sent Successfully!");
+      toastr.success("Your password has been changed successfully!");
       }).catch((error)=>{
         toastr.error(error);
           throw(error);
@@ -137,7 +137,8 @@ let fbSignIn = (data) =>{
     return(dispatch) => {
         return apiLoginRequest.then(({data})=>{
         
-              // /  sessionStorage.setItem('userDetails', JSON.stringify(data));
+               sessionStorage.setItem('userDetails', JSON.stringify(data));
+            
                 dispatch({type:types.LOGIN_USER, apiResult:data});
         }).catch((error)=>{
             throw(error);
@@ -156,8 +157,7 @@ let facebookRegister=(data)=>{
     const api_FB_SignupRequest= axios.post(url,{first_name,last_name,email,zipcode,fb_id});
     return(dispatch)=>{
       return api_FB_SignupRequest.then(({data})=>{
-           
-            toastr.success("User Account using Facebook Created Succefully");
+            ///toastr.success("User Account Using Facebook Created Succefully");
             sessionStorage.setItem('userDetails', JSON.stringify(data));
             dispatch({type:types.LOGIN_USER, apiResult:data});
             return data;

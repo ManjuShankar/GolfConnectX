@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {isValidImage} from "../utils/Validation";
 import {IMG_CONSTANT} from '../constants/application.constants';
 import {saveGroupDetails} from '../actions/addGroupAction';
 import {groupCourseList} from '../actions/courseListAction';
@@ -13,7 +14,7 @@ import {SERVICE_URLS} from '../constants/serviceUrl';
 import {getGolfConnectXmembers} from '../actions/friendsAction.js';
 import {addOrRemoveGroupMemebrs} from '../actions/groupListAction';
 import Select from 'react-select';
-
+import Spinner from 'react-spinner';
 
 let imgPath=IMG_CONSTANT.IMAGE_PATH;
 class AddGroup extends Component{
@@ -32,8 +33,9 @@ class AddGroup extends Component{
               selectedValue:'',
               togClass:false,
               isShowCropper:false,
+              isCropper:false,
               cropImageSrc:"",
-              cropImageWidth: 945
+              cropImageWidth: 945, ajaxCallInProgress:false
             };
 
     this.onFieldChange=this.onFieldChange.bind(this);
@@ -70,11 +72,12 @@ class AddGroup extends Component{
              'Authorization':'Token '+ token
             },
              success: function(data){
-               that.setState({groupImageObject: data });
-               that.setState({groupsImage: data.image , isShowCropper:false});
+               
+               that.setState({groupImageObject: data,groupsImage: data.image , isShowCropper:false, isCropper:false });
+               that.refs.file.value="";
              },
              error: function(){
-                console.log("Error");
+
              }
          });
          e.preventDefault();
@@ -107,24 +110,25 @@ class AddGroup extends Component{
            document.getElementsByName(e.target.name).disabled = false;
          });
      }
-
     componentDidMount() {
       $('.menu').parent().removeClass('active');
       $('#group').parent().addClass('active');
    }
-
    componentWillMount(){
+       this.setState({ajaxCallInProgress:true});
         let  other = {city:'', created_by:1, created_on:'', id:"-1", is_premium:true, name:'Other', state:''};
         this.props.groupCourseList(this.props.activeUser.token).then(()=>{
             let courseList = this.props.getCourseList;
             courseList.unshift(other);
             this.setState({getCourseslist:courseList});
+            this.setState({ajaxCallInProgress:false});
         }).catch((error)=>{
+            this.setState({ajaxCallInProgress:false});
         });
          this.props.getGolfConnectXmembers(this.props.activeUser.token).then(()=>{
                    this.setState({friends:this.props.friends.Members});
          }).catch((error)=>{
-            console.log("Error", error);
+
       });
       }
 
@@ -158,7 +162,7 @@ class AddGroup extends Component{
        this.props.addOrRemoveGroupMemebrs(this.props.activeUser.token, this.state.newGroup.id, members).then(()=>{
          this.context.router.push('/groups');
        }).catch((error)=>{
-         console.log("Error", error);
+
        });
      }
      /****/
@@ -200,23 +204,95 @@ class AddGroup extends Component{
 
     onCacelCrop(){
     let _img = 'http://' + this.state.groupsImage;
-    this.setState({cropImageSrc: _img, isShowCropper: false});
+    this.setState({cropImageSrc: _img, isShowCropper: false, isCropper:false});
+    this.refs.file.value="";
     }
 
     onImageChange(e){
-      let files;
-      if (e.dataTransfer) {
-        files = e.dataTransfer.files;
-      } else if (e.target) {
-        files = e.target.files;
+      // let files;
+      // if (e.dataTransfer) {
+      //   files = e.dataTransfer.files[0];
+      // } else if (e.target) {
+      //   files = e.target.files[0];
+      // }
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //     this.setState({cropImageSrc: reader.result});
+      // };
+      // reader.readAsDataURL(files);
+      // this.setState({isShowCropper:true});
+
+       var that=this;
+       let _URL = window.URL || window.webkitURL;
+       var file, img;
+     
+        if(e.target.files.length>0){
+        if((file = e.target.files[0])) {
+            img = new Image();
+            
+            img.onload = function () {
+         
+            if( (this.height>280 || this.height<300) && this.width>1200){
+            
+            that.setState({cropImageSrc: img.src, isShowCropper:true});
+             
+          }
+          else if(this.height>300 && this.width<1200){
+            that.setState({cropImageSrc:img, isCropper:true});
+            
+          }
+          
+           else{
+              that.uploadFileAsRealImage(SERVICE_URLS.URL_USED + 'api/groups/upload-cover-image/',1,file);
+           }
+        };
+         img.src = _URL.createObjectURL(file);
+         this.refs.file.value = "";
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-          this.setState({cropImageSrc: reader.result});
-      };
-      reader.readAsDataURL(files[0]);
-      this.setState({isShowCropper:true});
+      }
     }
+
+    uploadFileAsRealImage(urlImage,imgtype,file){
+
+		          let typeNmbr = imgtype;
+             
+              var fd = new FormData();
+              var that = this;
+              let fileObj = file;
+              let token = that.props.activeUser.token;
+              let fileExtention = this.getFileExtension(fileObj.name);
+                 if(isValidImage(fileExtention)){
+                  fd.append('image', fileObj);
+                  $.ajax({
+                      url: urlImage,
+                      data: fd,
+                      processData: false,
+                      contentType: false,
+                      type: 'POST',
+                      headers:{
+                        'Authorization':'Token '+ token
+                      },
+                      success: function(data){
+
+                            
+			    that.setState({groupImageObject: data });
+                            that.setState({groupsImage: data.image });
+					               },
+                        error: function(){
+                        that.setState({isShowCropper:false, isCropper:false});
+
+                      }
+              });
+         }else{
+           toastr.error('Upload Valid Image');
+         }
+    }
+    getFileExtension(name){
+       var found = name.lastIndexOf('.') + 1;
+       return (parseInt(found) > 0 ? name.substr(found) : "");
+     }
+
+
 
     handleCropChange(values){
     if(values.width>=945){
@@ -225,45 +301,58 @@ class AddGroup extends Component{
           this.setState({cropImageWidth: 945});
       }
   }
-
+hideCropper(){
+  this.setState({
+    isShowCropper : false, isCropper:false
+  });
+}
     render(){
-       if(_.size(this.state.getCourseslist)>0){
-         return(<div className="scrollAndHeight">
-            <div className="AddGroup">
-        <div className="editgrpimg">
-            {(_.size(this.state.groupImageObject)>0)?(<span>{(this.state.groupImageObject.height>=240 && this.state.groupImageObject.width>=1152)?(<img src={'http://' + this.state.cropImageSrc} className="coverimg" />):(<div className="">
-                  <img className="hero__background"  />
-                  <center><img className="hero__image"  src={'http://' + this.state.groupsImage} /></center>
-             </div>)}</span>):(<img className="hero__image"  src={imgPath+"coverimg.png"} />)}
-            <div className="addgrpimg col-sm-3">
-
-                <button className="btn btn-default addgrp"  >
-                <span className="glyphicon glyphicon-pencil glyph1"></span> Add Group Image
-                </button>
-                <input ref="file" id="file" type="file" name="file" onChange={this.onImageChange.bind(this)} className="upload-file form-control btnUploadPhoto cursor-pointer" accept="image/*" />
+       return(<div className="scrollAndHeight">
+           {this.state.ajaxCallInProgress?(<div className="mt25pc"><Spinner /></div>):(<div className="AddGroup">
+        <div className="editgrpimg col-sm-12 zeroPad">
+            
+              {(_.size(this.state.groupImageObject)>0)?(<div>
+                  
+                  <center>  <img className="hero__image"  src={'http://' + this.state.groupsImage} />  </center>
+                  </div>) : (<img className="hero__image"  src={imgPath+"GolfConnectx_GroupPhoto_1200x280.png"} />) }
+                <div className="addgrpimg col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                     <img src="/assets/img/GolfConnectx_EditPhoto_Button.png" className="addgrp" />              
+                <input ref="file" id="file" type="file" name="file" onClick={this.hideCropper.bind(this)} onChange={this.onImageChange.bind(this)} className="upload-file form-control btnUploadPhoto cursor-pointer hgt50px" accept="image/*" />
 
             </div>
 
 
 
-                <div className="captionDiv">
+                <div className="captionDiv dsplyNone">
                 <span className="imgtag"></span>
 
             </div>
          </div>
-          {(this.state.isShowCropper) && (<div className="col-sm-12">
-                                    <div className="col-sm-6">
-                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={this.state.cropImageWidth} height={103} fixedRatio={false} allowNewSelection={false}
+          {(this.state.isShowCropper) && ( <div> <div className="col-sm-12 overflowCropper">
+                                    <div className="cropperImg">
+                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={1200} height={280} fixedRatio={false} allowNewSelection={false}
                                       onChange={values => this.handleCropChange(values)} />
-                                    <br/>
+                                    </div>
+                                    </div>
                                     <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this)}/>
                                     <input type="button" className=" btn btnSecondary" value="Cancel"  onClick={this.onCacelCrop.bind(this)}/>
-                     </div> </div>)}
-            <div id="accordion" role="tablist" aria-multiselectable="true" className={this.state.isShowCropper?'display-none':'zeroPad col-sm-12 accordionPanel'}>
+                      </div>)}
+          {(this.state.isCropper) && ( <div className="overflowCropper"> <div className="col-sm-12">
+                                    <div className="cropperImgVertical">
+                                    <Cropper  src={this.state.cropImageSrc.src} ref="cropper" width={this.state.cropImageSrc.width} height={280}   fixedRatio={false} allowNewSelection={false}
+                                      onChange={values => this.handleCropChange(values)} />
+                                    <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this)}/>
+                                    <input type="button" className=" btn btnSecondary" value="Cancel"  onClick={this.onCacelCrop.bind(this)}/>
+                                    </div>
+                                    </div>
+                                    
+                                    
+                      </div>)}
+            <div id="accordion" role="tablist" aria-multiselectable="true" className={(this.state.isShowCropper || this.state.isCropper)?'display-none':'zeroPad col-sm-12 accordionPanel'}>
 
   <form className="card" id="addGroupForm" method="post" onClick={this.plusminusToggle}>
     <div className="card-header cardDiv cursor-pointer" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onClick={this.changeIcon}>
-      <h5 className="mb-0 titleclass">
+      <h5 className="mb-0 titleclass dsplyNone">
        Add Group
           <span id="headingOneSpan" className={ (this.state.togClass == false?"fr":"glyphicon glyphicon-minus fr")} >
             </span>
@@ -275,15 +364,15 @@ class AddGroup extends Component{
 
        <div>
           <div className="form-group row">
-            <label htmlFor="example-text-input" className="col-xs-2 col-form-label">Group Name:<span className="txtRed">*</span></label>
-            <div className="col-sm-9">
+            <label htmlFor="example-text-input" className="col-xs-12 col-sm-2 col-form-label">Group Name:<span className="txtRed">*</span></label>
+            <div className="col-sm-9 col-xs-12">
             <input className="form-control" maxLength="200" type="text" id="example-text-input"  name="name" onChange={this.onRequired.bind(this)}/>
             {this.state.errName}
             </div>
            </div>
            <div className="form-group row">
-            <label htmlFor="example-text-input" className="col-xs-2 col-form-label">Home Course:<span className="txtRed">*</span></label>
-            <div className="col-sm-9">
+            <label htmlFor="example-text-input" className="col-xs-12 col-sm-2 col-form-label">Home Course:<span className="txtRed">*</span></label>
+            <div className="col-sm-9 col-xs-12">
                 {(_.size(this.state.getCourseslist)>0)?(<Select
                   name="course"
                   value={this.state.selectedValue} labelKey="name" valueKey="id"
@@ -292,15 +381,15 @@ class AddGroup extends Component{
             </div>
            </div>
            <div className="form-group row">
-            <label htmlFor="example-text-input" className="col-xs-2 col-form-label">Description:<span className="txtRed">*</span></label>
-            <div className="col-sm-9">
+            <label htmlFor="example-text-input" className="col-xs-12 col-sm-2 col-form-label">Description:<span className="txtRed">*</span></label>
+            <div className="col-sm-9 col-xs-12">
             <textarea className="form-control" maxLength="500" id="example-text-input" name="description" onChange={this.onRequired.bind(this)}/>
             {this.state.errDesc}
             </div>
            </div>
            <div className="form-group row">
-               <label htmlFor="example-text-input" className="col-xs-2 col-form-label">Private Group:</label>
-               <label className="switch">
+               <label htmlFor="example-text-input" className="col-xs-7 col-sm-2 col-form-label">Private Group:</label>
+               <label className="switch col-xs-5">
             <input type="checkbox" name="is_private"/>
             <div className="slider round"></div>
                </label>
@@ -313,18 +402,50 @@ class AddGroup extends Component{
         </div>
       </div>
     </div>
+
   </form>
+  {/*{(this.state.newGroup!=undefined && this.state.newGroup!=null && _.size(this.state.newGroup)>0 && this.state.newGroup.id!=0)?(<div className="card">
+    <div className="card-header cardDiv cursor-pointer" role="tab" id="headingTwo" onClick={this.changeIcon2}>
+      <h5 className="mb-0 titleclass collapsed" id="sec2" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" >
+
+          Add Members
+       <span id="headingTwoSpan" className="glyphicon glyphicon-minus fr" >
+            </span>
+      </h5>
+    </div>
+    <div id="collapseTwo" className="collapse in" role="tabpanel" aria-labelledby="headingTwo">
+    <form id="addOrRemoveMemebrs" className="card-block" onClick={this.plusminusToggle}>
+        <div className="form-group row">
+            <div className="col-sm-3">
+               <span className="spanclass"> Add/Remove Member:</span>
+            <input type="button" onClick={this.addOrRemoveMembers.bind(this)} className=" Savebtn adminSave" value="Save"/>
+            </div>
+            <div className="col-sm-9">
+            {_.size(this.state.friends)>0  && this.state.friends.map((item, i) => {
+            return <div key={i}>
+                    <div className="col-sm-1 sliderswitch">
+                      <label className="switch">
+                          <input id={item.id} type="checkbox" defaultChecked={false} disabled={(this.props.activeUser!=undefined && this.props.activeUser!=null && this.props.activeUser.id==item.id)?true:false}/>
+                            <div className="slider round"></div>
+                      </label>
+                    </div>
+                    <div className="col-sm-3">
+                        <img src={'http://'+item.profile_image_url} className="adminimg"></img>
+                        <span className="ml5px">{item.last_name + ' ' + item.first_name}</span>
+                    </div>
+                </div>
+            })}
+            </div>
+          </div>
+    </form>
+    </div>
+
+  </div>):(<div></div>)}*/}
 </div>
-        </div>
+        </div>)}
            </div>
             );
-         }
-
-          else {
-            return(
-              <div>no data</div>
-          );
-         }
+         
     }
 }
 
@@ -345,6 +466,8 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch){
     return bindActionCreators({groupCourseList, saveGroupDetails, getGolfConnectXmembers,
       addOrRemoveGroupMemebrs}, dispatch);
+
+
 }
 
 export default  connect(mapStateToProps, matchDispatchToProps)(AddGroup);

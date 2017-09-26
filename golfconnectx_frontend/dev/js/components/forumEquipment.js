@@ -27,7 +27,7 @@ class ForumEquipment extends React.Component{
              this.setState({ajaxCallInProgress:false});
               $("#catList").trigger('click');
         }).catch((error)=>{
-          console.log("Error", error);
+
           if(error == "Error: Request failed with status code 401"){
          this.context.router.push('/');
         }  
@@ -95,7 +95,7 @@ class ForumEquipment extends React.Component{
                   this.setState({Category:this.props.selectedEquipmentCategory.SearchList});
                   
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -105,10 +105,9 @@ class ForumEquipment extends React.Component{
           {
             this.props.searchEquipmentCategoryPosts(this.props.activeUser.token, this.props.selectedEquipmentCategory.CatDetails.id, e.target.value).then(()=>{
                   this.setState({categoryDetails:this.props.selectedEquipmentCategory.CategorySearchList});
-              console.log("post Search",this.state.Category);
 
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -119,13 +118,12 @@ class ForumEquipment extends React.Component{
        addNewCategory(){
        this.setState({catMsg : ""});
       let name = document.getElementById('txtPostInput');
-        console.log("name",name);
       this.props.addNewEquipmentCategory(this.props.activeUser.token, name.value).then(()=>{
        this.props.getEquipmentCategory(this.props.activeUser.token).then(()=>{
             this.setState({Category:this.props.forumCourse.getEquipmentCategory,catMsg : ""});
             
         }).catch((error)=>{
-          console.log("Error", error);
+
         });
         document.getElementById('txtPostInput').value='';
       }).catch((error)=>{
@@ -142,7 +140,6 @@ class ForumEquipment extends React.Component{
        else{
       this.setState({postMsg : ""});
       let subject_line = document.getElementById('PostInput');
-        console.log("this.props.selectedCategory.id",this.props.selectedEquipmentCategory.CatDetails.id);
 
       this.props.addNewEquipmentCategoryPost(this.props.selectedEquipmentCategory.CatDetails.id, this.props.activeUser.token, subject_line.value).then(()=>{
       
@@ -156,7 +153,6 @@ class ForumEquipment extends React.Component{
       
       let commentTextBox=(id + "textComment");
       let body = document.getElementById(commentTextBox).value;
-      console.log("body",body);
       if(body == ""){
       $("#"+commentTextBox).focus();
     }
@@ -224,7 +220,6 @@ if(e.target.name == "post_msg"){
 render() {
   
     let imagePath=IMG_CONSTANT.IMAGE_PATH;
-    console.log("this.state.categoryDetails",this.state.categoryDetails);
     return (
         <div className="forumCourse">         
           <div className=" col-sm-12 frumCrse">

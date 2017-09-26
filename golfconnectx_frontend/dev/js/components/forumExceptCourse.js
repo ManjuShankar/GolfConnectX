@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import Spinner from 'react-spinner';
-
+import {isExistObj} from '../utils/functions';
 import {addNewForumCategory,
         getForumCategory,
         getForumCategoryObject,
@@ -53,39 +53,28 @@ class ForumExceptCourse extends React.Component{
         forumTypeTitle = this.getTitle(forumType);
         this.setState({ajaxCallInProgress:true});
         this.props.getForumCategory(this.props.activeUser.token, forumType).then(()=>{
-            this.setState({Category:this.props.forumCourse.Category});
-             this.setState({ajaxCallInProgress:false});
+            this.setState({Category:this.props.forumCourse.Category, ajaxCallInProgress:false});
              $("#catList").trigger('click');
         }).catch((error)=>{
-            console.log("Error", error);
+            
             if(error == "Error: Request failed with status code 401"){
             this.context.router.push('/');
         }
          this.setState({ajaxCallInProgress:false});
         });
-        /* if(_.size(this.state.categoryDetails)==0 && this.props.forumCourse!=undefined && this.props.forumCourse!=null && _.size(this.props.forumCourse)>0){
-                this.showCategoryDetails(this.props.forumCourse.Category[0].id);
-
-        }*/
     }
 
 
     componentWillReceiveProps(nextProps){
-         if(this.props.getCategory!=nextProps.getCategory)
-        {
+       if(this.props.getCategory!=nextProps.getCategory){
             this.setState({Category:nextProps.forumCourse.Category});
         }
-        if(_.size(this.state.categoryDetails)==0 && this.props.forumCourse!=undefined && this.props.forumCourse!=null && _.size(this.props.forumCourse)>0 && _.has(this.props.forumCourse, 'Category')){
+        if(_.size(this.state.categoryDetails)==0 && isExistObj(this.props.forumCourse) && _.size(this.props.forumCourse)>0 && isExistObj(this.props.forumCourse.Category) && _.has(this.props.forumCourse, 'Category')){
                 this.showCategoryDetails(this.props.forumCourse.Category[0].id);
         }
-
         if(this.props.selectedCategory!=nextProps.selectedCategory){
-                this.setState({categoryDetails:nextProps.selectedCategory.Category});
+                this.setState({categoryDetails:nextProps.selectedCategory.Category, Details:nextProps.selectedCategory.CatDetails});
         }
-         if(this.props.selectedCategory!=nextProps.selectedCategory){
-                this.setState({ Details:nextProps.selectedCategory.CatDetails});
-        }
-
     }
 
      showCategoryDetails(id){
@@ -105,7 +94,7 @@ class ForumExceptCourse extends React.Component{
 
      }
      getCategoryConversation(){
-
+      if(isExistObj(this.props.selectedCategory) && (this.props.selectedCategory.CatDetails)){
       this.props.getForumCategoryObject(this.props.selectedCategory.CatDetails.id, this.props.activeUser.token, forumType).then((id)=>{
 
           this.setState({categoryDetails:this.props.selectedCategory.Category,postMsg : ""});
@@ -113,6 +102,7 @@ class ForumExceptCourse extends React.Component{
 
        }).catch((error)=>{
        });
+     }
      }
 
      searchCategory(e){
@@ -123,26 +113,30 @@ class ForumExceptCourse extends React.Component{
                   this.setState({Category:this.props.forumCourse.WaterCoolerSearchList});
                  
             }).catch((error)=>{
-                console.log("Error", error);
+                
             });
           }
       }
       onPostSearch(e){
 
-          if(e.which==13)
+          if(e.which==13 && isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails))
           {
             this.props.searchForumCategoryPosts(this.props.activeUser.token, this.props.selectedCategory.CatDetails.id, e.target.value, forumType).then(()=>{
                   this.setState({categoryDetails:this.props.selectedCategory.CategorySearchList});
               
 
             }).catch((error)=>{
-                console.log("Error", error);
+                
             });
           }
       }
 
       onforumclick(){
         this.context.router.push('/forumsPage');
+        if(screen.width<769)
+        {
+          $(".MobileNav").show();
+        }
 
       }
        addNewCategory(){
@@ -155,7 +149,7 @@ class ForumExceptCourse extends React.Component{
             this.setState({Category:this.props.forumCourse.Category,catMsg : ""});
 
         }).catch((error)=>{
-          console.log("Error", error);
+          
         });
         document.getElementById('txtPostInput').value='';
       }).catch((error)=>{
@@ -178,8 +172,7 @@ class ForumExceptCourse extends React.Component{
        else{
       this.setState({postMsg : "",catErr:""});
       let subject_line = document.getElementById('PostInput');
-        console.log("this.props.selectedCategory.id",this.props.selectedCategory.CatDetails.id);
-
+      if(isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails)){
       this.props.addNewForumCategoryPost(this.props.selectedCategory.CatDetails.id, this.props.activeUser.token, subject_line.value, forumType).then(()=>{
 
         document.getElementById('PostInput').value='';
@@ -188,7 +181,8 @@ class ForumExceptCourse extends React.Component{
       });
     }
     }
-    Comment( id){
+    }
+    Comment(id){
 let innerDescValue = document.getElementById(id + "textComment").value.replace(new RegExp('\r?\n','g'), '<br />');
       let commentTextBox=(id + "textComment");
       let body = document.getElementById(commentTextBox).value;
@@ -197,6 +191,7 @@ let innerDescValue = document.getElementById(id + "textComment").value.replace(n
       $("#"+commentTextBox).focus();
     }
     else{
+      if(isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails)){
       this.props.addForumCategoryComment(this.props.selectedCategory.CatDetails.id, id , this.props.activeUser.token, innerDescValue, forumType).then(()=>{
 
          this.getCategoryConversation();
@@ -204,6 +199,7 @@ let innerDescValue = document.getElementById(id + "textComment").value.replace(n
         $(".closeThis").collapse('hide');
       }).catch((error)=>{
       });
+    }
     }
     }
     /*****/
@@ -248,37 +244,57 @@ let innerDescValue = document.getElementById(id + "textComment").value.replace(n
         }
      }
  }
-
-
-    deletePost(id){
+rightViewToggle(){
+    let width = window.innerWidth;
+    if(width<992){
+      $('.right-column').fadeIn();
+      $('.left-column').hide();
+    }
+  }
+  leftViewToggle(){
+    let width = window.innerWidth;
+    if(width<992){
+      $('.left-column').fadeIn();
+      $('.right-column').hide();
+    }
+  }
+   deletePost(id){
+      if(isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails)){
         this.props.deletePost(this.props.selectedCategory.CatDetails.id, id, this.props.activeUser.token, forumType).then(()=>{
         this.getCategoryConversation();
          }).catch((error)=>{
-         console.log("Error", error);
+
        });
+     }
     }
-     
+
+
     deleteComments(id, commentId){
+      if(isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails)){
        this.props.deleteComment(this.props.selectedCategory.CatDetails.id, id, commentId, this.props.activeUser.token, forumType).then(()=>{
        this.getCategoryConversation();
         }).catch((error)=>{
-       console.log("Error", error);
+
         });
+      }
       }
 render() {
 
-    return (
-        <div className="forumCourse">
-          <div className=" col-sm-12 frumCrse">
-             {(this.state.ajaxCallInProgress)?(<div className="mt25pc"><Spinner /></div>):(<div className="row">
+    return (<div>
+        {(this.state.ajaxCallInProgress)?(<div className="mt20perc"><Spinner /></div>):(<div className="forumCourse">
+          <div className=" col-sm-12 pdryt0px frumCrse">
+             <div className="forumCousreAlign col-sm-12">
               <div className="headerContent col-sm-12">
-                <div className="courseHeader">
-                  <h3 className="header"><span className="glyphicon glyphicon-chevron-left arrowChevron" onClick={this.onforumclick.bind(this)}/>{forumTypeTitle}</h3>
+                <div className="courseHeader col-sm-12">
+                  <h3 className="header"><span className="glyphicon glyphicon-chevron-left arrowChevron display" onClick={this.onforumclick.bind(this)}/>{forumTypeTitle}</h3>
                 </div>
               </div>
               <div className="col-sm-12 coursesCntnt pdng">
-                <div className="bgwhite forumCntnt col-sm-12">
-                  <div className="col-sm-3 brdrRyt pdng left-column ">
+                <div className="forumCntnt col-sm-12 pdlftryt0px bgwhite">
+                  <div className="col-md-3 col-sm-12 brdrRyt pdng left-column ">
+                    <div className="col-sm-12 pdlftryt0px courseSelRspns">
+                      <span className="glyphicon glyphicon-remove float-left" onClick={this.onforumclick.bind(this)} /><span className="txtcenter">select category</span>
+                    </div>
                     <div className="col-sm-12 pdng7pc">
                     <div className="addCourse col-sm-12">
 
@@ -295,7 +311,8 @@ render() {
                         <ul className="crsesLst">
                         {_.size(this.state.Category)>0 && this.state.Category.map((item, index)=>{
                               return(<div key={index} onClick={this.showCategoryDetails.bind(this,item.id)}>
-                              <li id="catList" className={(this.props.selectedCategory!=undefined && this.props.selectedCategory!=null && this.props.selectedCategory.CatDetails.id==item.id)?("selected_element"):("")}><a>{item.name}</a></li>
+                              <li id="catList" className={(isExistObj(this.props.selectedCategory) && isExistObj(this.props.selectedCategory.CatDetails) && this.props.selectedCategory.CatDetails.id==item.id)?("selected_element"):("")}>
+                              <div onClick={this.rightViewToggle.bind(this)}><a>{item.name}</a></div></li>
                              </div> );
                               })}
 
@@ -303,9 +320,12 @@ render() {
                       </div>
                     </div>
                   </div>
-                  <div className="col-sm-9 right-column">
+                  <div className="col-md-9 right-column pdlftryt0px">
+                  <div className="col-sm-12 pdlftryt0px courseSelRspns">
+                      <span className="glyphicon glyphicon-chevron-left float-left" onClick={this.leftViewToggle.bind(this)} /><span className="txtcenter">{(_.size(this.state.Details)>0)?this.state.Details.name:''}</span>
+                    </div>
                     <div className="col-sm-12 pdng3pc">
-                    <div className="coursesListing col-sm-12">
+                    <div className="coursesListing col-sm-12 pdlftryt0px">
                       <div className="col-sm-12 listName pdng">
                         <div className="col-sm-6 pdng corseListName">
                           {(_.size(this.state.Details)>0)?this.state.Details.name:''}
@@ -326,19 +346,19 @@ render() {
                         <div className="col-sm-12 txtRyt pdryt23px"><input type="button" id="postBtn" value="Post" className="btn postCourse-butn" onClick={this.addPost.bind(this)} disabled={!this.state.postMsg} /></div>
                       </div>
                       <div className="corsesLists col-sm-12 pdng">
-                         {((this.state.categoryDetails!=undefined &&   this.state.categoryDetails!=null && _.size(this.state.categoryDetails)>0)?(this.state.categoryDetails.map((item, i) => {
+                         {((isExistObj(this.state.categoryDetails) &&  _.size(this.state.categoryDetails)>0)?(this.state.categoryDetails.map((item, i) => {
 
                                   return (<div key={i}>
                                     <div className="courseDetail pdng col-sm-12">
                           <div className="postingCourse col-sm-12 pdng">
-                            <div className=" col-sm-12 brdrbtm pdng pdbtm1pc">
+                            <div className=" col-sm-12 col-xs-12 brdrbtm pdng pdbtm1pc">
                               <div className=" col-sm-12 pdng">
                                 <div className="col-sm-4 personName">{item.created_by}</div>
                                 <div className="col-sm-6 personSeen">{item.created_on}</div>
                                 <div className="col-sm-2 rspns"data-toggle="collapse" data-target={"#"+item.id+"rplyTopstPerson_one"}>reply</div>
                               </div>
-                              <div className=" col-sm-12 personMsg mt1pc pdng">
-                              {item.created_by==this.props.activeUser.name?<span className="glyphicon glyphicon-trash fr cursor-pointer mt-7px mr1pc" data-toggle="modal" data-target="#postDelModal"></span>:''}
+                              <div className=" col-sm-12 personMsg col-xs-12 mt1pc pdng">
+                              {isExistObj(this.props.activeUser) && isExistObj(item.author) && item.author.id==this.props.activeUser.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt-7px mr1pc" data-toggle="modal" data-target="#postDelModal"></span>:''}
                                 {item.subject_line}
                               </div>
 
@@ -361,27 +381,27 @@ render() {
 
 
                               <div id={item.id+"rplyTopstPerson_one"} className="collapse fade closeThis">
-                              <div className="col-sm-12 pdlft0px">
+                              <div className="col-sm-12 pdlft0px col-xs-12 pdlftryt0px">
                                 <p className="col-sm-12 pdlft0px"><textarea id={item.id+"textComment"} name="reply_msg" className="col-sm-12 txtaria" placeholder="write something..." onChange={this.onRequired.bind(this)}></textarea></p>
 
                                                             </div>
-                              <div className="col-sm-12 pdlft0px">
-                                <div className="col-sm-12 pdlft0px">
+                              <div className="col-sm-12 pdlft0px col-xs-12 pdlftryt0px">
+                                <div className="col-sm-12 pdlft0px col-xs-12 pdlftryt0px">
                                   <button type="button" className="btn sbmtButn"  onClick={this.Comment.bind(this, item.id)}>Reply</button>
-                                  <button type="button" className="cnclButn" onClick={this.closeReply.bind(this, item.id)}>Cancel</button>
+<button type="button" className="cnclButn" onClick={this.closeReply.bind(this, item.id)}>Cancel</button>
                                 </div>
                               </div>
                             </div>
                               </div>
                               <div className="coursesRspns col-sm-12 pdng">
-                                {_.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
+                                {isExistObj(item) && isExistObj(item.comments) && _.size(item.comments)>0 && item.comments.map((childItem, childIndex)=>{
                                       return(<div className="rplyMember col-sm-12 pdng pdbtm1pc">
                                   <div className="col-sm-12 pdng">
                                     <div className="col-sm-4 personName">{childItem.created_by}</div>
                                     <div className="col-sm-6 personSeen">{childItem.created_on}</div>
                                   </div>
                                   <div className="col-sm-12 personMsg mt1pc pdng">
-                                  {childItem.created_by==this.props.activeUser.name?<span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc" data-toggle="modal" data-target="#commentsDelModal"></span>:''}
+                                  {isExistObj(this.props.activeUser) && isExistObj(childItem.author) && childItem.author.id==this.props.activeUser.id?<span className="glyphicon glyphicon-trash fr cursor-pointer mt1pc mr4pc" data-toggle="modal" data-target="#commentsDelModal"></span>:''}
                                     <p dangerouslySetInnerHTML={{__html: childItem.body}}></p>
                                   </div>
                                   {/* Delete Comments PopUp*/}
@@ -416,11 +436,12 @@ render() {
                 </div>
               </div>
               <div className="col-sm-12 txtCntr">
-                <img src="/assets/img/ads.png" className="adImg" />
+                <img src="/assets/img/golfconnectx_ad.png" className="adImg" />
               </div>
-            </div>)}
+            </div>
           </div>
-        </div>
+        </div>)}
+                       </div>
          );
    }
 }

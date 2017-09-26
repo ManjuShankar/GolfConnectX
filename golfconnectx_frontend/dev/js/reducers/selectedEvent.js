@@ -19,6 +19,7 @@ export default function(state = null, action) {
             break;
             case types.EVENT_GALLERY:
             return Object.assign({}, state, {gallery: action.apiResult});
+          console.log("gallery",action.apiResult);
             break;
       case types.INVITIES_LIST:
             return Object.assign({}, state, {invitiesList: action.apiResult});

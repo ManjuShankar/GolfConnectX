@@ -222,7 +222,7 @@ render() {
     return (
         <div className="forumCourse">         
           <div className=" col-sm-12 frumCrse">
-             {(this.state.ajaxCallInProgress)?(<div className="mt25pc"><Spinner /></div>):(<div className="row">
+             {(this.state.ajaxCallInProgress)?(<div className="mt20perc"><Spinner /></div>):(<div className="row">
               <div className="headerContent col-sm-12">
                 <div className="courseHeader">
                   <h3 className="header"><span className="glyphicon glyphicon-chevron-left arrowChevron" onClick={this.onforumclick.bind(this)}/>WATER COOLER</h3>

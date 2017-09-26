@@ -9,8 +9,7 @@ let registerUser=(data)=>{
     const apiSignupRequest= axios.post(url,data);
     return(dispatch)=>{
       return apiSignupRequest.then(({data})=>{
-
-            toastr.success("User Account Created Succefully");
+            toastr.success("User Account Created Successfully");
             dispatch({type:types.LOGIN_USER, apiResult:data});
             return data;
         }).catch((error)=>{

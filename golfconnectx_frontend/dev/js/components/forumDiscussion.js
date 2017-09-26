@@ -29,7 +29,7 @@ class ForumDiscussion extends React.Component{
             this.setState({ajaxCallInProgress:false});
              $("#catList").trigger('click');
         }).catch((error)=>{
-          console.log("Error", error);
+
           if(error == "Error: Request failed with status code 401"){
           this.context.router.push('/');
              }  
@@ -97,7 +97,7 @@ class ForumDiscussion extends React.Component{
                   this.setState({Category:this.props.selectedDiscussion.SearchList});
                   
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -107,10 +107,9 @@ class ForumDiscussion extends React.Component{
           {
             this.props.searchDiscussionCategoryPosts(this.props.activeUser.token, this.props.selectedDiscussion.CatDetails.id, e.target.value).then(()=>{
                   this.setState({categoryDetails:this.props.selectedDiscussion.CategorySearchList});
-                console.log("search", this.state.categoryDetails);
-              
+
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -121,13 +120,12 @@ class ForumDiscussion extends React.Component{
        addNewCategory(){
        this.setState({catMsg : ""});
       let name = document.getElementById('txtPostInput');
-        console.log("name",name);
       this.props.addNewDiscussionCategory(this.props.activeUser.token, name.value).then(()=>{
        this.props.getDiscussionCategory(this.props.activeUser.token).then(()=>{
             this.setState({Category:this.props.forumCourse.getDiscussionCategory,catMsg : ""});
             
         }).catch((error)=>{
-          console.log("Error", error);
+
         });
         document.getElementById('txtPostInput').value='';
       }).catch((error)=>{
@@ -144,7 +142,6 @@ class ForumDiscussion extends React.Component{
        else{
       this.setState({postMsg : ""});
       let subject_line = document.getElementById('PostInput');
-        console.log("this.props.selectedCategory.id",this.props.selectedDiscussion.CatDetails.id);
 
       this.props.addNewDiscussionCategoryPost(this.props.selectedDiscussion.CatDetails.id, this.props.activeUser.token, subject_line.value).then(()=>{
       
@@ -158,7 +155,6 @@ class ForumDiscussion extends React.Component{
       
       let commentTextBox=(id + "textComment");
       let body = document.getElementById(commentTextBox).value;
-      console.log("body",body);
       if(body == ""){
       $("#"+commentTextBox).focus();
     }

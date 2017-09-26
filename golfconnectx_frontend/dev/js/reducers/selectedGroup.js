@@ -11,8 +11,11 @@ export default function(state = null, action) {
                       break;
 
                       case types.GET_GROUP_ADMINS_LIST:
-                                return Object.assign({}, state, Object.assign([], state.admins, {admins: action.apiResult}));
-                                break;
+                                let _state = Object.assign({}, state)
+                                _.set(_state, 'admins', action.apiResult)
+                                return _state;
+                                ///return Object.assign({}, state, Object.assign([], state.admins, {admins: action.apiResult}));
+                                ///break;
 
                       case types.GET_GROUP_POSTS_LIST:
                                 return Object.assign({}, state, Object.assign([], state.posts, {posts: action.apiResult}));
@@ -31,7 +34,7 @@ export default function(state = null, action) {
                       case types.GET_GROUP_EVENTLIST:
                                return Object.assign([],state,{getEventsList:action.apiResult});
                                 break;
-                    /*case types.UPDATE_GROUP_INFO:console.log("Reducer", action.apiResult);
+                    /*case types.UPDATE_GROUP_INFO:
                       ///return Object.assign({}, state, Object.assign({}, state, {state.description: action.apiResult}));
                       ///return Object.assign({}, state.description, action.apiResult);
                     break;*/

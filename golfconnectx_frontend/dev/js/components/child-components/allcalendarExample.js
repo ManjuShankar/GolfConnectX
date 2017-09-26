@@ -52,6 +52,15 @@ previous(){
   select(day){
     this.props.selFunc(day);
     this.forceUpdate();
+    if (screen.width <769) {
+           $(".calenderEvents").hide();
+           $("ul.calender_Alignment, #calendarcurrentDate").show();
+       }
+       else {
+
+           $(".calenderEvents").show();
+       }
+
   }
 
   componentWillMount(){

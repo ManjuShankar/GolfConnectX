@@ -25,7 +25,7 @@ componentWillMount(){
             this.setState({ajaxCallInProgress:false});
             $("#catList").trigger('click');
         }).catch((error)=>{
-           console.log("Error", error);
+
            if(error == "Error: Request failed with status code 401"){
            this.context.router.push('/');
            }
@@ -92,9 +92,8 @@ componentWillMount(){
             this.props.searchCategory(this.props.activeUser.token, e.target.value).then(()=>{
               
                   this.setState({Category:this.props.selected19thHoleCategory.SearchList});
-                  console.log("Course Search", this.props.selected19thHoleCategory.SearchList);
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -104,10 +103,9 @@ componentWillMount(){
           {
             this.props.search19HoleCategoryPosts(this.props.activeUser.token, this.props.selected19thHoleCategory.CatDetails.id, e.target.value).then(()=>{
                   this.setState({categoryDetails:this.props.selected19thHoleCategory.CategorySearchList});
-              console.log("post Search",this.state.Category);
 
             }).catch((error)=>{
-                console.log("Error", error);
+
             });
           }
       }
@@ -118,13 +116,12 @@ componentWillMount(){
        addNewCategory(){
         this.setState({catMsg : ""});
         let name = document.getElementById('txtPostInput');
-        console.log("name",name);
          this.props.addNew19HoleCategory(this.props.activeUser.token, name.value).then(()=>{
          this.props.get19HoleCategory(this.props.activeUser.token).then(()=>{
             this.setState({Category:this.props.forumCourse.get19Category,catMsg : ""});
             
         }).catch((error)=>{
-          console.log("Error", error);
+
         });
         document.getElementById('txtPostInput').value='';
       }).catch((error)=>{
@@ -141,7 +138,6 @@ componentWillMount(){
        else{
       this.setState({postMsg : ""});
       let subject_line = document.getElementById('PostInput');
-        console.log("this.props.selectedCategory.id",this.props.selected19thHoleCategory.CatDetails.id);
 
       this.props.addNew19HoleCategoryPost(this.props.selected19thHoleCategory.CatDetails.id, this.props.activeUser.token, subject_line.value).then(()=>{
       
@@ -161,7 +157,6 @@ componentWillMount(){
       
       let commentTextBox=(id + "textComment");
       let body = document.getElementById(commentTextBox).value;
-      console.log("body",body);
       if(body == ""){
       $("#"+commentTextBox).focus();
     }
@@ -225,10 +220,6 @@ if(e.target.name == "post_msg"){
 
     /*****/
 render() {
-  if(_.size(this.state.Details)>0!=null && (_.size(this.state.Details)>0)!= undefined){
-    console.log("this.state.Details",this.state.Details);
-  }
-
     let imagePath=IMG_CONSTANT.IMAGE_PATH;
     return (
         <div className="forumCourse">         

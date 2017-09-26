@@ -15,8 +15,8 @@ class SelectedCoursePage extends Component{
     constructor(props,context){
         super(props,context);
         }
-
-        render(){
+render(){
+        
          return(
          	<div className="selectedCourse">
          	<div className="">
@@ -68,19 +68,19 @@ class SelectedCoursePage extends Component{
             </div>
             <div className ="eventsContainer">
            <div className="postContent"  >
-
+            
               <div className="col-sm-6">
-
+                
                     <div className="inlinePostTittle">
                     <div className="postthumb"><img src="" className="postImg"/></div>
                     <div className="postTittle">title</div>
                     </div>
-
+                    
                 </div>
-
-
-
-
+              
+   
+                
+             
                 <div className="col-sm-6">
                     <div className="postTime">created<br/>created_since ago</div>
                 </div>
@@ -106,7 +106,7 @@ class SelectedCoursePage extends Component{
         Description
         </TabPanel>
         <TabPanel>
-
+        
           <div className="groupListData col-sm-12 zeroPad">
           <span>pvt</span>
           <div className="groupData">
@@ -116,8 +116,8 @@ class SelectedCoursePage extends Component{
 
         </div>
         </div>
-
-
+          
+          
         </TabPanel>
         <TabPanel className="eventsTabs">
         <Tabs>
@@ -143,17 +143,17 @@ class SelectedCoursePage extends Component{
         </TabPanel>
       </Tabs>
       </div>
-
+   
 			</div>
 			</div>
 			</div>
               );
          }
 
-
+          
     }
 
-SelectedCoursePage.contextTypes = {
+    SelectedCoursePage.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
 
@@ -170,6 +170,8 @@ function mapStateToProps(state) {
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators({courseList,eventDetails, searchCourses, unFollowCourse, getCourseObject, groupList}, dispatch);
+
+
 }
 
 export default  connect(mapStateToProps, matchDispatchToProps)(SelectedCoursePage);

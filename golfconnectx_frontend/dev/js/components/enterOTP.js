@@ -15,31 +15,39 @@ class EnterCorrectOTP extends Component
     onOTPsubmitbuttonClick(){
       let form = document.querySelector('#OTPForm');
        let formData = serialize(form, { hash: true });
+       if(this.refs.otp.value != ""){
        this.props.EnterOTP(formData).then(()=>{
              $("#email").val('');
             this.context.router.push("/enterNewPassword");
          }).catch((error)=>{
          });
-
+       }
+       else{
+         this.refs.otp.focus();
+       }
+    
     }
      onSubmit(e){
 
-   if((e.keyCode ==13)  && (this.refs.otp.value != "")){
-
+   if((e.keyCode ==13)  && (this.refs.otp.value != "")){   
+     
       $("#OTPForm").submit(function(e){
           e.preventDefault();
          });
-      $("#btnSubmit").trigger("click");
+      $("#btnSubmit").trigger("click");      
   }
- else{
+ else{  
        $("#OTPForm").submit(function(e){
         e.preventDefault();
       });
     }
-
+   
    }
-
-
+    cancel(){
+        this.context.router.push('/');
+    }
+   
+   
     render()
     {
       return(
@@ -68,7 +76,7 @@ class EnterCorrectOTP extends Component
                     <div className="col-sm-3"></div>
                     <div className="col-sm-5">
                       <div className="col-sm-12">
-                        <div className="txtwhite col-sm-4 zeroPad txtRyt fnt16px">Enter Security Code : </div>
+                        <div className="txtwhite col-sm-4 zeroPad fnt16px">Enter Security Code : </div>
                         <div className="col-sm-8">
                         {isExistObj(this.props.activeUser) && isExistObj(this.props.activeUser.email) && <input type="hidden" value={this.props.activeUser.email.email} name="email" />}
                           <input type="text" placeholder="Enter Code" ref="otp" name="otp" className="form-control" onKeyDown={this.onSubmit.bind(this)} />
@@ -81,7 +89,7 @@ class EnterCorrectOTP extends Component
                     <div className="col-sm-4"></div>
                     <div className="col-sm-4">
                       <div className="col-sm-12">
-                      <div className="OTPResendDiv pdryt10pc txtRyt col-sm-6"><input type="button" value="Resend Code" className="OTPResend-butn" /></div>
+                       <div className="OTPSubmitDiv pl1pc col-sm-6"><input type="button" value="Cancel" id="btnSubmit" className="OTPSubmit-butn" onClick={this.cancel.bind(this)} /></div>
                       <div className="OTPSubmitDiv pl1pc col-sm-6"><input type="button" value="Submit" id="btnSubmit" className="OTPSubmit-butn" onClick={this.onOTPsubmitbuttonClick.bind(this)} /></div>
                       </div>
                     </div>
@@ -102,7 +110,7 @@ EnterCorrectOTP.contextTypes = {
 function mapStateToProps(state) {
     return {
         activeUser: (state.activeUser!=null)?(state.activeUser):(JSON.parse(sessionStorage.getItem('userDetails')))
-
+        
     };
 }
 

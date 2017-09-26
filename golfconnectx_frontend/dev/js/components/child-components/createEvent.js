@@ -24,7 +24,7 @@ class CreateEvent extends React.Component {
            getCourseslist:[],
            getGroupList: [],
            eventsImageObj:null,
-           editeventImg:(this.props.isCreateOrEdit=="Edit")?((this.props.upComingeventDetail.cover_image!=null)?(this.props.upComingeventDetail.cover_image.image):null):({}),
+           editeventImg:(this.props.isCreateOrEdit=="Edit")?((this.props.upComingeventDetail.cover_image!=null)?(this.props.upComingeventDetail.cover_image):null):({}),
            isExistCourseDetails: (this.props.isCreateOrEdit=="Edit")?(this.props.upComingeventDetail.venue_course_id==null?true:false):(false),
            isExistGroupDetails:(this.props.isCreateOrEdit=="Edit")?(this.props.upComingeventDetail.event_group_id!=null?true:false):(false),
            titleName: "", venueName:"", address:"", city:"", zip:"",
@@ -33,10 +33,11 @@ class CreateEvent extends React.Component {
            croppedImage:"",
            teaTimesList: (this.props.isCreateOrEdit=="Edit")?(this.props.teaTimesList):([]),
            cropImageWidth: 725,
-           cropImageSrc: "/assets/img/4th_july.jpg",
+           cropImageSrc: "/assets/img/GolfConnectx_EventPhoto_725x150.png",
            src: '',
            file: null,
            isShowCropper: false,
+           isCropper : false,
            isImageCropped: false,
            fromDate:moment(), stateList:[], stateSelect:''
        };
@@ -84,7 +85,7 @@ class CreateEvent extends React.Component {
                  document.getElementById('uploadFileName').value='';
                  $('#teatime').val('');
                  $('#uploadFileModal').modal('hide');
-                 console.log("Error");
+
                }
            });
 
@@ -130,11 +131,15 @@ class CreateEvent extends React.Component {
         if((file = e.target.files[0])) {
           img = new Image();
           img.onload = function () {
-            if(this.height>=100 && this.width>=700){
-             
+            if(this.height>150 && this.width>725){
+
             that.setState({cropImageSrc: img.src, isShowCropper:true});
-            }else if(this.height<100 && this.width<700){
-             
+           } 
+           else if(this.height>150 && this.width<725 ){
+             that.setState({cropImageSrc: img, isCropper :true});
+           }
+            else if(this.height<150 && this.width<725){
+
               that.uploadFileAsRealImage(SERVICE_URLS.URL_USED + 'api/events/upload-cover-image/',1,file);
             }else{
              
@@ -188,11 +193,9 @@ class CreateEvent extends React.Component {
       
 		          let typeNmbr = imgtype;
               // let file = document.getElementById('file').files[0];
-              console.log("File",file);
               var fd = new FormData();
               var that = this;
               let fileObj = file;
-              console.log(fileObj);
               let fileExtention = this.getFileExtension(fileObj.name);
                  if(isValidImage(fileExtention)){
                   fd.append('image', fileObj);
@@ -206,13 +209,12 @@ class CreateEvent extends React.Component {
                         'Authorization':'Token '+ that.props.activeUser.token
                       },
                       success: function(data){
-                          console.log('Data', data)
-                          that.setState({eventsImage: data, eventsImageObj:(typeNmbr != null && typeNmbr == 1?data.image:data.thumbnail), editeventImg:(typeNmbr != null && typeNmbr == 1?data.image:data.thumbnail), cropImageSrc: 'http://' + data.image, isShowCropper:false, isImageCropped:false});
-					              	
+                          that.setState({eventsImage: data, eventsImageObj:data, editeventImg:data, cropImageSrc: 'http://' + data.image, isShowCropper:false,isCropper:false,isImageCropped:false});
+
 					    },
                         error: function(){
-                        that.setState({isShowCropper:false});
-                        console.log("Error");
+                        that.setState({isShowCropper:false,isCropper:false});
+
                       }
               });
          }else{
@@ -230,11 +232,9 @@ class CreateEvent extends React.Component {
               eventDetailsUpdated.city = data.city;
               eventDetailsUpdated.zip_code = data.zip_code;
               eventDetailsUpdated.state =data.state;
-              
-              // console.log("dfgdfgdsfsdf",this.state.upComingeventDetail.state);
+
               this.setState({upComingeventDetail:eventDetailsUpdated});
-              // console.log("dataOnChangeVenue",this.state.upComingeventDetail);
-             
+
            }).catch((error)=>{
 
           });
@@ -243,7 +243,7 @@ class CreateEvent extends React.Component {
        eventDetailsUpdated.address1 = '';
        eventDetailsUpdated.city = '';
        eventDetailsUpdated.zip_code = '';
-        eventDetailsUpdated.state='';
+       eventDetailsUpdated.state='';
        this.setState({selectedValue: '', upComingeventDetail:eventDetailsUpdated});
      }
   }
@@ -257,7 +257,6 @@ class CreateEvent extends React.Component {
       }
       const reader = new FileReader();
       reader.onload = () => {
-          console.log('Reader', reader);
           this.setState({cropImageSrc: reader.result});
       };
       reader.readAsDataURL(files[0]);
@@ -275,11 +274,10 @@ class CreateEvent extends React.Component {
             height = this.height;
         };
           img.src = _URL.createObjectURL(file);
-          console.log('H&W', width, height);
           if(height>=100 && width>=700){
               that.setState({cropImageSrc: img.src, isShowCropper:true});
           }else{
-              toastr.error('Image height and width doesn\'t match requirement');
+              toastr.error('Image Height/Width Doesn\'t Match Requirement');
           }
        }
      });*/
@@ -310,26 +308,28 @@ class CreateEvent extends React.Component {
                       'Authorization':'Token '+ token
                      },
                       success: function(data){
-                        that.setState({eventsImage: data, 
-                          eventsImageObj:data.image, 
-                          editeventImg:data.image, 
-                          cropImageSrc: 'http://' + data.image, 
-                          isShowCropper:false, 
+                        that.setState({eventsImage: data,
+                          eventsImageObj:data,
+                          editeventImg:data,
+                          cropImageSrc: 'http://' + data.image,
+                          isShowCropper:false,
+                          isCropper:false,
                           isImageCropped:false});
                         $('#addEventImage').modal('hide');
                       },
                       error: function(){
                           that.setState({isShowCropper:false});
-                         console.log("Error");
+
                       }
                   });
               });
        }
 
 onSubmitClick(){
- 
+
     var form = document.querySelector('#eventsForm');
     var formData = serialize(form, { hash: true });
+    console.log("form data",formData);
     if((this.refs.name.value == "") || (this.refs.name.value == undefined)) {
         this.refs.name.focus();
     }
@@ -361,6 +361,9 @@ onSubmitClick(){
         else if((formData['end_date'] == null) || (formData['end_date'] == undefined) || this.state.dateErr ){
           this.refs.end_date.focus();
         }*/
+    else if( (this.refs.is_course.checked == true) && ((formData['state'] == "") || (formData['state'] == undefined)) ) {
+         this.refs.state.focus();
+        }
         else if((formData['description'] == "") || (formData['description'] == undefined)){
           this.refs.description.focus();
         }
@@ -370,7 +373,10 @@ onSubmitClick(){
             if(this.compare(_fromDate, _endDate)==1){
                 toastr.error('Start date can\'t be greater than End date');
             }else{
-            _.set(formData, 'state', this.state.stateSelect)
+                let stateValue=this.state.upComingeventDetail.state==null?this.state.stateSelect:this.state.upComingeventDetail.state;
+                console.log("stateValue",stateValue,this.state.stateSelect);
+            _.set(formData, 'state',this.refs.state.value )
+            console.log("form",formData,"state",this.state.stateSelect,this.state.upComingeventDetail.state);
             _.set(formData, 'teetime_file', this.state.teetime_file);
             if(this.state.eventsImageObj!=null)
             {
@@ -402,36 +408,50 @@ onSubmitClick(){
           _.set(formData, 'description', innerDescValue);
           this.props.onSaveClick(formData);
         }
+        
       }
+    console.log("formdata",formData);
     }
 handleStateChange(e){
-  this.setState({stateSelect:e.target.value});
+  this.state.stateSelect=e.target.value;
+    console.log("state",this.state.stateSelect,e.target.value);
 }
 colpseTgl(e){
+    //  this.state.isExistCourseDetails = !this.state.isExistCourseDetails;
     this.setState({isExistCourseDetails:!this.state.isExistCourseDetails});
-    // if( this.refs.is_course.checked == true){
-    //   let _localState=this.state.upComingeventDetail;
-    //   _localState.venue='';
-    //   _localState.address1='';
-    //   _localState.city='';
-    //   _localState.zip_code='';
-    //   _localState.state='';
-    //   this.refs.address1.value = "";
-    //   this.refs.city.value = "";
-    //   this.refs.zip_code.value = "";
-    //   this.refs.state.value = "";
-    //   this.setState({upComingeventDetail: _localState});
-    // }else{
-    //   this.setState({upComingeventDetail: this.props.upComingeventDetail});
-    // }
-      this.refs.address1.value = "";
-      this.refs.city.value = "";
-      this.refs.zip_code.value = "";
-      this.refs.state.value = "";
-      this.state.upComingeventDetail.address1 = "";
-      this.state.upComingeventDetail.city ="";
-      this.state.upComingeventDetail.zip_code = "";
-      this.state.upComingeventDetail.state = "";
+    //  if( this.refs.is_course.checked == true){
+    //    let _localState=this.state.upComingeventDetail;
+    //    _localState.venue='';
+    //    _localState.address1='';
+    //    _localState.city='';
+    //    _localState.zip_code='';
+    //    _localState.state='';
+    //    this.refs.address1.value = "";
+    //    this.refs.city.value = "";
+    //    this.refs.zip_code.value = "";
+    //    this.refs.state.value = "";
+    //    this.setState({upComingeventDetail: _localState});
+    //    console.log(this.state.upComingeventDetail);
+    //  }
+    //  else{
+    //    this.setState({upComingeventDetail: this.props.upComingeventDetail});
+    //  }
+       this.state.selectedValue ="";     //selected Venue
+       this.refs.address1.value = "";
+       this.refs.city.value = "";
+       this.refs.zip_code.value = "";
+       this.state.upComingeventDetail.state = "";
+     
+      /*To clear data of auto load Deatails*/
+       this.state.upComingeventDetail.address1 = "";
+       this.state.upComingeventDetail.city ="";
+       this.state.upComingeventDetail.zip_code = "";
+       this.state.upComingeventDetail.state = "";
+      // if(this.refs.is_course.checked == true){
+      //     //let venue = document.getElementById('venue').value;
+      //     //alert(venue);   
+      //     this.refs.venue.value = "";
+      //  }
 }
 
 groupcolapseTgl(){
@@ -491,8 +511,8 @@ else{
 }
 
 onCacelCrop(){
-    let _img = (this.props.isCreateOrEdit=="Create")?("assets/img/4th_july.jpg"):('http://' + this.state.eventsImageObj)
-    this.setState({cropImageSrc: _img, isShowCropper: false});
+    let _img = (this.props.isCreateOrEdit=="Create")?("assets/img/GolfConnectx_EventPhoto_725x150.png"):('http://' + this.state.eventsImageObj.image)
+    this.setState({cropImageSrc: _img, isShowCropper: false,isCropper:false});
     this.refs.file.value="";
 }
 
@@ -503,6 +523,7 @@ compare(frmDate, toDate) {
 }
 
 handleChange(date, dateType){
+
   let _localState = this.state.upComingeventDetail;
   if(date=='start_date'){
     let _fromDate = moment(dateType._d).format("MM/DD/YYYY");
@@ -551,57 +572,42 @@ handleChange(date, dateType){
         return(
             <div>
             <form action="" method="post" id="eventsForm" name="eventsForm" ref="eventsForm"  encType="multipart/form-data" >
-            <div className="col-sm-9 eventScroll pdtop">
+            <div className="col-md-9  col-sm-12 eventScroll pdtop">
             <div className="coursesContent">
             <div className="eventImage">
             {(isCreateOrEdit=="Create")?((this.state.eventsImage=='')?(<div>
               <center><img src={this.state.cropImageSrc} className="eventImg" /></center>
-                    <span>
+                    <span className={this.state.eventsImageObj.width<75?"span-btn":""}>
                       <button className="btn btn-default editeventImg"><span className="glyphicon glyphicon-pencil"></span> {this.props.isCreateOrEdit} Event Image </button>
                       <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" />
                   </span>
-                </div>):((this.state.eventsImageObj!=undefined && this.state.eventsImageObj!=null)?(((this.state.eventsImage.height>=100 && this.state.eventsImage.width>=600)?
-                (<div>
-                  <img src={'http://' + this.state.eventsImageObj} className="eventImg" />
+                </div>):((this.state.eventsImageObj!=undefined && this.state.eventsImageObj!=null)?(
+                  <div>
+                  <img src={'http://' + this.state.eventsImageObj.image} className="eventImg" />
                     <span>
                     <button className="btn btn-default editeventImg"><span className="glyphicon glyphicon-pencil"></span> {this.props.isCreateOrEdit} Event Image </button>
                     <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" />
                     </span>
                 </div>
-                ):
-                (<div className="hero">
-                  {/*<img className="hero__background"  />*/}
-                  <center><img className="hero__image"  src={'http://' + this.state.eventsImageObj} /></center>
-
-                    <span>
-                    <button className="btn btn-default editeventImg"><span className="glyphicon glyphicon-pencil"></span> {this.props.isCreateOrEdit} Event Image </button>
-                    <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" />
-                    </span>
-                </div>
-            ))):(<div><img src="/assets/img/4th_july.jpg" className="eventImg raghu" />
-            <span className="">
+                  
+            
+            ):(<div><img src="/assets/img/GolfConnectx_EventPhoto_725x150.png" className="eventImg raghu" />
+            <span>
                           <button className="btn btn-default editeventImg"><span className="glyphicon glyphicon-pencil"></span> {this.props.isCreateOrEdit} Event Image </button>
                           <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" />
                        </span>
-                        </div>))):((isCreateOrEdit=="Edit")?(((this.state.editeventImg!=undefined && this.state.editeventImg!=null)?((this.state.eventsImage.height>=100 && this.state.eventsImage.width>=600)?
-                        (<div>
-                          <img className="eventImg"  src={'http://'+ this.state.editeventImg} />
+                        </div>))):((isCreateOrEdit=="Edit")?(((this.state.editeventImg!=undefined && this.state.editeventImg!=null)?(
+                        <div>
+                          <img className="eventImg"  src={'http://'+ this.state.editeventImg.image} />
                           <span><input className="btn btn-default editeventImg" type="button" value={this.props.isCreateOrEdit+ ' Event Image'} />
-                            {/*<span className="glyphicon glyphicon-pencil"></span>*/}
+                           
                           <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" /></span>
                           </div>
-                        ):
-                       (<div className="hero">
-                        {/*<img className="hero__background"  />*/}
-                          <center><img className="hero__image"  src={'http://'+ this.state.editeventImg} /></center>
-                           <span><input className="btn btn-default editeventImg" type="button" value={this.props.isCreateOrEdit+ ' Event Image'} />
-                            {/*<span className="glyphicon glyphicon-pencil"></span>*/}
-                             <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" /></span>
-                      </div>
-                      )
-                  ):(<div><img src={(this.state.editeventImg!=undefined && this.state.editeventImg!=null)?(this.state.editeventImg):("/assets/img/4th_july.jpg")} className="eventImg" />
+                       
+                       
+                  ):(<div><img src={(this.state.editeventImg!=undefined && this.state.editeventImg!=null)?(this.state.editeventImg.image):("/assets/img/GolfConnectx_EventPhoto_725x150.png")} className="eventImg" />
                         <span><input className="btn btn-default editeventImg" type="button" value={this.props.isCreateOrEdit+ ' Event Image'} />
-                           {/*<span className="glyphicon glyphicon-pencil"> </span>*/}
+                          
                         <input ref="file" id="file" onChange={this.onFileUploadChangeEvnt.bind(this)}  type="file" name="file"  className="upload-file form-control" accept="image/*" /></span>
                         </div>
                     ))):((<div><img src={'http://'+this.state.eventsImage} className="eventImg" />
@@ -612,19 +618,32 @@ handleChange(date, dateType){
                         </div>
                     )))}
             </div>
-                    {(this.state.isShowCropper && <div className="col-sm-12">
-                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={this.state.cropImageWidth} height={103} fixedRatio={false} allowNewSelection={false}
+                    {(this.state.isShowCropper && <div> <div className="col-sm-12 overflowCropper">
+                                     <div className="cropperImg">
+                                    <Cropper  src={this.state.cropImageSrc} ref="cropper" width={this.state.cropImageWidth} height={150} fixedRatio={false} allowNewSelection={false}
                                       onChange={values => this.handleCropChange(values)} />
-                                    <br/>
+                                    </div>
+                                    </div>
                                     <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this)}/>
                                     <input type="button" className=" btn btnSecondary" value="Cancel" onClick={this.onCacelCrop.bind(this)}/>
                       </div>)}
+                      {(this.state.isCropper) && ( <div className="overflowCropper"> <div className="col-sm-12">
+                                    <div className="cropperImgVertical">
+                                    <Cropper  src={this.state.cropImageSrc.src} ref="cropper" width={this.state.cropImageSrc.width} height={150}   fixedRatio={false} allowNewSelection={false}
+                                      onChange={values => this.handleCropChange(values)} />
+                                    <input type="button"  className=" btn btnSecondary" value="Upload" onClick={this.uploadFile.bind(this)}/>
+                                    <input type="button" className=" btn btnSecondary" value="Cancel"  onClick={this.onCacelCrop.bind(this)}/>
+                                    </div>
+                                    </div>
+                                    
+                                    
+                      </div>)}
 
-                      <div className={this.state.isShowCropper?'display-none':''}>
+                      <div className={(this.state.isShowCropper ||  this.state.isCropper)?'display-none':''}>
                       <div className="col-sm-12">
                         <div className="form-group row">
                           <label className="col-sm-2 col-form-label">Title:<span className="txtRed">*</span></label>
-                            <div className="col-sm-10 pdl0px-1024">
+                            <div className="col-sm-10 ">
                                 <input className="form-control" maxLength="100" type="text" id="example-text-input1" ref="name"  name="name" defaultValue={this.state.upComingeventDetail.name} />
                                   {this.state.errTitle}
                             </div>
@@ -637,8 +656,8 @@ handleChange(date, dateType){
                               </div>
                         </div>
 						               <div className="form-group row">
-                          <label  className="col-sm-7 col-form-label">Location not found</label>
-                            <div className="col-sm-4">
+                          <label  className="col-sm-3  col-xs-3 col-form-label">Location not found</label>
+                            <div className="col-sm-5 col-xs-5">
                               <label  className="switch">
                                   <input type="checkbox" name="is_course" ref="is_course" defaultChecked={this.state.isExistCourseDetails} onChange={this.colpseTgl.bind(this)}/>
                                   <div className="slider round "></div>
@@ -653,33 +672,36 @@ handleChange(date, dateType){
                       </div>
                       <div className="form-group row">
                         <label  className="col-sm-2 col-form-label">City:<span className="txtRed">*</span></label>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 dateInputDiv">
                           <input className="form-control" maxLength="100" type="text" id="example-text-input3" ref="city" name="city" defaultValue={this.state.upComingeventDetail.city}  />
                         </div>
-                        <div className="col-sm-2 zipLabel">
-                          <label  className="col-sm-12 col-form-label zeroPad">Zip code:<span className="txtRed">*</span></label>
+                        <div className="col-sm-2  dateLabelDiv textevent">
+                          <label  className="col-sm-12 col-form-label whiteSpace">Zip code:<span className="txtRed">*</span></label>
                         </div>
-                        <div className="col-sm-2  pdngryt0px">
+                        <div className="col-sm-2  dateInputDiv ">
                           <input className="form-control" type="text" id="example-text-input4" ref="zip_code" name="zip_code" defaultValue={this.state.upComingeventDetail.zip_code} onKeyPress={this.zipCodeEvent.bind(this)}  />
                         </div>
                          <div className="col-sm-2 stateLabel">
-                          <label  className="col-sm-12 col-form-label">State:<span className="txtRed">*</span></label>
+                          <label  className="col-sm-12 col-form-label  ">State:<span className="txtRed">*</span></label>
                         </div>
-                        <div className="col-sm-2 stateDiv pdngryt0px">
-                          <select className="form-control" name="state" ref="state"  onChange={this.handleStateChange.bind(this)}>
-                            {this.state.stateList!=null && this.state.stateList!=undefined && this.state.stateList.map((item,i)=>{
-                              
+                              {/*<option defaultValue={this.state.upComingeventDetail.state} value={item.value} >{this.state.upComingeventDetail.state==null?item.value:this.state.upComingeventDetail.state}</option>*/}
+                        
+                        <div className="col-sm-2 stateDiv ">
+                          <select className="form-control" name="state" ref="state"  onChange={this.handleStateChange.bind(this)} defaultValue={this.state.upComingeventDetail.state}>
+                            {isExistObj(this.state.stateList) && _.size(this.state.stateList)>0 && this.state.stateList.map((item,i)=>{
                               return(
+    
                               <option defaultValue={this.state.upComingeventDetail.state} value={item.value} >{item.value}</option>
+
                               )
                             })}
-                            
+
                         </select>
                         </div>
                     </div>
                   </div>):(<div className="col-sm-12 zeroPad">
                     <div className="form-group row m0px">
-                      <label  className="col-sm-2 col-form-label pl1pc">Venue:<span className="txtRed">*</span></label>
+                      <label  className="col-sm-2 col-form-label zeroPad">Venue:<span className="txtRed">*</span></label>
                       <div className="col-sm-10 pdl0px-1024 pl1pc">
                         <label className="col-sm-12 zeroPad mb17pcc hgt34px">
 
@@ -688,13 +710,13 @@ handleChange(date, dateType){
                                 value={this.state.selectedValue} labelKey="name" valueKey="id"
                                 options={this.props.getCourseList}
                                 ref="venue_course" id="venue_course" onChange={this.showCourseDetails.bind(this)}
-                                />):(<span></span>)}
+                                 />):(<span></span>)}
                         </label>
                   </div>
               </div>
 			  <div className="form-group row">
-                          <label  className="col-sm-7 col-form-label">Location not found</label>
-                            <div className="col-sm-4">
+                          <label  className="col-sm-3  col-xs-3 col-form-label">Location not found</label>
+                            <div className="col-sm-5 col-xs-5">
                               <label  className="switch">
                                   <input type="checkbox" name="is_course" ref="is_course" defaultChecked={this.state.isExistCourseDetails} onChange={this.colpseTgl.bind(this)}/>
                                   <div className="slider round "></div>
@@ -703,28 +725,28 @@ handleChange(date, dateType){
                         </div>
            <div className="form-group row">
              <label  className="col-sm-2 col-form-label">Address:<span className="txtRed">*</span></label>
-             <div className="col-sm-10 pdl0px-1024">
+             <div className="col-sm-10 ">
                <input className="form-control" maxLength="500" type="text" id="example-text-input5" ref="address1" name="address1" value={this.state.upComingeventDetail.address1} disabled/>
              </div>
            </div>
            <div className="form-group row">
                <label  className="col-sm-2 col-form-label">City:<span className="txtRed">*</span></label>
-               <div className="col-sm-2 ">
+               <div className="col-sm-2 dateInputDiv">
                    <input className="form-control" maxLength="100"type="text" id="example-text-input5" ref="city" name="city" value={this.state.upComingeventDetail.city} disabled/>
                </div>
-               <div className="col-sm-2 zipLabel">
-                       <label  className="col-sm-12 col-form-label zeroPad">Zip code:<span className="txtRed">*</span></label>
+               <div className="col-sm-2  dateLabelDiv textevent">
+                       <label  className="col-sm-12 col-form-label whiteSpace ">Zip code:<span className="txtRed">*</span></label>
                </div>
-               <div className="col-sm-2  pdngryt0px">
+               <div className="col-sm-2  dateInputDiv ">
                  <input className="form-control" type="text" id="example-text-input6" name="zip_code" ref="zip_code" value={this.state.upComingeventDetail.zip_code} onKeyPress={this.zipCodeEvent.bind(this)} disabled/>
                </div>
                <div className="col-sm-2 stateLabel">
                           <label  className="col-sm-12 col-form-label">State:<span className="txtRed">*</span></label>
                         </div>
-                        <div className="col-sm-2 stateDiv pdngryt0px">
+                        <div className="col-sm-2 stateDiv ">
                           <select className="form-control" name="state" ref="state" disabled >
-                           {this.state.stateList!=null && this.state.stateList!=undefined && this.state.stateList.map((item,i)=>{
-                             
+                           {isExistObj(this.state.stateList) && _.size(this.state.stateList)>0 && this.state.stateList.map((item,i)=>{
+
                               return(
                               <option defaultValue={this.state.upComingeventDetail.state} value={item.value} >{this.state.upComingeventDetail.state}</option>
                               )
@@ -734,17 +756,17 @@ handleChange(date, dateType){
             </div></div>)}
 
                 <div className="form-group row">
-            <label  className="col-sm-2 col-form-label">Start Date:<span className="txtRed">*</span></label>
+            <label  className="col-sm-2 col-form-label whiteSpace">Start Date:<span className="txtRed">*</span></label>
             <div className="col-sm-2 dateInputDiv">
               <DatePicker id="start_date" ref="start_date" className="form-control" name="start_date"
                 selected={moment(this.state.upComingeventDetail.start_date_format)}
                 onChange={this.handleChange.bind(this, 'start_date')}  minDate={moment()} placeholderText="mm/dd/yyyy" />
             {this.state.dateInvalid1}
             </div>
-                    <div className="col-sm-2 dateLabelDiv ">
+                    <div className="col-sm-2 dateLabelDiv  whiteSpace">
                         <label  className="col-sm-12 col-form-label">End Date:<span className="txtRed">*</span></label>
                     </div>
-            <div className="col-sm-2 dateInputDiv pdngryt0px">
+            <div className="col-sm-2 dateInputDiv ">
                 <DatePicker id="end_date" ref="end_date" className="form-control" name="end_date"
                   selected={moment(this.state.upComingeventDetail.end_date_format)}
                   onChange={this.handleChange.bind(this, 'end_date')}  minDate={this.state.fromDate} placeholderText="mm/dd/yyyy" />
@@ -752,21 +774,21 @@ handleChange(date, dateType){
             {this.state.dateErr}
             </div>
            </div>
-            <div className="form-group row">
+            <div className="form-group row ">
             <label  className="col-sm-2 col-form-label">Time:</label>
-            <div className="col-sm-2 dateInputDiv">
+            <div className="col-sm-2 dateInputDiv ">
             <input className="form-control" type="time" id="example-text-input7" ref="start_time" name="start_time" defaultValue={moment(this.state.upComingeventDetail.start_time,'HH:mm a').format("HH:mm")} />
             </div>
-                    <div className="col-sm-2 dateLabelDiv">
+                    <div className="col-sm-2 dateLabelDiv ">
                         <label  className="col-sm-12 col-form-label">To:</label>
                     </div>
-                    <div className="col-sm-2 dateInputDiv pdngryt0px">
+                    <div className="col-sm-2 dateInputDiv  ">
             <input className="form-control" type="time" id="example-text-input8" ref="end_time" name="end_time" defaultValue={moment(this.state.upComingeventDetail.end_time,'HH:mm a').format("HH:mm")} />
             </div>
            </div>
           {(_.size(this.state.getGroupList)>0)?(<div><div className="form-group row">
-            <label  className="col-sm-7 col-form-label">Is this event for a Group?</label>
-            <div className="col-sm-4">
+            <label  className="col-sm-3 col-xs-3 col-form-label">Is this event for a Group?</label>
+            <div className="col-sm-5 col-xs-5">
               <label  className="switch">
                 <input type="checkbox" defaultChecked={this.state.isExistGroupDetails || this.props.id } onChange={this.groupcolapseTgl.bind(this)} disabled={this.props.id} />
                 <div className="slider round"></div>
@@ -778,7 +800,8 @@ handleChange(date, dateType){
            <div className="col-sm-10 pdl0px-1024">
               <label   className="col-sm-12 zeroPad">
                 <select className="form-control" id="group_id"  name="group_id" defaultValue={this.props.id?this.props.id:this.state.upComingeventDetail.event_group_id} disabled={this.props.id}>
-                  {this.state.getGroupList.map((item, index)=>{
+                  {_.size(this.state.getGroupList)>0 && this.state.getGroupList.map((item, index)=>{
+                   
                     return(
                       <option key={index} value={item.id}  data-default className="selection">{item.name}</option>
                   );
@@ -786,8 +809,8 @@ handleChange(date, dateType){
                 </select>
               </label>
             </div></div>):(<div></div>)}</div>):(<div></div>)}
-              <div className="col-sm-12">
-               {this.props.isCreateOrEdit=="Edit"  ? <div className="col-sm-7 zeroPad">
+              <div className="row">
+               {this.props.isCreateOrEdit=="Edit"  ? <div className="col-sm-12 zeroPad">
                   <div className="groupIcon col-sm-3">
                      {isExistObj(this.state.upComingeventDetail.selected_group)?<img src={"http://"+this.state.upComingeventDetail.selected_group.image_url}  className="grpimgdiv" />:<div></div>}
                       </div>
@@ -798,10 +821,10 @@ handleChange(date, dateType){
                   </div>
                   :<div></div>}
 
-                  <div className="form-group row">
-                    <label  className="col-sm-7 zeroPad">Private Event:</label>
-                    <div className="col-sm-4 zeroPad">
-                      <label  className="switch ml9pc">
+                  <div className="form-group">
+                    <label  className="col-sm-3 col-xs-3">Private Event:</label>
+                    <div className="col-sm-5  col-xs-5">
+                      <label  className="switch ">
                         <input type="checkbox" name="is_private"  defaultChecked={this.state.upComingeventDetail.is_private}/>
                         <div className="slider round"></div>
                       </label>

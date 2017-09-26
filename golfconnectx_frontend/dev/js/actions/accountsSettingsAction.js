@@ -13,7 +13,7 @@ let uploadFile = (token, acceptedFiles) =>{
 
     return(dispatch)=>{
     return apiuploadImageRequest.then(({data})=>{
-        toastr.success("File Uploaded Successfully");
+        toastr.success("Profile image uploaded successfully");
       }).catch((error)=>{
           throw(error);
       });
@@ -64,7 +64,7 @@ let saveProfileDetails = (formData, token) =>{
   const apiSaveProfileRequest = axios.post(url, formData, config);
   return(dispatch)=>{
     return apiSaveProfileRequest.then(({data})=>{
-      toastr.success("Profile Details Saved Successfully");
+      toastr.success("Profile details saved successfully");
         dispatch({type:types.GET_ACCOUNT_PROFILE_DETAILS,apiResult: data});
       }).catch((error)=>{
           toastr.error(error);
@@ -81,11 +81,13 @@ let savePrivateDetails = (formData, token) =>{
   const apiSaveProfileRequest = axios.post(url, formData, config);
   return(dispatch)=>{
     return apiSaveProfileRequest.then(({data})=>{
-        toastr.success("Private Details Saved Successfully");
+        toastr.success("Password changed successfully");
       
         dispatch({type:types.GET_ACCOUNT_PRIVATE_DETAILS,apiResult: data});
+        
       }).catch((error)=>{
-          toastr.error(error);
+        
+          toastr.warning(error.response.data.error);
           throw(error);
       });
  }
@@ -99,7 +101,7 @@ let saveNotificationDetails = (formData, token) =>{
   const apiSaveProfileRequest = axios.post(url, formData, config);
   return(dispatch)=>{
     return apiSaveProfileRequest.then(({data})=>{
-        toastr.success("Notifications Saved Successfully");
+        toastr.success("Notification settings saved successfully");
         dispatch({type:types.GET_ACCOUNT_NOTIFICATIONS_DETAILS,apiResult: data});
       }).catch((error)=>{
           toastr.error(error);
@@ -116,7 +118,7 @@ let saveEmailDetails = (formData, token) =>{
   const apiSaveProfileRequest = axios.post(url, formData, config);
   return(dispatch)=>{
     return apiSaveProfileRequest.then(({data})=>{
-        toastr.success("Email Details Saved Successfully");
+        toastr.success("Email settings saved successfully");
         dispatch({type:types.GET_ACCOUNT_EMAIL_DETAILS,apiResult: data});
       }).catch((error)=>{
           toastr.error(error);
@@ -126,7 +128,7 @@ let saveEmailDetails = (formData, token) =>{
 }
 
 let getSkillset = (token) =>{
-
+  
   const url = SERVICE_URLS.GOLFER_SKILLS;
   var config = {
        headers: {'Authorization':'Token '+token}
@@ -135,7 +137,7 @@ let getSkillset = (token) =>{
   const apiSkillRequest = axios.get(url,config);
   return(dispatch) => {
          return apiSkillRequest.then(({data})=>{
-
+          
            dispatch({type:types.GET_SKILLS ,apiResult:data});
          }).catch((error)=>{
             if(error != "Error: Request failed with status code 401"){

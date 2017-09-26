@@ -31,7 +31,7 @@ let removeNotification = (token, notificationId) =>{
 const apiNotificationRequest = axios.delete(url, config);
 return(dispatch) => {
         return apiNotificationRequest.then(({data})=>{
-          toastr.success("Notification Removed Succefully");
+          toastr.success("Notification Removed Successfully");
         }).catch((error)=>{
           toastr.error(error);
             throw(error);

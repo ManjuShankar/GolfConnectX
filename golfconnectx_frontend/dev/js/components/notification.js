@@ -13,7 +13,7 @@ class Notifications extends Component{
     {
         super(props, context);
         this.state={
-          notifications: [],
+          notifications: Object.assign([], props.notifications),
           ajaxCallInProgress:false
         };
     }
@@ -21,6 +21,7 @@ class Notifications extends Component{
 
     componentWillMount(){
       this.setState({ajaxCallInProgress:true});
+
           this.props.getNotifications(this.props.activeUser.token).then(()=>{
                     this.setState({notifications:this.props.notifications});
                     this.setState({ajaxCallInProgress:false});
@@ -32,8 +33,17 @@ class Notifications extends Component{
        });
      }
 
+     componentWillReceiveProps(nextProps){
+      if(nextProps.notifications!=null && this.props.notifications!=nextProps.notifications){
+        this.setState({notifications: nextProps.notifications});
+      }
+    }
+
      onNavigateToNotificationDetail(id){
-       this.context.router.push('/viewNotification_' + id)
+       this.context.router.push('/viewNotification_' + id);
+       if(screen.width<769){
+        $(".sidebar").hide();
+       }
      }
      onCheckedClick(){
 
@@ -49,8 +59,8 @@ class Notifications extends Component{
           <div className="notifcontainer">
               <div className="content">
                   <div className="notifyhead">NOTIFICATIONS</div>
-
-
+                  
+        
               </div>
 
           <div className="row">
@@ -59,7 +69,7 @@ class Notifications extends Component{
                 <ul className="list-group">
                 {_.size(this.state.notifications)>0  ? this.state.notifications.map((item, i) => {
                 return (<li onClick={this.onNavigateToNotificationDetail.bind(this, item.id)}  key={i} className="list-group-item col-sm-12 brdr bg zeroPad cursor-pointer">
-                  <div className="col-sm-12 pdtop1pc pdlft1pc pdryt0px">
+                  <div className="col-sm-12 pdtop1pc pdlft1pc pdryt0px notifPading">
                   <div className="col-sm-1 wd20px pdng">
                     </div>
                       <div className="col-sm-3 pdng">
@@ -69,10 +79,10 @@ class Notifications extends Component{
                   </div>
                   <div className="msg col-sm-8 pdng">
                   <div className="col-sm-12 pdng">
-                   <div className="col-sm-7 pdng">
+                   <div className="col-sm-7 pdng notifMsgView">
                      <span className="msgbody">{item.message}</span>
                    </div>
-                   <div className="col-sm-3 fr pdng">
+                   <div className="col-sm-3 fr pdng notifTime">
                     <span className="msgtime">{item.created_on}</span>
                   </div>
                   </div>

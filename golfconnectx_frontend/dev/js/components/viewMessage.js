@@ -8,7 +8,8 @@ class ViewMessage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state={
-      messageDetails: {}
+      messageDetails: {},
+      msgNotEmpty : ""      
     };
   }
 
@@ -32,23 +33,46 @@ class ViewMessage extends React.Component {
    });
   }
 
-  sendNewMessageDetails(){
+  sendNewMessageDetails(e){
+    if(e.target.name == "nonResponsive"){
+this.setState({
+          msgNotEmpty : ""
+      });
     let message=document.getElementById('message').value;
+
     this.props.sendNewMessageDetails(this.props.activeUser.token, paramId, message).then(()=>{
       document.getElementById('message').value='';
+      ///this.context.router.push("/messages");
     }).catch((error)=>{
-
-    });
+ });
+  }
+  if(e.target.name == "responsive"){
+      let message=document.getElementById('messageResponsive').value;
+       this.props.sendNewMessageDetails(this.props.activeUser.token, paramId, message).then(()=>{
+        document.getElementById('messageResponsive').value='';
+      }).catch((error)=>{
+     });
+  }
   }
 
 
   navigateMainPage(){
       this.context.router.push("/messages");
+      if(screen.width<600){
+        $(".MobileNav").hide();
+
+      }
   }
 
   navigateNewMessage(){
       this.context.router.push("/newMessage");
   }
+      
+      msgNotEmpty(e){
+          this.setState({
+              msgNotEmpty : e.target.value
+          });
+      }
 
   render() {
     return (
@@ -74,12 +98,13 @@ class ViewMessage extends React.Component {
                                  </div>
                                 </div>
                             </div>
+
                       </div>
                    </div>
               </div>
                <div className="groupmsgs col-sm-12 zeroPad">
                    <div className="msgs col-sm-12 zeroPad">
-                   {_.size(this.state.messageDetails)>0 && _.size(this.state.messageDetails.messages)>0 && this.state.messageDetails.messages.map((item, index)=>{
+                   {isExistObj(this.state.messageDetails) && isExistObj(this.state.messageDetails.messages) && _.size(this.state.messageDetails)>0 && _.size(this.state.messageDetails.messages)>0 && this.state.messageDetails.messages.map((item, index)=>{
                       return(<div key={index} className="stevemsg">
                           <div className="stevedetails">
                               <img src={'http://' + item.created_by.profile_image_url} className="person-img"/>
@@ -91,25 +116,59 @@ class ViewMessage extends React.Component {
                           <p>{item.message}</p>
                       </div>)
                    })}
+
+
                </div>
                <div className="stevedetails">
                               {isExistObj(this.props.activeUser) && <img src={'http://' + this.props.activeUser.profile_image_url} className="person-img"/>}
                               <span className="lastseen">
                                   <h3>Me</h3>
+
                               </span>
                           </div>
                <div className="nxtrply col-sm-12 zeroPad">
                    <div className="nickrply col-sm-12 zeroPad">
                        <div className="rplybox col-sm-12">
-                           <textarea id="message" name="message" maxLength="1000" className="txtarea" name="txtArea"></textarea>
+                           <textarea id="message"  name="message" ref="replyMessage" onChange={this.msgNotEmpty.bind(this)} maxLength="1000" className="txtarea" name="txtArea"></textarea>
                            <div className="brdrline">
+
                           <span className="rytside">
                             <button onClick={this.navigateMainPage.bind(this)} className="butnCancel">Cancel</button>
-                            <button id="" onClick={this.sendNewMessageDetails.bind(this)} className="butnSnd">Send</button>
+                            <button name="nonResponsive" disabled={!this.state.msgNotEmpty} onClick={this.sendNewMessageDetails.bind(this)} className="btn butnSnd" >Send</button>
                           </span>
                         </div>
                        </div>
                    </div>
+               </div>
+                   </div>
+           </div>
+           <div className="mobileMsgRspnsv">
+            <div className="headerMsg col-sm-12 zeroPad">
+            {/*  <span className="glyphicon glyphicon-chevron-left col-sm-1" onClick={this.navigateMainPage.bind(this)}/>*/}
+              <h3 className="col-sm-11 msgbg">MESSAGES</h3>
+            </div>
+            <div className="">
+            <div>
+              <span className="glyphicon glyphicon-chevron-left col-sm-1" onClick={this.navigateMainPage.bind(this)}/><span className="display-inline">{this.props.params.name}</span>
+            </div>
+              <div>
+                <ul>
+                {_.size(this.state.messageDetails)>0 && _.size(this.state.messageDetails.messages)>0 && this.state.messageDetails.messages.map((item, index)=>{
+                  return(<li key={index}>
+                    <div className="person_chat">
+                      <span className="personImage"><img src={'http://' + item.created_by.profile_image_url} className="person-img"/></span>
+                      <span className="personSay">{item.message}</span>
+                      <span className="lastseen"><h4>{item.created_on}</h4></span>
+                    </div>
+                  </li>)
+                })}
+                </ul>
+              </div>
+            </div>
+            <div className="sendingMsg">
+              <div className="bgType">
+                <textarea type="text" id="messageResponsive" name="message" placeholder="Type message here.." className="msg_Typing" maxLength="1000" />
+                <button name="responsive" onClick={this.sendNewMessageDetails.bind(this)} className="msg_send">Send</button>
                </div>
                    </div>
            </div>

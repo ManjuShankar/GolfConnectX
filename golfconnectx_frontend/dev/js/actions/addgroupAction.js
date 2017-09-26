@@ -14,7 +14,7 @@ let saveGroupDetails = (formData, token) =>{
     return apiSaveGroupRequest.then(({data})=>{
        
         dispatch({type:types.CREATE_GROUP,apiResult: data});
-        toastr.success("Group Details Saved Succefully");
+        toastr.success("Group created successfully");
         return data;
       }).catch((error)=>{
         toastr.error(error);
@@ -32,8 +32,8 @@ let editGroupDetails = (formData, id, token) =>{
   const apiEditGroupRequest = axios.post(url, formData, config);
   return(dispatch)=>{
     return apiEditGroupRequest.then(({data})=>{
-        toastr.success("Group Details Updated Succefully");
-       
+        toastr.success("Group details updated successfully");
+
         dispatch({type:types.EDIT_GROUP_DETAILS,apiResult: data});
       }).catch((error)=>{
           toastr.error(error);
