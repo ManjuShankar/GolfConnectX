@@ -25,7 +25,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "node-libs-browser": "^1.0.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.14.1",
     "pui-react-collapse": "^7.4.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
