@@ -22,4 +22,4 @@ python-thumbnails==0.5.1
 ratelim==0.1.6
 requests==2.6.0
 six==1.9.0
-urllib3==1.20
+urllib3==1.26.5
